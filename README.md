@@ -1,10 +1,24 @@
 # project-tiger
 
+#### Build directions
+```
+cd src
+mkdir build
+cmake ..
 
+#build server and client
+make server client
+
+#run tests
+make test
+```
 
 ##Libraries
-####SQLite
+#### SQLite
 [SQLite](https://www.sqlite.org/) is available in the src/libraries/sqlite folder. In its current form, it is the amalgamated source (i.e. all source files merged, which is the preferred distribution). SQLite is in the public domain.
+
+#### Crow
+[Crow](https://github.com/CrowCpp/Crow) is available in src/libraries/Crow. It is C++ framework for HTTP and Websocket web services with routing for servers and clients. It is covered by a BSD-style license.
 
 ## Tools for linting, static analysis etc.
 ####Cpplint
