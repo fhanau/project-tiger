@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
       return crow::response("Error: Username is already taken");
     }
 
-    // This is where the Authenicator.create() method is called
+    // This is where the Authenticator.create() method is called
     int isSuccessful = 1;
     
     if (isSuccessful) {
@@ -31,9 +31,10 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/login/<string>/<string>")([] (string username, string password) {
     // This is where SQLWrapper.isValidHost() would be called
+    // Would need to encrypt password with Authenticator.encrypt() first
     int isValidLogin = 1;
     if (isValidLogin) {
-      // Could also return a session token to client as proof of succesful login
+      // Could also return a session token to client as proof of successful login
       // Token would be required to access private information
       // Token could be randomly generated everytime the server is started and stored as a global variable
       return crow::response("Login successful.");
