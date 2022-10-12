@@ -16,7 +16,7 @@ make test
 make code-tests
 ```
 
-##Libraries
+## Libraries
 #### SQLite
 [SQLite](https://www.sqlite.org/) is available in the src/libraries/sqlite folder. In its current form, it is the amalgamated source (i.e. all source files merged, which is the preferred distribution). SQLite is in the public domain.
 
