@@ -27,13 +27,13 @@ make code-tests
 We use [GoogleTest and GMock](https://github.com/google/googletest), available in test/googletest. The libraries use a 3-Clause BSD license. Use `make run-tiger-test` to run the tests.  
 
 ## Tools for linting, static analysis etc.
-####Cpplint
+#### Cpplint
 We will be using cpplint, which enforces the [google style guide](https://google.github.io/styleguide/cppguide.html). To install, run `pip3 install cpplint`.  
 TODO: Google's style guide is pretty restrictive, so we'll disable some of the warnings later on, in particular for GNU extensions and some C-style constructs.
 
 
-####Cppcheck (static analysis)
+#### Cppcheck (static analysis)
 Install [cppcheck](https://cppcheck.sourceforge.io/) and run `cppcheck --enable=warning,style,unusedFunction <path to repo>`.  
 
-####Codespell (spelling)
+#### Codespell (spelling)
 Install [codespell](https://github.com/codespell-project/codespell) using `pip3 install codespell` and run `codespell <path to repo>` to find spelling mistakes.
