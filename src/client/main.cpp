@@ -8,7 +8,7 @@ using namespace std;
 
 void handleCreateHost(vector<string> input, string& loggedInUsername) {
   if (input.size() != 3) {
-    cout << "Invalid input for creating account.";
+    cout << "Invalid input for creating account.\n";
   } else {
     string username = input[1];
     string password = input[2];
@@ -21,7 +21,7 @@ void handleCreateHost(vector<string> input, string& loggedInUsername) {
 
 void handleLoginHost(vector<string> input, string& loggedInUsername) {
   if (input.size() != 3) {
-    cout << "Invalid input for logging into account.";
+    cout << "Invalid input for logging into account.\n";
   } else {
     string username = input[1];
     string password = input[2];
@@ -46,7 +46,7 @@ void handleLogoutHost(string& loggedInUsername) {
 };
 
 void handleExit() {
-  cout << "Exiting client.";
+  cout << "Exiting client.\n";
   exit(0);
 }
 
@@ -70,9 +70,9 @@ int main(int argc, char** argv) {
   vector<string> cleanInput;
   Parser clientParser;
   string loggedInUsername;
-  cout << "Welcome to Project Tiger!";
-  cout << "A list of commands can be displayed by typing 'help' and hitting enter.";
-  cout << "Otherwise you can begin entering commands.";
+  cout << "Welcome to Project Tiger!\n";
+  cout << "A list of commands can be displayed by typing 'help' and hitting enter.\n";
+  cout << "Otherwise you can begin entering commands.\n";
   while (true) {
     cout << ">" << " ";
     cin >> userInput;
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
       cleanInput = clientParser.getCleanInput();
       processCleanInput(cleanInput, loggedInUsername);
     } else {
-      cout << "Invalid command. Type 'help' and hit enter to see a list of valid commands.";
+      cout << "Invalid command. Type 'help' and hit enter to see a list of valid commands.\n";
     }
   }
 }
