@@ -23,6 +23,9 @@ make code-tests
 #### Crow
 [Crow](https://github.com/CrowCpp/Crow) is available in src/libraries/Crow. It is C++ framework for HTTP and Websocket web services with routing for servers and clients. It is covered by a BSD-style license.
 
+## Testing/Mocking
+We use [GoogleTest and GMock](https://github.com/google/googletest), available in test/googletest. The libraries use a 3-Clause BSD license. Use `make run-tiger-test` to run the tests.  
+
 ## Tools for linting, static analysis etc.
 ####Cpplint
 We will be using cpplint, which enforces the [google style guide](https://google.github.io/styleguide/cppguide.html). To install, run `pip3 install cpplint`.  
