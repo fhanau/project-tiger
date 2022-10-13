@@ -1,15 +1,21 @@
+#ifndef PARSER_H
+#define PARSER_H
+
 #include <iostream>
 #include <memory>
 #include <string>
 #include <set>
 #include <vector>
 
+using namespace std;
+
 class Parser {
   public:
     int verifyInput(string input);
     vector<string> getCleanInput();
   private:
-    set<string> validCommands;
-    string currentInput;
     vector<string> parseWords(string input);
+    vector<string> currentInput;
 };
+
+#endif

@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-#include "helper/parser.h"
+#include "parser.h"
 
 using namespace std;
 
@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
   cout << "Otherwise you can begin entering commands.\n";
   while (true) {
     cout << ">" << " ";
-    cin >> userInput;
+    getline(cin, userInput);
     int validUserInput = clientParser.verifyInput(userInput);
     if (validUserInput) {
       cleanInput = clientParser.getCleanInput();
