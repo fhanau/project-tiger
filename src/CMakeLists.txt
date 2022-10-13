@@ -11,6 +11,7 @@ add_subdirectory(server)
 add_subdirectory(client)
 add_subdirectory(test)
 add_subdirectory(libraries/Crow)
+add_subdirectory(libraries/sqlite)
 
 add_custom_target(code-tests)
 add_dependencies(code-tests code-spell code-lint code-analyze)
