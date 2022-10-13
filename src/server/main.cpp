@@ -4,8 +4,6 @@
 
 #include "crow.h"
 
-using namespace std;
-
 int main(int argc, char** argv) {
   crow::SimpleApp app;
 
@@ -13,7 +11,7 @@ int main(int argc, char** argv) {
     return "Welcome to Project Tiger";
   });
 
-  CROW_ROUTE(app, "/create/<string>/<string>")([](string username, string password) {
+  CROW_ROUTE(app, "/create/<string>/<string>")([](std::string username, std::string password) {
     // This is where SQLWrapper.usernameExists() would be called
     if (true) {
       return crow::response("Error: Username is already taken");
@@ -29,7 +27,7 @@ int main(int argc, char** argv) {
     }
   });
 
-  CROW_ROUTE(app, "/login/<string>/<string>")([] (string username, string password) {
+  CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username, std::string password) {
     // This is where SQLWrapper.isValidHost() would be called
     // Would need to encrypt password with Authenticator.encrypt() first
     int isValidLogin = 1;
