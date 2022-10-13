@@ -4,8 +4,6 @@
 #include <set>
 #include <vector>
 
-using namespace std;
-
 class Parser {
   public:
     int verifyInput(string input);
