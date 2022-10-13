@@ -32,6 +32,8 @@ public:
     Database(const char* db_dir);
     ~Database();
     int createTable(string command);
+    int insertData(string command);
+
 };
 
 Database::Database(const char* db_dir)
@@ -42,34 +44,39 @@ Database::Database(const char* db_dir)
 
     // Create the 3 tables
     string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
-		"player_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"name      CHAR(50) NOT NULL, "
-		"game_type     TEXT NOT NULL, "
-		"total_wins       INT  NOT NULL, "
-        "total_losses       INT  NOT NULL, "
+		"player_id      INT  NOT NULL, "
+		"name           CHAR(50) NOT NULL, "
+		"game_type      TEXT NOT NULL, "
+		"total_wins     INT  NOT NULL, "
+        "total_losses   INT  NOT NULL, "
         "most_won       INT  NOT NULL, "
-        "most_lost       INT  NOT NULL, "
-        "total_money       INT  NOT NULL );";
+        "most_lost      INT  NOT NULL, "
+        "total_money    INT  NOT NULL );";
 
     this->createTable(command1);
 
     string command2 = "CREATE TABLE IF NOT EXISTS game_list("
 		"game_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"game_type      TEXT NOT NULL, "
-		"host_CHECK     TEXT NOT NULL, "
-		"winning_player_id       INT  NOT NULL, "
-        "result       TEXT NOT NULL, "
-        "money_won      INT  NOT NULL );";
+		"game_type              TEXT NOT NULL, "
+		"host_CHECK             TEXT NOT NULL, "
+		"winning_player_id      INT  NOT NULL, "
+        "result                 TEXT NOT NULL, "
+        "money_won              INT  NOT NULL );";
 
     this->createTable(command2);
 
     string command3 = "CREATE TABLE IF NOT EXISTS achievements("
-		"player_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"achievement_id      INT NOT NULL, "
-		"description    TEXT NOT NULL, "
-		"unlocked       INT  NOT NULL );";
+		"player_id          INT  NOT NULL, "
+		"achievement_id     INT NOT NULL, "
+		"description        TEXT NOT NULL, "
+		"unlocked           INT  NOT NULL );";
     
     this->createTable(command3);
+
+    string command4 = "CREATE TABLE IF NOT EXISTS players("
+		"player_id  INTEGER PRIMARY KEY AUTOINCREMENT, "
+		"name       CHAR(50) NOT NULL, "
+		"lname      CHAR(50) NOT NULL );";
 
     //sqlite3_close(DB);
 }
@@ -106,12 +113,33 @@ int Database::createTable(string command)
 	return 0;
 }
 
+int Database::insertData(string command)
+{
+    char* messageError;
+		
+	int exit = sqlite3_open(directory, &DB);
+	/* An open database, SQL to be evaluated, Callback function, 1st argument to callback, Error msg written here */
+	exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
+	if (exit != SQLITE_OK) {
+		cerr << "Error in insertData function." << endl;
+		sqlite3_free(messageError);
+	}
+	else
+		cout << "Records inserted Successfully!" << endl;
+
+	return 0;
+}
+
 
 int main()
 {
 	const char* dir = "test.db";
 
     Database dummy("dummy.db");
+
+    dummy.insertData("INSERT INTO player_stats (name, game_type,total_wins, total_losses, \
+        most_won, most_lost, total_money) VALUES('Alex', 'RPS', 35, 53, 10000000, 50, 2222);");
+
     /*
 	createDB(dir);
 	createTable(dir);
