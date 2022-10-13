@@ -43,7 +43,7 @@ Database::Database(const char* db_dir)
     // Create the 3 tables
     string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
 		"player_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"name      TEXT NOT NULL, "
+		"name      CHAR(50) NOT NULL, "
 		"game_type     TEXT NOT NULL, "
 		"total_wins       INT  NOT NULL, "
         "total_losses       INT  NOT NULL, "
@@ -59,7 +59,7 @@ Database::Database(const char* db_dir)
 		"host_CHECK     TEXT NOT NULL, "
 		"winning_player_id       INT  NOT NULL, "
         "result       TEXT NOT NULL, "
-        "money_won      INT  NOT NULL, );";
+        "money_won      INT  NOT NULL );";
 
     this->createTable(command2);
 
@@ -111,12 +111,14 @@ int main()
 {
 	const char* dir = "test.db";
 
+    Database dummy("dummy.db");
+    /*
 	createDB(dir);
 	createTable(dir);
 	//deleteData(dir); // use prior to insert
 	insertData(dir); // uncomment the deleteData above to avoid duplicates
 	updateData(dir);
-	selectData(dir);
+	selectData(dir);*/
 
 	return 0;
 }
