@@ -1,8 +1,35 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <set>
 
 #include "crow.h"
+
+int isValidTypeOfPublicRequest(std::string type) {
+  std::set<std::string> validTypes = {"games", "total"};
+  return validTypes.find(type) != validTypes.end();
+};
+
+std::string handlePublicRequest(std::string type) {
+  if (!type.compare("games")) {
+    return requestPublicGameData();
+  }
+  // Will have to discuss what types of general information is publicly accessible
+};
+
+std::string requestPublicGameData() {
+  // Can simplify by just having very basic information and one query for it
+  // Can expand to a couple of different types of public data requests
+  // Call SQLWrapper.getPublicGameData(); regardless
+  // If an error occurs when quering SQL, return ERROR
+  int isError = 0;
+  if (isError) {
+    return "ERROR";
+  }
+  // Would be set equal to some formatted version of the SQL data table result.
+  std::string publicData = "Public Information: We store game data and crunch numbers :)";
+  return publicData;
+}
 
 int main(int argc, char** argv) {
   crow::SimpleApp app;
@@ -46,6 +73,26 @@ int main(int argc, char** argv) {
     } else {
       return crow::response("");
     }
+  });
+
+  CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
+    crow::json::wvalue resp({{"type", ""}});
+    if (isValidTypeOfPublicRequest(type)) {
+      resp["type"] = "ERROR";
+      resp["errorMessage"] = "Invalid type of request for data.";
+      return resp;
+    }
+    
+    // Function for processing valid type
+    std::string result = handlePublicRequest(type);
+    if (!result.compare("ERROR")) {
+      resp["type"] = "ERROR";
+      resp["errorMessage"] = "Error when requesting public game data.";
+      return resp;
+    }
+    resp["type"] = "public";
+    resp["data"] = result;
+    return resp;
   });
 
   app.port(18080).multithreaded().run();
