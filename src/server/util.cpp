@@ -35,7 +35,7 @@ std::string getSession() {
   if (session.size() > 0) {
     return session;
   }
-  int memory = 1000;
+  uint32_t memory = 1000;
   uint32_t id = reinterpret_cast<uint32_t>(&memory);
   char literal[10];
   sprintf(literal, "%I64u", id);
