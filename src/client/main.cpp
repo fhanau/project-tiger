@@ -3,15 +3,14 @@
 #include <string>
 
 #include "parser.h"
+#include "requester.h"
 
-using namespace std;
-
-void handleCreateHost(vector<string> input, string& loggedInUsername) {
+void handleCreateHost(std::vector<std::string> input, std::string& loggedInUsername) {
   if (input.size() != 3) {
     cout << "Invalid input for creating account.\n";
   } else {
-    string username = input[1];
-    string password = input[2];
+    std::string username = input[1];
+    std::string password = input[2];
     // This is where request to CROW(/create) is made
     // if validated by server
     loggedInUsername = username;
@@ -19,12 +18,12 @@ void handleCreateHost(vector<string> input, string& loggedInUsername) {
   }
 };
 
-void handleLoginHost(vector<string> input, string& loggedInUsername) {
+void handleLoginHost(std::vector<std::string> input, std::string& loggedInUsername) {
   if (input.size() != 3) {
     cout << "Invalid input for logging into account.\n";
   } else {
-    string username = input[1];
-    string password = input[2];
+    std::string username = input[1];
+    std::string password = input[2];
     // This is where request to CROW(/login) is made
     // if validated by server
     loggedInUsername = username;
@@ -40,7 +39,7 @@ void displayHelp() {
   cout << "exit\n";
 };
 
-void handleLogoutHost(string& loggedInUsername) {
+void handleLogoutHost(std::string& loggedInUsername) {
   cout << "Successfully logged out of " << loggedInUsername << ".\n";
   loggedInUsername = "";
 };
@@ -50,8 +49,8 @@ void handleExit() {
   exit(0);
 }
 
-void processCleanInput(vector<string>& cleanInput, string& loggedInUsername) {
-  string command = cleanInput[0];
+void processCleanInput(std::vector<std::string>& cleanInput, std::string& loggedInUsername) {
+  std::string command = cleanInput[0];
   if (!command.compare("create")) {
     handleCreateHost(cleanInput, loggedInUsername);
   } else if (!command.compare("login")) {
@@ -66,10 +65,10 @@ void processCleanInput(vector<string>& cleanInput, string& loggedInUsername) {
 };
 
 int main(int argc, char** argv) {
-  string userInput;
-  vector<string> cleanInput;
+  std::string userInput;
+  std::vector<std::string> cleanInput;
   Parser clientParser;
-  string loggedInUsername;
+  std::string loggedInUsername;
   cout << "Welcome to Project Tiger!\n";
   cout << "A list of commands can be displayed by typing 'help' and hitting enter.\n";
   cout << "Otherwise you can begin entering commands.\n";
