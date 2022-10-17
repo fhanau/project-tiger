@@ -35,16 +35,15 @@ class Card {
     Suit suit;
     Face face;
     // the player index who owns the card, "" means not owned by anyone
-    int owner;
+    std::string owner;
 
  public:
-    Card();
     Card(Face face, Suit suit);
-    Card(Face face, Suit suit, int owner);
+    Card(Face face, Suit suit, std::string& owner);
     Card(const Card& card);
     ~Card();
     Suit getSuit() const;
-    int getFace() const;
+    Face getFace() const;
     bool isOwned() const;
     std::string getOwner() const;
     void display() const;
