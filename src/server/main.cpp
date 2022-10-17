@@ -4,42 +4,13 @@
 #include <set>
 
 #include "crow.h"
-
-int isValidTypeOfPublicRequest(std::string type) {
-  std::set<std::string> validTypes = {"games", "total"};
-  return validTypes.find(type) != validTypes.end();
-};
-
-std::string requestPublicGameData() {
-  // Can simplify by just having very basic information and one query for it
-  // Can expand to a couple of different types of public data requests
-  // Call SQLWrapper.getPublicGameData(); regardless
-  // If an error occurs when quering SQL, return ERROR
-  int isError = 0;
-  if (isError) {
-    return "ERROR";
-  }
-  // Would be set equal to some formatted version of the SQL data table result.
-  std::string publicData = "Public Information: We store game data and crunch numbers :)";
-  return publicData;
-}
-
-std::string handlePublicRequest(std::string type) {
-  if (!type.compare("games")) {
-    return requestPublicGameData();
-  }
-  // Will have to discuss what types of general information is publicly accessible
-};
+#include "util.h"
 
 int main(int argc, char** argv) {
   crow::SimpleApp app;
 
   // Create a unique session id based on the app object's location in memory
   // Give this to clients as proof they logged in successfully
-  uint32_t id = reinterpret_cast<uint32_t>(&app);
-  char literal[10];
-  sprintf(literal, "%I64u", id);
-  std::string session(literal);
 
   CROW_ROUTE(app, "/")([]() {
     return "Welcome to Project Tiger";
@@ -55,7 +26,7 @@ int main(int argc, char** argv) {
     int isSuccessful = 1;
     
     if (isSuccessful) {
-      return crow::response(session);
+      return crow::response(getSession());
     } else {
       return crow::response("");
     }
@@ -69,7 +40,7 @@ int main(int argc, char** argv) {
       // Could also return a session token to client as proof of successful login
       // Token would be required to access private information
       // Token could be randomly generated everytime the server is started and stored as a global variable
-      return crow::response(session);
+      return crow::response(getSession());
     } else {
       return crow::response("");
     }
