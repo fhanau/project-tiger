@@ -1,11 +1,16 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <set>
 
 #include "crow.h"
+#include "util.h"
 
 int main(int argc, char** argv) {
   crow::SimpleApp app;
+
+  // Create a unique session id based on the app object's location in memory
+  // Give this to clients as proof they logged in successfully
 
   CROW_ROUTE(app, "/")([]() {
     return "Welcome to Project Tiger";
@@ -21,9 +26,9 @@ int main(int argc, char** argv) {
     int isSuccessful = 1;
     
     if (isSuccessful) {
-      return crow::response("Account creation successful");
+      return crow::response(getSession());
     } else {
-      return crow::response("Account creation unsuccessful. Try again.");
+      return crow::response("");
     }
   });
 
@@ -35,10 +40,30 @@ int main(int argc, char** argv) {
       // Could also return a session token to client as proof of successful login
       // Token would be required to access private information
       // Token could be randomly generated everytime the server is started and stored as a global variable
-      return crow::response("Login successful.");
+      return crow::response(getSession());
     } else {
-      return crow::response("Login unsuccessful. Try again.");
+      return crow::response("");
     }
+  });
+
+  CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
+    crow::json::wvalue resp({{"type", ""}});
+    if (isValidTypeOfPublicRequest(type)) {
+      resp["type"] = "ERROR";
+      resp["errorMessage"] = "Invalid type of request for data.";
+      return resp;
+    }
+    
+    // Function for processing valid type
+    std::string result = handlePublicRequest(type);
+    if (!result.compare("ERROR")) {
+      resp["type"] = "ERROR";
+      resp["errorMessage"] = "Error when requesting public game data.";
+      return resp;
+    }
+    resp["type"] = "public";
+    resp["data"] = result;
+    return resp;
   });
 
   app.port(18080).multithreaded().run();
