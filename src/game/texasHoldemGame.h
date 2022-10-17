@@ -1,9 +1,11 @@
-#ifndef TEXASHOLDEMGAME_H
-#define TEXASHOLDEMGAME_H
+#ifndef SRC_GAME_TEXASHOLDEMGAME_H_
+#define SRC_GAME_TEXASHOLDEMGAME_H_
 
-#include "card.h"
-#include "deck.h"
 #include <algorithm>
 
-// TODO: implement the file
-#endif
+#include "./card.h"
+#include "./deck.h"
+
+
+// TODO(Songheng): implement the file
+#endif      // SRC_GAME_TEXASHOLDEMGAME_H_

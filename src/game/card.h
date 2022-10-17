@@ -1,8 +1,10 @@
-#ifndef CARD_H
-#define CARD_H
+#ifndef SRC_GAME_CARD_H_
+#define SRC_GAME_CARD_H_
+
+#include <string>
 
 class Card {
-public:
+ public:
     enum Suit {
         heart = 0,
         diamond = 1,
@@ -10,7 +12,7 @@ public:
         club = 3
     };
 
-     // TODO: not sure if needed
+    // TODO(Songheng): not sure if needed
     enum Face {
         ace = 1,
         two = 2,
@@ -29,23 +31,24 @@ public:
         red_joker = 15
     };
 
-private:
+ private:
     Suit suit;
     Face face;
-    // the player index who owns the card, -1 means not owned by anyone
+    // the player index who owns the card, "" means not owned by anyone
     int owner;
-public:
-    Card ();
-    Card (Face face, Suit suit);
-    Card (Face face, Suit suit, int owner);
-    Card (const Card& card);
-    ~Card ();
+
+ public:
+    Card();
+    Card(Face face, Suit suit);
+    Card(Face face, Suit suit, int owner);
+    Card(const Card& card);
+    ~Card();
     Suit getSuit() const;
     int getFace() const;
     bool isOwned() const;
-    int getOwner() const;
+    std::string getOwner() const;
     void display() const;
     bool comparator(const Card& card1, const Card& card2) const;
 };
 
-#endif
+#endif  // SRC_GAME_CARD_H_

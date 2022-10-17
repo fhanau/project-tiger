@@ -1,28 +1,31 @@
-#ifndef DECK_H
-#define DECK_H
+#ifndef SRC_GAME_DECK_H_
+#define SRC_GAME_DECK_H_
 
-#include "card.h"
 #include <random>
+#include <utility>
 #include <list>
 #include <vector>
 
+#include "./card.h"
+
 class Deck {
-private:
+ private:
     bool includeJokers;
     std::list<Card*> remainingCards;
     std::list<Card*> dealedCards;
 
-public:
+ public:
     Deck();
-    Deck(bool includeJokers);
+    explicit Deck(bool includeJokers);
     ~Deck();
     void shuffle();
     void reset();
     // deal single/multiple cards
     Card* dealCards();
     Card* dealCards(int amount);
-    Card* dealGivenCards(Card::Suit suit, Card::Face face); 
-    Card* dealGivenCards(std::vector<std::pair<Card::Suit, Card::Face>>& cards); 
+    Card* dealGivenCards(Card::Suit suit, Card::Face face);
+    Card* dealGivenCards(const std::vector<std::pair<Card::Suit,
+        Card::Face>>& cards);
 };
 
-#endif
+#endif  // SRC_GAME_DECK_H_
