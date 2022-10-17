@@ -35,10 +35,9 @@ std::string getSession() {
   if (session.size() > 0) {
     return session;
   }
-  uint32_t memory = 1000;
-  uint32_t id = reinterpret_cast<uint32_t>(&memory);
-  char literal[10];
-  sprintf(literal, "%I64u", id);
-  session = std::string(literal);
+  uint32_t randomLocationInMemory = 1000;
+  char randomLocationAsLiteral[10];
+  sprintf(randomLocationAsLiteral, "%I64u", &randomLocationInMemory);
+  session = std::string(randomLocationAsLiteral);
   return session;
 }
