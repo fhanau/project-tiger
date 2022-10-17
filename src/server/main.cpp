@@ -10,13 +10,6 @@ int isValidTypeOfPublicRequest(std::string type) {
   return validTypes.find(type) != validTypes.end();
 };
 
-std::string handlePublicRequest(std::string type) {
-  if (!type.compare("games")) {
-    return requestPublicGameData();
-  }
-  // Will have to discuss what types of general information is publicly accessible
-};
-
 std::string requestPublicGameData() {
   // Can simplify by just having very basic information and one query for it
   // Can expand to a couple of different types of public data requests
@@ -30,6 +23,13 @@ std::string requestPublicGameData() {
   std::string publicData = "Public Information: We store game data and crunch numbers :)";
   return publicData;
 }
+
+std::string handlePublicRequest(std::string type) {
+  if (!type.compare("games")) {
+    return requestPublicGameData();
+  }
+  // Will have to discuss what types of general information is publicly accessible
+};
 
 int main(int argc, char** argv) {
   crow::SimpleApp app;
