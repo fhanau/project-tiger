@@ -10,6 +10,6 @@
 [submodule "src/libraries/curl"]
 	path = src/libraries/curl
 	url = https://github.com/curl/curl.git
-[submodule "src/libraries/openssl"]
-	path = src/libraries/openssl
-	url = https://github.com/openssl/openssl.git
+[submodule "src/libraries/openssl-cmake"]
+	path = src/libraries/openssl-cmake
+	url = https://github.com/janbar/openssl-cmake.git
