@@ -2,10 +2,10 @@
 #define REQUESTER_H
 
 #include <string>
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Option.hpp>
-#include <curlpp/Exception.hpp>
+#include "curlpp/cURLpp.hpp"
+#include "curlpp/Easy.hpp"
+#include "curlpp/Option.hpp"
+#include "curlpp/Exception.hpp"
 #include <cstdlib>
 #include <sstream>
 
