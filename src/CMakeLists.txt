@@ -10,6 +10,7 @@ endif()
 add_subdirectory(server)
 add_subdirectory(client)
 add_subdirectory(libraries/Crow)
+add_subdirectory(libraries/openssl)
 add_subdirectory(libraries/curl)
 add_subdirectory(libraries/curlpp)
 
