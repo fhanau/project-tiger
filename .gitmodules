@@ -7,3 +7,6 @@
 [submodule "src/libraries/curlpp"]
 	path = src/libraries/curlpp
 	url = https://github.com/jpbarrette/curlpp.git
+[submodule "src/libraries/curl"]
+	path = src/libraries/curl
+	url = https://github.com/curl/curl.git
