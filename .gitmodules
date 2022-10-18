@@ -10,3 +10,6 @@
 [submodule "src/libraries/curl"]
 	path = src/libraries/curl
 	url = https://github.com/curl/curl.git
+[submodule "src/libraries/openssl"]
+	path = src/libraries/openssl
+	url = https://github.com/openssl/openssl.git
