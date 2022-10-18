@@ -10,6 +10,7 @@ endif()
 add_subdirectory(server)
 add_subdirectory(client)
 add_subdirectory(libraries/Crow)
+add_subdirectory(libraries/curlpp)
 
 #While tests are done elsewhere, import them here since they also need the settings above.
 #TODO: Consider moving this CMakeLists to the top level, should be cleaner since it sets up defines shared between src and test and both are isolated in different folders.
