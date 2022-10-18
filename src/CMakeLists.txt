@@ -11,7 +11,11 @@ add_subdirectory(server)
 add_subdirectory(client)
 add_subdirectory(libraries/Crow)
 add_subdirectory(libraries/curl)
+set(CURL_INCLUDE_DIR libraries/curl/include)
+set(CURL_LIBRARY libcurl)
+set(CURLPP_BUILD_SHARED_LIBS OFF)
 add_subdirectory(libraries/curlpp)
+add_subdirectory(libraries/openssl-cmake)
 
 
 #While tests are done elsewhere, import them here since they also need the settings above.
