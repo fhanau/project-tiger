@@ -7,7 +7,7 @@
 #include "requester.h"
 
 void handleCreateHost(std::vector<std::string> input, std::string& loggedInUsername,
-std::Requester req, std::string& session) {
+Requester req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
   } else {
@@ -78,6 +78,8 @@ Requester req, std::string &session) {
 };
 
 int validateCommandLinePort(std::string arg) {
+  // Lifted error checking code from
+  // https://stackoverflow.com/questions/2797813/how-to-convert-a-command-line-argument-to-int
   try {
     std::size_t pos;
     int port = std::stoi(arg, &pos);
