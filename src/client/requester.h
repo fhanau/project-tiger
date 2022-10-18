@@ -2,22 +2,24 @@
 #define REQUESTER_H
 
 #include <string>
-#include "crow.h"
+#include <curlpp/cURLpp.hpp>
+#include <curlpp/Easy.hpp>
+#include <curlpp/Option.hpp>
+#include <curlpp/Exception.hpp>
+#include <cstdlib>
+#include <sstream>
 
 class Requester {
   public:
     std::string createHost(std::string username, std::string password);
     std::string loginHost(std::string username, std::string password);
-    inline Requester(int port) {
-      client.bindaddr("127.0.0.1").port(port).run();
-      c.connect(asio::ip::tcp::endpoint(asio::ip::address::from_string("127.0.0.1"), port));
+    inline Requester() {
+      
     }
   private:
-    char buf[4096];
-    std::string requestHeader = "GET";
-    crow::SimpleApp client;
-    asio::io_service is;
-    asio::ip::tcp::socket c(is);
+    curlpp::Cleanup cleaner;
+    curlpp::Easy request;
+    std::string baseUrl = "http://127.0.0.1:18080/";
 };
 
 #endif

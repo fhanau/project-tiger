@@ -66,5 +66,5 @@ int main(int argc, char** argv) {
     return resp;
   });
 
-  app.port(18080).multithreaded().run();
+  app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
 }
