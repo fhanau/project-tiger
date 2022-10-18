@@ -4,32 +4,24 @@
 #include <set>
 #include <vector>
 
-// Include asio i believe
-using namespace std;
+#include "requester.h"
 
-class Requester {
-  public:
-    Requester() {
-      
-    }
-    std::string createHost(string username, string password) {
-      string requestBody = "...";
-      string request = requestHeader.append(requestBody);
-      // Send request using asio or curlpp
-      string response = ""; //Get response from server
-      // If our server returns a session token maybe return that instead
-      return response;
-    }
+std::string createHost(std::string username, std::string password) {
+  std::string requestBody = "...";
+  std::string request = requestHeader.append(requestBody);
 
-    std::string loginHost(string username, string password) {
-      string requestBody = "...";
-      string request = requestHeader.append(requestBody);
-      // Send request using asio or curlpp
-      string response = ""; //Get response from server
-      // If our server returns a session token maybe return that instead
-      return response;
-    }
-  private:
-    char buf[4096];
-    string requestHeader = "GET";
-};
+  c.send(asio::buffer(request));
+  size_t received = c.receive(asio::buffer(buf, 4096));
+  std::string response(buf);
+  return response;
+}
+
+std::string loginHost(std::string username, std::string password) {
+  std::string requestBody = "...";
+  std::string request = requestHeader.append(requestBody);
+  c.send(asio::buffer(request));
+  size_t received = c.receive(asio::buffer(buf, 4096));
+  std::string response(buf);
+  return response;
+}
+    
