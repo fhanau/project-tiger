@@ -13,7 +13,7 @@ add_subdirectory(libraries/Crow)
 add_subdirectory(libraries/curl)
 set(CURL_INCLUDE_DIR libraries/curl/include)
 set(CURL_LIBRARY libcurl)
-set(CURLPP_BUILD_SHARED_LIBS OFF)
+set(CURLPP_BUILD_SHARED_LIBS ON)
 add_subdirectory(libraries/curlpp)
 add_subdirectory(libraries/openssl-cmake)
 
