@@ -12,12 +12,15 @@ add_subdirectory(client)
 add_subdirectory(libraries/Crow)
 set(CURL_INCLUDE_DIR libraries/curl/include)
 set(CURL_LIBRARY libcurl)
-set(CURLPP_BUILD_SHARED_LIBS ON)
-find_package(CURL REQUIRED)
-target_link_directories(libraries/curlpp libraries/curl)
+set(CURLPP_BUILD_SHARED_LIBS OFF)
 add_subdirectory(libraries/openssl-cmake)
 add_subdirectory(libraries/curl)
-add_dependencies(libraries/curlpp libraries/curl)
+
+find_package(CURL REQUIRED)
+find_package(Curlpp REQUIRED)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} CURL::libcurl)
+
 add_subdirectory(libraries/curlpp)
 
 #While tests are done elsewhere, import them here since they also need the settings above.
