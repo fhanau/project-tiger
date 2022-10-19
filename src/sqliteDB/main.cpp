@@ -5,11 +5,12 @@ Created on 11/20/2019
 Last Edited on 11/22/2019
 */
 
-//Final Version
-//#include <sqlite3.h>
-#include "../libraries/sqlite/sqlite3.h"
+// Final Version
+// #include <sqlite3.h>
+
 #include <stdio.h>
 #include <iostream>
+#include "../libraries/sqlite/sqlite3.h"
 
 using namespace std;
 
@@ -21,37 +22,39 @@ static int updateData(const char* s);
 static int selectData(const char* s);
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 
-class Database
-{
-private:
+class Database{
+ private:
     /* data */
     sqlite3* DB;
     const char* directory;
 
-public:
-    Database(const char* db_dir);
+ public:
+    explicit Database(const char* db_dir);
     ~Database();
     int createTable(string command);
-    int insertData(string command);
-
+	int insertData(string command);
+	int selectData(string command);
+	int updateData(string command);
+	int deleteData(string command);
+	static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 };
 
-Database::Database(const char* db_dir)
-{
+Database::Database(const char* db_dir){
     directory = db_dir;
     //int exit = 0;
 	//exit = sqlite3_open(directory, &DB);
 
     // Create the 3 tables
     string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
-		"player_id      INT  NOT NULL, "
-		"name           CHAR(50) NOT NULL, "
-		"game_type      TEXT NOT NULL, "
-		"total_wins     INT  NOT NULL, "
-        "total_losses   INT  NOT NULL, "
-        "most_won       INT  NOT NULL, "
-        "most_lost      INT  NOT NULL, "
-        "total_money    INT  NOT NULL );";
+		"player_id      INT  		NOT NULL, "
+		"host_id      	INT  		NOT NULL, "
+		"name           CHAR(50) 	NOT NULL, "
+		"game_type      CHAR(50) 	NOT NULL, "
+		"total_wins     INT  		NOT NULL, "
+        "total_losses   INT  		NOT NULL, "
+        "most_won       INT  		NOT NULL, "
+        "most_lost      INT  		NOT NULL, "
+        "total_money    INT  		NOT NULL );";
 
     this->createTable(command1);
 
@@ -59,6 +62,7 @@ Database::Database(const char* db_dir)
 		"game_id INTEGER PRIMARY KEY AUTOINCREMENT, "
 		"game_type              TEXT NOT NULL, "
 		"host_CHECK             TEXT NOT NULL, "
+		"host_id             	INT  NOT NULL, "
 		"winning_player_id      INT  NOT NULL, "
         "result                 TEXT NOT NULL, "
         "money_won              INT  NOT NULL );";
@@ -67,16 +71,36 @@ Database::Database(const char* db_dir)
 
     string command3 = "CREATE TABLE IF NOT EXISTS achievements("
 		"player_id          INT  NOT NULL, "
-		"achievement_id     INT NOT NULL, "
+		"host_id          	INT  NOT NULL, "
+		"achievement_id     INT  NOT NULL, "
 		"description        TEXT NOT NULL, "
-		"unlocked           INT  NOT NULL );";
+		"unlocked           INT  NOT NULL DEFAULT 0, "
+		"CONSTRAINT player_host_achievement PRIMARY KEY (player_id, host_id, achievement_id) );";
     
     this->createTable(command3);
 
     string command4 = "CREATE TABLE IF NOT EXISTS players("
-		"player_id  INTEGER PRIMARY KEY AUTOINCREMENT, "
+		"player_id  INT	  	 NOT NULL, "
+		"host_id    INT  	 NOT NULL, "
 		"name       CHAR(50) NOT NULL, "
-		"lname      CHAR(50) NOT NULL );";
+		"lname      CHAR(50) NOT NULL, "
+		"CONSTRAINT player_host PRIMARY KEY (player_id, host_id) );";
+
+	this->createTable(command4);
+
+	string command5 = "CREATE TABLE IF NOT EXISTS hosts("
+		"host_id  INTEGER PRIMARY KEY AUTOINCREMENT, "
+		"username       CHAR(50) NOT NULL, "
+		"password      CHAR(50) NOT NULL );";
+
+	this->createTable(command5);
+
+	string command6 = "CREATE TABLE IF NOT EXISTS games("
+		"game_name  CHAR(50) NOT NULL PRIMARY KEY );";
+
+	this->createTable(command6);
+
+	
 
     //sqlite3_close(DB);
 }
@@ -124,12 +148,67 @@ int Database::insertData(string command)
 		cerr << "Error in insertData function." << endl;
 		sqlite3_free(messageError);
 	}
-	else
+	else{
 		cout << "Records inserted Successfully!" << endl;
+	}
 
 	return 0;
 }
 
+int Database::selectData(string command)
+{
+	//sqlite3* DB;
+	char* messageError;
+
+	//string sql = "SELECT * FROM GRADES;";
+
+	int exit = sqlite3_open(directory, &DB);
+	/* An open database, SQL to be evaluated, Callback function, 1st argument to callback, Error msg written here*/
+	exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+
+	if (exit != SQLITE_OK) {
+		cerr << "Error in selectData function." << endl;
+		sqlite3_free(messageError);
+	}
+	else{
+		cout << "Records selected Successfully!" << endl;
+	}
+
+	return 0;
+}
+
+int Database::updateData(string command)
+{
+	//sqlite3* DB;
+	char* messageError;
+
+	//string sql("UPDATE GRADES SET GRADE = 'A' WHERE LNAME = 'Cooper'");
+
+	int exit = sqlite3_open(directory, &DB);
+	/* An open database, SQL to be evaluated, Callback function, 1st argument to callback, Error msg written here */
+	exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
+	if (exit != SQLITE_OK) {
+		cerr << "Error in updateData function." << endl;
+		sqlite3_free(messageError);
+	}
+	else{
+		cout << "Records updated Successfully!" << endl;
+	}
+
+	return 0;
+}
+
+int Database::callback(void* NotUsed, int argc, char** argv, char** azColName)
+{
+	for (int i = 0; i < argc; i++) {
+		// column name and value
+		cout << azColName[i] << ": " << argv[i] << endl;
+	}
+
+	cout << "finish\n" << endl;
+
+	return 0;
+}
 
 int main()
 {
@@ -137,9 +216,10 @@ int main()
 
     Database dummy("dummy.db");
 
-    dummy.insertData("INSERT INTO player_stats (name, game_type,total_wins, total_losses, \
-        most_won, most_lost, total_money) VALUES('Alex', 'RPS', 35, 53, 10000000, 50, 2222);");
+    dummy.insertData("INSERT INTO player_stats (player_id, host_id, name, game_type,total_wins, total_losses, \
+        most_won, most_lost, total_money) VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222);");
 
+	dummy.selectData("SELECT * FROM player_stats;");
     /*
 	createDB(dir);
 	createTable(dir);
@@ -254,8 +334,9 @@ static int deleteData(const char* s)
 		cerr << "Error in deleteData function." << endl;
 		sqlite3_free(messageError);
 	}
-	else
+	else{
 		cout << "Records deleted Successfully!" << endl;
+	}
 
 	return 0;
 }
@@ -283,7 +364,7 @@ static int selectData(const char* s)
 
 // retrieve contents of database used by selectData()
 /* argc: holds the number of results, argv: holds each value in array, azColName: holds each column returned in array, */
-static int callback(void* NotUsed, int argc, char** argv, char** azColName)
+static int callback1(void* NotUsed, int argc, char** argv, char** azColName)
 {
 	for (int i = 0; i < argc; i++) {
 		// column name and value
