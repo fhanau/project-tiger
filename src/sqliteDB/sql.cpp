@@ -24,6 +24,8 @@ Database::Database(const char* db_dir) {
     directory = db_dir;
 
     // Create the 6 tables
+    // player_stats, game_list, achievements,
+    // players, hosts, games.
     std::string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
         "player_id      INT         NOT NULL, "
         "host_id        INT         NOT NULL, "
