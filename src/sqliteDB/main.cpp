@@ -36,7 +36,7 @@ class Database{
 	int selectData(string command);
 	int updateData(string command);
 	int deleteData(string command);
-	static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+	//int callback(void* NotUsed, int argc, char** argv, char** azColName);
 };
 
 Database::Database(const char* db_dir){
@@ -54,7 +54,8 @@ Database::Database(const char* db_dir){
         "total_losses   INT  		NOT NULL, "
         "most_won       INT  		NOT NULL, "
         "most_lost      INT  		NOT NULL, "
-        "total_money    INT  		NOT NULL );";
+        "total_money    INT  		NOT NULL, "
+		"CONSTRAINT player_host_achievement PRIMARY KEY (player_id, host_id, game_type) );";
 
     this->createTable(command1);
 
@@ -65,7 +66,8 @@ Database::Database(const char* db_dir){
 		"host_id             	INT  NOT NULL, "
 		"winning_player_id      INT  NOT NULL, "
         "result                 TEXT NOT NULL, "
-        "money_won              INT  NOT NULL );";
+        "money_won              INT  NOT NULL, "
+		"CONSTRAINT player_host_achievement PRIMARY KEY (game_id, host_id) );";
 
     this->createTable(command2);
 
@@ -198,7 +200,28 @@ int Database::updateData(string command)
 	return 0;
 }
 
-int Database::callback(void* NotUsed, int argc, char** argv, char** azColName)
+int Database::deleteData(string command){
+	
+	//sqlite3* DB;
+	char* messageError;
+
+	//string sql = "DELETE FROM GRADES;";
+
+	int exit = sqlite3_open(directory, &DB);
+	/* An open database, SQL to be evaluated, Callback function, 1st argument to callback, Error msg written here */
+	exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+	if (exit != SQLITE_OK) {
+		cerr << "Error in deleteData function." << endl;
+		sqlite3_free(messageError);
+	}
+	else{
+		cout << "Records deleted Successfully!" << endl;
+	}
+
+	return 0;
+}
+
+static int callback(void* NotUsed, int argc, char** argv, char** azColName)
 {
 	for (int i = 0; i < argc; i++) {
 		// column name and value
@@ -219,7 +242,12 @@ int main()
     dummy.insertData("INSERT INTO player_stats (player_id, host_id, name, game_type,total_wins, total_losses, \
         most_won, most_lost, total_money) VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222);");
 
-	dummy.selectData("SELECT * FROM player_stats;");
+	dummy.selectData("SELECT * FROM player_stats WHERE player_id = 100;");
+
+	dummy.updateData("UPDATE player_stats SET player_id = 102 WHERE player_id = 100;");
+
+	dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
+
     /*
 	createDB(dir);
 	createTable(dir);
