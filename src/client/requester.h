@@ -3,19 +3,15 @@
 
 #include <string>
 #include <cstdlib>
-#include <sstream>
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
-#include <curlpp/Exception.hpp>
+#include "curlpp/cURLpp.hpp"
+#include "curlpp/Easy.hpp"
+#include "curlpp/Options.hpp"
+
 
 class Requester {
   public:
     std::string createHost(std::string username, std::string password);
     std::string loginHost(std::string username, std::string password);
-    inline Requester() {
-      
-    }
   private:
     curlpp::Cleanup cleaner;
     curlpp::Easy request;

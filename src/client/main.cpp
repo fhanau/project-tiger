@@ -7,7 +7,7 @@
 #include "requester.h"
 
 void handleCreateHost(std::vector<std::string> input, std::string& loggedInUsername,
-Requester req, std::string& session) {
+Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
   } else {
@@ -25,7 +25,7 @@ Requester req, std::string& session) {
 };
 
 void handleLoginHost(std::vector<std::string> input, std::string& loggedInUsername, 
-Requester req, std::string& session) {
+Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
   } else {
@@ -62,7 +62,7 @@ void handleExit() {
 }
 
 void processCleanInput(std::vector<std::string>& cleanInput, std::string& loggedInUsername, 
-Requester req, std::string &session) {
+Requester& req, std::string &session) {
   std::string command = cleanInput[0];
   if (!command.compare("create")) {
     handleCreateHost(cleanInput, loggedInUsername, req, session);
@@ -99,6 +99,7 @@ int validateCommandLinePort(std::string arg) {
     std::cerr << "Number out of range of possible integers: " << arg << '\n';
     handleExit();
   }
+  return EXIT_SUCCESS;
 }
 
 int main(int argc, char** argv) {
@@ -112,7 +113,7 @@ int main(int argc, char** argv) {
   std::string userInput;
   std::vector<std::string> cleanInput;
   Parser clientParser;
-  Requester req(port);
+  Requester req;
   std::string loggedInUsername;
   std::string session;
   std::cout << "Welcome to Project Tiger!\n";
@@ -129,4 +130,5 @@ int main(int argc, char** argv) {
       std::cout << "Invalid command. Type 'help' and hit enter to see a list of valid commands.\n";
     }
   }
+  return EXIT_SUCCESS;
 }
