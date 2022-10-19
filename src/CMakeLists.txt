@@ -14,8 +14,10 @@ set(CURL_INCLUDE_DIR libraries/curl/include)
 set(CURL_LIBRARY libcurl)
 set(CURLPP_BUILD_SHARED_LIBS ON)
 find_package(CURL REQUIRED)
+target_link_libraries(curl CURL::libcurl)
 add_subdirectory(libraries/openssl-cmake)
 add_subdirectory(libraries/curl)
+add_dependencies(libraries/curlpp libraries/curl)
 add_subdirectory(libraries/curlpp)
 
 #While tests are done elsewhere, import them here since they also need the settings above.
