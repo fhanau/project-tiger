@@ -12,20 +12,25 @@ int main(int argc, char** argv) {
   // Create a unique session id based on the app object's location in memory
   // Give this to clients as proof they logged in successfully
 
-  CROW_ROUTE(app, "/")([]() {
-    return "Welcome to Project Tiger";
+  CROW_ROUTE(app, "/")([](const crow::request&, crow::response& response) {
+    response.add_header("Access-Control-Allow-Origin", "*");
+    response.add_header("Access-Control-Allow-Headers", "Content-Type");
+    response.write("Welcome to Project Tiger");
+    response.end();
+    return response;
   });
 
   CROW_ROUTE(app, "/create/<string>/<string>")([](std::string username, std::string password) {
     // This is where SQLWrapper.usernameExists() would be called
-    if (true) {
-      return crow::response("Error: Username is already taken");
-    }
+    //if (true) {
+      //return crow::response("Error: Username is already taken");
+    //}
 
     // This is where the Authenticator.create() method is called
     int isSuccessful = 1;
     
     if (isSuccessful) {
+      std::cout << "Returned successful session: " << getSession() << "\n";
       return crow::response(getSession());
     } else {
       return crow::response("");

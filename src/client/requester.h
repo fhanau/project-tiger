@@ -3,6 +3,8 @@
 
 #include <string>
 #include <cstdlib>
+#include <sstream>
+#include <vector>
 #include "curlpp/cURLpp.hpp"
 #include "curlpp/Easy.hpp"
 #include "curlpp/Options.hpp"
