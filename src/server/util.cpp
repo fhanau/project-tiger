@@ -3,7 +3,6 @@
 #include <string>
 #include <set>
 
-
 int isValidTypeOfPublicRequest(std::string type) {
   std::set<std::string> validTypes = {"games", "total"};
   return validTypes.find(type) != validTypes.end();
@@ -28,6 +27,7 @@ std::string handlePublicRequest(std::string type) {
     return requestPublicGameData();
   }
   // Will have to discuss what types of general information is publicly accessible
+  return "";
 };
 
 std::string getSession() {
@@ -35,9 +35,9 @@ std::string getSession() {
   if (session.size() > 0) {
     return session;
   }
-  uint32_t randomLocationInMemory = 1000;
-  char randomLocationAsLiteral[10];
-  sprintf(randomLocationAsLiteral, "%I64u", &randomLocationInMemory);
+  int randomLocationInMemory = 1000;
+  char randomLocationAsLiteral[9];
+  sprintf(randomLocationAsLiteral, "%p", &randomLocationInMemory);
   session = std::string(randomLocationAsLiteral);
   return session;
 }
