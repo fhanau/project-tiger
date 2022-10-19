@@ -20,11 +20,12 @@ int main(int argc, char** argv) {
     return response;
   });
 
-  CROW_ROUTE(app, "/create/<string>/<string>")([](std::string username, std::string password) {
+  CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)([](std::string username, std::string password) {
     // This is where SQLWrapper.usernameExists() would be called
-    //if (true) {
-      //return crow::response("Error: Username is already taken");
-    //}
+    int usernameExists = 0;
+    if (usernameExists) {
+      return crow::response("Error: Username is already taken");
+    }
 
     // This is where the Authenticator.create() method is called
     int isSuccessful = 1;
