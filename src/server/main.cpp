@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     return resp;
   });
 
-  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type, 
+  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
   std::string sessionId) {
     if (sessionId.compare(getSession()) != 0) {
       return "ERROR: Not logged in.";
