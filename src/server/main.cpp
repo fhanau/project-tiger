@@ -16,9 +16,10 @@ int main(int argc, char** argv) {
     return "Welcome to Project Tiger";
   });
 
-  CROW_ROUTE(app, "/create/<string>/<string>")([](std::string username, std::string password) {
+  CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)([](std::string username, std::string password) {
     // This is where SQLWrapper.usernameExists() would be called
-    if (true) {
+    int usernameExists = 0;
+    if (usernameExists) {
       return crow::response("Error: Username is already taken");
     }
 
@@ -26,6 +27,7 @@ int main(int argc, char** argv) {
     int isSuccessful = 1;
     
     if (isSuccessful) {
+      std::cout << "Returned successful session: " << getSession() << "\n";
       return crow::response(getSession());
     } else {
       return crow::response("");
@@ -66,5 +68,5 @@ int main(int argc, char** argv) {
     return resp;
   });
 
-  app.port(18080).multithreaded().run();
+  app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
 }

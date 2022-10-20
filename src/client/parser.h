@@ -7,15 +7,13 @@
 #include <set>
 #include <vector>
 
-using namespace std;
-
 class Parser {
   public:
-    int verifyInput(string input);
-    vector<string> getCleanInput();
+    int verifyInput(std::string input);
+    std::vector<std::string> getCleanInput();
   private:
-    vector<string> parseWords(string input);
-    vector<string> currentInput;
+    std::vector<std::string> parseWords(std::string input);
+    std::vector<std::string> currentInput;
 };
 
 #endif

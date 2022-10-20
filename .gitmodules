@@ -4,3 +4,12 @@
 [submodule "test/googletest"]
 	path = test/googletest
 	url = https://github.com/google/googletest.git
+[submodule "src/libraries/curlpp"]
+	path = src/libraries/curlpp
+	url = https://github.com/jpbarrette/curlpp.git
+[submodule "src/libraries/openssl-cmake"]
+	path = src/libraries/openssl-cmake
+	url = https://github.com/janbar/openssl-cmake.git
+[submodule "src/libraries/curl"]
+	path = src/libraries/curl
+	url = https://github.com/curl/curl.git
