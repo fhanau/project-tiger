@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     }
   });
 
-  CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username, 
+  CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
   std::string password) {
     // This is where SQLWrapper.isValidHost() would be called
     int isValidLogin = 1;
@@ -53,7 +53,6 @@ int main(int argc, char** argv) {
       resp["errorMessage"] = "Invalid type of request for data.";
       return resp;
     }
-    
     // Function for processing valid type
     std::string result = handlePublicRequest(type);
     if (!result.compare("ERROR")) {
@@ -66,7 +65,8 @@ int main(int argc, char** argv) {
     return resp;
   });
 
-  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type, std::string sessionId) {
+  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type, 
+  std::string sessionId) {
     if (sessionId.compare(getSession()) != 0) {
       return "ERROR: Not logged in.";
     }

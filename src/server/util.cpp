@@ -3,10 +3,12 @@
 #include <string>
 #include <set>
 
+#include "util.h"
+
 int isValidTypeOfPublicRequest(std::string type) {
   std::set<std::string> validTypes = {"games", "total"};
   return validTypes.find(type) != validTypes.end();
-};
+}
 
 std::string requestPublicGameData() {
   // Can simplify by just having very basic information and one query for it
@@ -18,7 +20,7 @@ std::string requestPublicGameData() {
     return "ERROR";
   }
   // Would be set equal to some formatted version of the SQL data table result.
-  std::string publicData = "Public Information: We store game data and crunch numbers :)";
+  std::string publicData = "Public Information: We crunch numbers :)";
   return publicData;
 }
 
@@ -26,9 +28,8 @@ std::string handlePublicRequest(std::string type) {
   if (!type.compare("games")) {
     return requestPublicGameData();
   }
-  // Will have to discuss what types of general information is publicly accessible
   return "";
-};
+}
 
 std::string getSession() {
   static std::string session = "";
@@ -37,7 +38,7 @@ std::string getSession() {
   }
   int randomLocationInMemory = 1000;
   char randomLocationAsLiteral[9];
-  sprintf(randomLocationAsLiteral, "%p", &randomLocationInMemory);
+  snprintf(randomLocationAsLiteral, 9, "%p", &randomLocationInMemory);
   session = std::string(randomLocationAsLiteral);
   return session;
 }
