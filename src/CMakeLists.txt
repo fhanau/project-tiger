@@ -9,20 +9,19 @@ endif()
 
 add_subdirectory(server)
 add_subdirectory(client)
-add_subdirectory(libraries/Crow)
+
 set(CURL_INCLUDE_DIR libraries/curl/include)
 set(CURL_LIBRARY libcurl)
 set(CURLPP_BUILD_SHARED_LIBS OFF)
 add_subdirectory(libraries/openssl-cmake)
 add_subdirectory(libraries/curl)
 
-find_package(CURL REQUIRED)
-find_package(Curlpp REQUIRED)
-
-target_link_libraries(${CMAKE_PROJECT_NAME} CURL::libcurl)
-
+find_package(CURL)
+find_package(CURLPP)
 add_subdirectory(libraries/curlpp)
-
+find_package(asio CONFIG REQUIRED)
+target_link_libraries(main PRIVATE asio asio::asio)
+add_subdirectory(libraries/Crow)
 #While tests are done elsewhere, import them here since they also need the settings above.
 #TODO: Consider moving this CMakeLists to the top level, should be cleaner since it sets up defines shared between src and test and both are isolated in different folders.
 add_subdirectory(../test tests)
