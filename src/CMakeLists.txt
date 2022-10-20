@@ -10,15 +10,6 @@ endif()
 set(DCURL_INCLUDE_DIR "/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl/include")
 set(DCURL_LIBRARY "/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl/lib")
 
-#set(CURL_PATH "/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl")
-#find_library(
-#  LIB_CURL
-#  NAMES
-#    curl
-#  PATHS
-#    ${CURL_PATH}/lib
-#)
-
 find_library(CURL_INCLUDE_DIR libcurl DCURL_INCLUDE_DIR)
 
 add_subdirectory(server)

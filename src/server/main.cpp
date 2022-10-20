@@ -16,7 +16,8 @@ int main(int argc, char** argv) {
     return "Welcome to Project Tiger";
   });
 
-  CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)([](std::string username, std::string password) {
+  CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
+  ([](std::string username, std::string password) {
     // This is where SQLWrapper.usernameExists() would be called
     int usernameExists = 0;
     if (usernameExists) {
@@ -25,7 +26,6 @@ int main(int argc, char** argv) {
 
     // This is where the Authenticator.create() method is called
     int isSuccessful = 1;
-    
     if (isSuccessful) {
       std::cout << "Returned successful session: " << getSession() << "\n";
       return crow::response(getSession());
@@ -34,14 +34,12 @@ int main(int argc, char** argv) {
     }
   });
 
-  CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username, std::string password) {
+  CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username, 
+  std::string password) {
     // This is where SQLWrapper.isValidHost() would be called
-    // Would need to encrypt password with Authenticator.encrypt() first
     int isValidLogin = 1;
     if (isValidLogin) {
-      // Could also return a session token to client as proof of successful login
-      // Token would be required to access private information
-      // Token could be randomly generated everytime the server is started and stored as a global variable
+      // Token required to access specific information
       return crow::response(getSession());
     } else {
       return crow::response("");
@@ -66,6 +64,17 @@ int main(int argc, char** argv) {
     resp["type"] = "public";
     resp["data"] = result;
     return resp;
+  });
+
+  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type, std::string sessionId) {
+    if (sessionId.compare(getSession()) != 0) {
+      return "ERROR: Not logged in.";
+    }
+
+    // SQLWrapper.createGameType(type): SQLWrapper.insert(type)
+
+
+    return "Successfully added gametype.";
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
