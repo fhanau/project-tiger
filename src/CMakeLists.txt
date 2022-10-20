@@ -27,7 +27,7 @@ add_subdirectory(libraries/Crow)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(TIGER PRIVATE Threads::Threads)
+
 add_subdirectory(libraries/sqlite)
 
 add_subdirectory(libraries/curl)
