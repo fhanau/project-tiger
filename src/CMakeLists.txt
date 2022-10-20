@@ -9,9 +9,16 @@ endif()
 
 add_subdirectory(server)
 add_subdirectory(client)
-
+set(CURL_PATH "./libraries/curl/7.85.0-DEV")
+find_library(
+        LIB_CURL
+        NAMES
+            curl
+        PATHS 
+            ${CURL_PATH}/lib)
+set(CURL_VERSION)
 set(CURL_INCLUDE_DIR libraries/curl/include)
-set(CURL_LIBRARY libcurl)
+set(CURL_LIBRARY LIB_CURL)
 set(CURLPP_BUILD_SHARED_LIBS OFF)
 add_subdirectory(libraries/openssl-cmake)
 add_subdirectory(libraries/curl)
