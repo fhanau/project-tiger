@@ -24,6 +24,12 @@ find_library(CURL_INCLUDE_DIR libcurl DCURL_INCLUDE_DIR)
 add_subdirectory(server)
 add_subdirectory(client)
 add_subdirectory(libraries/Crow)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+add_subdirectory(libraries/sqlite)
+
 add_subdirectory(libraries/curl)
 set(CURL_INCLUDE_DIR libraries/curl/include)
 set(CURL_LIBRARY libcurl)
@@ -41,6 +47,7 @@ add_dependencies(all-tests code-tests run-tiger-test)
 add_custom_target(run-tiger-test
   DEPENDS tiger-test
   COMMAND tests/tiger-test || (exit 0))
+
 
 add_custom_target(code-tests)
 add_dependencies(code-tests code-spell code-lint code-analyze)
