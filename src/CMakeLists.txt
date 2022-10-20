@@ -3,11 +3,23 @@ project (TIGER VERSION 0.1)
 set (CMAKE_CXX_STANDARD 17)
 
 if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl/lib -/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl/include -Wextra -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-pessimizing-move -Wno-missing-field-initializers")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DCURL_INCLUDE_DIR -DCURL_LIBRARY -Wextra -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-pessimizing-move -Wno-missing-field-initializers")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -DCURL_INCLUDE_DIR -DCURL_LIBRARY -Wextra -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-pessimizing-move -Wno-missing-field-initializers")
 endif()
 
-find_library(CURL_INCLUDE_DIR libcurl libraries/curl/include)
+set(DCURL_INCLUDE_DIR "/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl/include")
+set(DCURL_LIBRARY "/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl/lib")
+
+#set(CURL_PATH "/home/runner/work/project-tiger/project-tiger/project-tiger/src/libraries/curl")
+#find_library(
+#  LIB_CURL
+#  NAMES
+#    curl
+#  PATHS
+#    ${CURL_PATH}/lib
+#)
+
+find_library(CURL_INCLUDE_DIR libcurl DCURL_INCLUDE_DIR)
 
 add_subdirectory(server)
 add_subdirectory(client)
