@@ -10,6 +10,7 @@ Database getDatabase() {
   static Database sql("db.db");
   return sql;
 }
+
 int isValidTypeOfPublicRequest(std::string type) {
   std::set<std::string> validTypes = {"games", "total"};
   return validTypes.find(type) != validTypes.end();
