@@ -4,5 +4,5 @@
 add_library(my_lib STATIC ../libraries/sqlite/sqlite3.c)
 target_include_directories(my_lib PUBLIC ./)
 
-add_executable(sqliteDB main.cpp sql.h sql.cpp)
+add_executable(sqliteDB main.cpp sql.h sql.cpp ../sqlite/shell.c ../sqlite/sqlite3.c ../sqlite/sqlite3.h ../sqlite/sqlite3ext.h)
 target_link_libraries(sqliteDB PRIVATE my_lib)

@@ -6,23 +6,6 @@
 #include "../libraries/Crow/include/crow.h"
 #include "util.h"
 
-std::string gen_random(const int len) {
-  //Lifted from:
-  //https://stackoverflow.com/questions/440133/how-do-i-create-a-random-alpha-numeric-string-in-c
-  static const char alphanum[] =
-      "0123456789"
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      "abcdefghijklmnopqrstuvwxyz";
-  std::string tmp_s;
-  tmp_s.reserve(len);
-
-  for (int i = 0; i < len; ++i) {
-      tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
-  }
-  
-  return tmp_s;
-}
-
 int main(int argc, char** argv) {
   crow::SimpleApp app;
 
@@ -53,6 +36,17 @@ int main(int argc, char** argv) {
     }
   });
 
+  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
+  std::string sessionId) {
+    if (sessionId.compare(getSession()) != 0) {
+      return "";
+    }
+    std::string values = "'" + type + "');";
+    std::string command = "INSERT INTO games(game_type) VALUES(" + values;
+    getDatabase().insertData(command);
+    return "SUCCESS";
+  });
+
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
     crow::json::wvalue resp({{"type", ""}});
     if (isValidTypeOfPublicRequest(type)) {
@@ -70,18 +64,6 @@ int main(int argc, char** argv) {
     resp["type"] = "public";
     resp["data"] = result;
     return resp;
-  });
-
-  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
-  std::string sessionId) {
-    if (sessionId.compare(getSession()) != 0) {
-      return "";
-    }
-    Database sql("../data/db.db");
-    std::string values = "'" + type + "');";
-    std::string command = "INSERT INTO games(game_type) VALUES(" + values;
-    getDatabase().insertData(command);
-    return "SUCCESS";
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
