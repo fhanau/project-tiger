@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef SRC_CLIENT_PARSER_H
+#define SRC_CLIENT_PARSER_H
 
 #include <iostream>
 #include <memory>
