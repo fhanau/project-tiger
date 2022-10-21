@@ -1,3 +1,5 @@
+#ifndef SRC_SQLITEDB_SQL_H
+#define SRC_SQLITEDB_SQL_H
 #include <stdio.h>
 #include <iostream>
 #include "../libraries/sqlite/sqlite3.h"
@@ -16,3 +18,5 @@ class Database {
     int updateData(std::string command);
     int deleteData(std::string command);
 };
+
+#endif
