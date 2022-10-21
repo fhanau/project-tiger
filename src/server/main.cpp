@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
   ([](std::string username, std::string password) {
     std::string values = "'" + username + "', '" + password + "');";
-    std::string command = "INSERT INTO hosts(host_id, username, password) VALUES(" + values;
+    std::string command = "INSERT INTO hosts(username, password) VALUES(" + values;
     std::string select = "SELECT * FROM hosts;";
     getDatabase().insertData(command);
     getDatabase().selectData(select);
