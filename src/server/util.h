@@ -6,7 +6,6 @@
 #include <set>
 #include "../sqliteDB/sql.h"
 
-std::string gen_random(const int len);
 Database getDatabase();
 int isValidTypeOfPublicRequest(std::string type);
 std::string requestPublicGameData();
