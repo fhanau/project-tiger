@@ -14,7 +14,7 @@ class Database {
 
  public:
     explicit Database(const char* db_dir);
-    //~Database();
+    ~Database();
     int createTable(std::string command);
     int insertData(std::string command);
     int selectData(std::string command);
