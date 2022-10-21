@@ -2,12 +2,9 @@
 #include <memory>
 #include <string>
 #include <set>
-#include <unistd.h>
 
 #include "../libraries/Crow/include/crow.h"
 #include "util.h"
-#include "../libraries/sqlite/sqlite3.h"
-#include "../sqliteDB/sql.h"
 
 std::string gen_random(const int len) {
   //Lifted from:
@@ -38,11 +35,10 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
   ([](std::string username, std::string password) {
-    Database sql("../data/db.db");
     std::string hostId = gen_random(15);
     std::string values = "'"+ hostId + "', '" + username + "', '" + password + "');";
     std::string command = "INSERT INTO hosts(host_id, username, password) VALUES(" + values;
-    sql.insertData(command);
+    getDatabase().insertData(command);
     return crow::response(getSession());
   });
 
@@ -84,7 +80,7 @@ int main(int argc, char** argv) {
     Database sql("../data/db.db");
     std::string values = "'" + type + "');";
     std::string command = "INSERT INTO games(game_type) VALUES(" + values;
-    sql.insertData(command);
+    getDatabase().insertData(command);
     return "SUCCESS";
   });
 
