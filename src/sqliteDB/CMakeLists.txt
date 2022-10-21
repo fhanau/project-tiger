@@ -5,4 +5,4 @@
 #target_include_directories(sqlite3 PUBLIC ./)
 
 add_executable(sqliteDB main.cpp sql.h sql.cpp)
-target_link_libraries(sqliteDB PUBLIC ${CMAKE_DL_LIBS} sqlite3)
+target_link_libraries(sqliteDB PUBLIC ${CMAKE_DL_LIBS} mysqlite3)
