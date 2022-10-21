@@ -2,9 +2,29 @@
 #include <memory>
 #include <string>
 #include <set>
+#include <unistd.h>
 
-#include "crow.h"
+#include "../libraries/Crow/include/crow.h"
 #include "util.h"
+#include "../libraries/sqlite/sqlite3.h"
+#include "../sqliteDB/sql.h"
+
+std::string gen_random(const int len) {
+  //Lifted from:
+  //https://stackoverflow.com/questions/440133/how-do-i-create-a-random-alpha-numeric-string-in-c
+  static const char alphanum[] =
+      "0123456789"
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      "abcdefghijklmnopqrstuvwxyz";
+  std::string tmp_s;
+  tmp_s.reserve(len);
+
+  for (int i = 0; i < len; ++i) {
+      tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+  }
+  
+  return tmp_s;
+}
 
 int main(int argc, char** argv) {
   crow::SimpleApp app;
@@ -18,25 +38,16 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
   ([](std::string username, std::string password) {
-    // This is where SQLWrapper.usernameExists() would be called
-    int usernameExists = 0;
-    if (usernameExists) {
-      return crow::response("Error: Username is already taken");
-    }
-
-    // This is where the Authenticator.create() method is called
-    int isSuccessful = 1;
-    if (isSuccessful) {
-      std::cout << "Returned successful session: " << getSession() << "\n";
-      return crow::response(getSession());
-    } else {
-      return crow::response("");
-    }
+    Database sql("../data/db.db");
+    std::string hostId = gen_random(15);
+    std::string values = "'"+ hostId + "', '" + username + "', '" + password + "');";
+    std::string command = "INSERT INTO hosts(host_id, username, password) VALUES(" + values;
+    sql.insertData(command);
+    return crow::response(getSession());
   });
 
   CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
   std::string password) {
-    // This is where SQLWrapper.isValidHost() would be called
     int isValidLogin = 1;
     if (isValidLogin) {
       // Token required to access specific information
@@ -68,13 +79,13 @@ int main(int argc, char** argv) {
   CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
   std::string sessionId) {
     if (sessionId.compare(getSession()) != 0) {
-      return "ERROR: Not logged in.";
+      return "";
     }
-
-    // SQLWrapper.createGameType(type): SQLWrapper.insert(type)
-
-
-    return "Successfully added gametype.";
+    Database sql("../data/db.db");
+    std::string values = "'" + type + "');";
+    std::string command = "INSERT INTO games(game_type) VALUES(" + values;
+    sql.insertData(command);
+    return "SUCCESS";
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
