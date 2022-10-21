@@ -26,7 +26,7 @@ Database::Database(const char* db_dir) {
     this->createTable(command1);
 
     std::string command2 = "CREATE TABLE IF NOT EXISTS game_list("
-        "game_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "game_id INTEGER AUTOINCREMENT, "
         "game_type              TEXT NOT NULL, "
         "host_CHECK             TEXT NOT NULL, "
         "host_id                INT  NOT NULL, "
