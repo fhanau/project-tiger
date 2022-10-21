@@ -24,7 +24,7 @@ std::string gen_random(const int len) {
 }
 
 Database getDatabase() {
-  static Database sql("../data/db.db");
+  static Database sql("db.db");
   return sql;
 }
 int isValidTypeOfPublicRequest(std::string type) {
