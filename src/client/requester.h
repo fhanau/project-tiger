@@ -1,5 +1,5 @@
-#ifndef REQUESTER_H
-#define REQUESTER_H
+#ifndef SRC_CLIENT_REQUESTER_H
+#define SRC_CLIENT_REQUESTER_H
 
 #include <string>
 #include <cstdlib>
@@ -14,6 +14,7 @@ class Requester {
   public:
     std::string createHost(std::string username, std::string password);
     std::string loginHost(std::string username, std::string password);
+    std::string addGameType(std::string gametype, std::string session);
   private:
     curlpp::Cleanup cleaner;
     curlpp::Easy request;

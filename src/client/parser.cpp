@@ -8,7 +8,7 @@
 #include "parser.h"
 
 int Parser::verifyInput(std::string input) {
-  std::set<std::string> validCommands = {"create", "login", "help", "logout", "exit"};
+  std::set<std::string> validCommands = {"create", "login", "help", "logout", "exit", "gametype"};
   std::vector<std::string> words = parseWords(input);
   if (words.size() < 1) {
     return 0;

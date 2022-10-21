@@ -4,7 +4,9 @@
 #include <memory>
 #include <string>
 #include <set>
+#include "../sqliteDB/sql.h"
 
+Database getDatabase();
 int isValidTypeOfPublicRequest(std::string type);
 std::string requestPublicGameData();
 std::string handlePublicRequest(std::string type);

@@ -4,6 +4,12 @@
 #include <set>
 
 #include "util.h"
+#include "../sqliteDB/sql.h"
+
+Database getDatabase() {
+  static Database sql("db.db");
+  return sql;
+}
 
 int isValidTypeOfPublicRequest(std::string type) {
   std::set<std::string> validTypes = {"games", "total"};

@@ -1,24 +1,12 @@
 #include <stdio.h>
 #include <iostream>
 #include "../libraries/sqlite/sqlite3.h"
+#include "sql.h"
 
-static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-
-class Database{
- private:
-    sqlite3* DB;
-    const char* directory;
-
- public:
-    explicit Database(const char* db_dir);
-    ~Database();
-    int createTable(std::string command);
-    int insertData(std::string command);
-    int selectData(std::string command);
-    int updateData(std::string command);
-    int deleteData(std::string command);
-    // int callback(void* NotUsed, int argc, char** argv, char** azColName);
-};
+//static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+int doesExist(void* NotUsed, int argc, char** argv, char** azColName) {
+  return argc > 0;
+}
 
 Database::Database(const char* db_dir) {
     directory = db_dir;
@@ -36,19 +24,19 @@ Database::Database(const char* db_dir) {
         "most_won       INT         NOT NULL, "
         "most_lost      INT         NOT NULL, "
         "total_money    INT         NOT NULL, "
-        "CONSTRAINT player_host_achievement PRIMARY KEY (player_id, host_id, game_type) );";
+        "CONSTRAINT player_host_gametype PRIMARY KEY (player_id, host_id, game_type) );";
 
     this->createTable(command1);
 
     std::string command2 = "CREATE TABLE IF NOT EXISTS game_list("
-        "game_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "game_id                INT  NOT NULL, "
         "game_type              TEXT NOT NULL, "
         "host_CHECK             TEXT NOT NULL, "
         "host_id                INT  NOT NULL, "
         "winning_player_id      INT  NOT NULL, "
         "result                 TEXT NOT NULL, "
         "money_won              INT  NOT NULL, "
-        "CONSTRAINT player_host_achievement PRIMARY KEY (game_id, host_id) );";
+        "CONSTRAINT game_host PRIMARY KEY (game_id, host_id) );";
 
     this->createTable(command2);
 
@@ -126,6 +114,21 @@ int Database::insertData(std::string command) {
 
     return 0;
 }
+/*
+int Database::createAccount(std::string command) {
+    char* messageError;
+
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), doesExist, 0, &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error when creatingAccount\n";
+	sqlite3_free(messageError);
+    } else {
+        std::cout << "Added to hosts table successfully!\n";
+    }
+
+    return doesExist;
+}*/
 
 int Database::selectData(std::string command) {
     char* messageError;
