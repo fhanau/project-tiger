@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
       return "";
     }
     std::string values = "'" + type + "');";
-    std::string command = "INSERT INTO games(game_type) VALUES(" + values;
+    std::string command = "INSERT INTO games(game_name) VALUES(" + values;
     getDatabase().insertData(command);
     return "SUCCESS";
   });
