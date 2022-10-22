@@ -9,7 +9,8 @@ class Card {
         heart = 0,
         diamond = 1,
         spade = 2,
-        club = 3
+        club = 3,
+        nil
     };
 
     // TODO(Songheng): not sure if needed
@@ -49,5 +50,11 @@ class Card {
     void display() const;
     bool comparator(const Card& card1, const Card& card2) const;
 };
+
+bool operator==(const Card& lhs, const Card& rhs) {
+    return typeid(lhs) == typeid(rhs) 
+        && lhs.getFace() == rhs.getFace()
+        && lhs.getSuit() == rhs.getSuit();
+}
 
 #endif  // SRC_GAME_CARD_H_
