@@ -2,8 +2,8 @@
 #define SRC_GAME_DECK_H_
 
 #include <random>
+#include <algorithm>
 #include <utility>
-#include <list>
 #include <vector>
 
 #include "./card.h"
@@ -11,20 +11,20 @@
 class Deck {
  private:
     bool includeJokers;
-    std::list<Card*> remainingCards;
-    std::list<Card*> dealedCards;
+    int cardCount;
+    std::vector<Card*> remainingCards;
+    std::vector<Card*> dealedCards;
 
  public:
-    Deck();
-    explicit Deck(bool includeJokers);
+    Deck(bool includeJokers=false);
     ~Deck();
     void shuffle();
     void reset();
     // deal single/multiple cards
     Card* dealCards();
-    Card* dealCards(int amount);
+    std::vector<Card*> dealCards(int amount);
     Card* dealGivenCards(Card::Suit suit, Card::Face face);
-    Card* dealGivenCards(const std::vector<std::pair<Card::Suit,
+    std::vector<Card*> dealGivenCards(const std::vector<std::pair<Card::Suit,
         Card::Face>>& cards);
 };
 
