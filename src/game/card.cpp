@@ -4,14 +4,14 @@
 
 #include "./card.h"
 
-Card::Card(Card::Face face, Card::Suit suit)
-:face(face), suit(suit) {}
+Card::Card(Card::Suit suit, Card::Face face)
+:suit(suit), face(face) {}
 
-Card::Card(Card::Face face, Card::Suit suit, std::string& owner)
-:face(face), suit(suit), owner(owner) {}
+Card::Card(Card::Suit suit, Card::Face face, std::string& owner)
+:suit(suit), face(face), owner(owner) {}
 
 Card::Card(const Card& card)
-:face(card.face), suit(card.suit), owner(card.owner) {}
+:suit(card.suit), face(card.face), owner(card.owner) {}
 
 Card::Suit Card::getSuit() const {
     return suit;
@@ -23,6 +23,10 @@ Card::Face Card::getFace() const {
 
 bool Card::isOwned() const {
     return (owner != "");
+}
+
+void Card::setOwner(std::string owner) {
+    this->owner = owner;
 }
 
 std::string Card::getOwner() const {

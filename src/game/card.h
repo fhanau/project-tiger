@@ -13,7 +13,6 @@ class Card {
         nil
     };
 
-    // TODO(Songheng): not sure if needed
     enum Face {
         ace = 1,
         two = 2,
@@ -39,13 +38,14 @@ class Card {
     std::string owner;
 
  public:
-    Card(Face face, Suit suit);
-    Card(Face face, Suit suit, std::string& owner);
+    Card(Suit suit, Face face);
+    Card(Suit suit, Face face, std::string& owner);
     Card(const Card& card);
     ~Card();
     Suit getSuit() const;
     Face getFace() const;
     bool isOwned() const;
+    void setOwner(std::string owner);
     std::string getOwner() const;
     void display() const;
     bool comparator(const Card& card1, const Card& card2) const;
