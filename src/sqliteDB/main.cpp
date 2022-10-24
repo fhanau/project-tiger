@@ -10,7 +10,8 @@ int main() {
     Database dummy("dummy.db");
 
     dummy.insertData("INSERT INTO player_stats(player_id, host_id, name, \
-game_type, total_wins, total_losses, most_won, most_lost, total_money) VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222); ");
+game_type, total_wins, total_losses, most_won, most_lost, total_money) \
+VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222);");
 
     dummy.selectData("SELECT * FROM player_stats WHERE player_id = 100;");
 
@@ -35,7 +36,9 @@ game_type, total_wins, total_losses, most_won, most_lost, total_money) VALUES(10
         while((test = sqlite3_step(x)) != SQLITE_DONE) {
             std::cout << "TEST = " << test << std::endl;
             for(int i = 0; i< col; i++) {
-                std::cout << i << " Columns 9 = " << sqlite3_column_count(x) <<" Num = " << sqlite3_column_type(x, i) << std::endl;
+                std::cout << i << " Columns 9 = " << 
+                sqlite3_column_count(x) <<" Num = " << 
+                sqlite3_column_type(x, i) << std::endl;
                 std::cout << test << std::endl;
             }
 

@@ -23,17 +23,19 @@ int main(int argc, char** argv) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
       std::string values = "'" + username + "', '" + password + "');";
-      std::string command = "INSERT INTO hosts(username, password) VALUES(" + values;
+      std::string command = "INSERT INTO hosts(username, password) VALUES(" 
+      + values;
       getDatabase().insertData(command);
       return crow::response(getSession());
-    } 
+    }
   });
 
   CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
   std::string password) {
     std::string formattedUsername = "username = '" + username + "' AND ";
     std::string formattedPassword = "password = '" + password + "';";
-    std::string command = "SELECT * from hosts WHERE " + formattedUsername + formattedPassword;
+    std::string command = "SELECT * from hosts WHERE " 
+    + formattedUsername + formattedPassword;
     sqlite3_stmt* result = getDatabase().makeStatement(command);
     if (!getDatabase().doesExist(result)) {
       // Token required to access specific information

@@ -180,7 +180,6 @@ int Database::deleteData(std::string command) {
 }
 
 sqlite3_stmt* Database::makeStatement(std::string command) {
-
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     return the_Statement;
 
@@ -211,11 +210,10 @@ DELETE this comment later.
     }
 
 */
-
 }
 
 int doesExist(sqlite3_stmt* statement) {
-    if(sqlite3_step(statement) != SQLITE_DONE) {
+    if (sqlite3_step(statement) != SQLITE_DONE) {
         return 1;
     } else {
         return 0;
