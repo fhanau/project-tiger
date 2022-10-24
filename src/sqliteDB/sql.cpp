@@ -188,7 +188,7 @@ sqlite3_stmt* Database::makeStatement(std::string command) {
     return the_Statement;
 
 /*
-DELETE this comment later.
+DELETE this comment later. 
 - The variable the_Statement will return the first row of the selected query.
 
 - run step(the_Statement to return current row and point to next row after)

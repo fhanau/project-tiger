@@ -42,7 +42,7 @@ game_type, total_wins, total_losses, most_won, most_lost, total_money) VALUES(10
         }
     }
 /*
-    if(test == SQLITE_DONE) {
+    if(test == SQLITE_DONE) { 
         std::cout << "CODE 1" << std::endl;
     }
     else {

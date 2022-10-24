@@ -26,4 +26,5 @@ class Database {
     int doesExist(sqlite3_stmt* statement);
 };
 
+
 #endif
