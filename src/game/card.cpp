@@ -58,8 +58,8 @@ bool Card::comparator(const Card& card1, const Card& card2) const {
     return true;
 }
 
-bool Card::operator==(const Card& rhs) {
-    return typeid(this) == typeid(rhs) 
+bool Card::operator==(const Card& rhs) const {
+    return typeid(*this) == typeid(rhs) 
         && this->getFace() == rhs.getFace()
         && this->getSuit() == rhs.getSuit();
 }

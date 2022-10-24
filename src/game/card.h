@@ -49,7 +49,7 @@ class Card {
     std::string getOwner() const;
     void display() const;
     bool comparator(const Card& card1, const Card& card2) const;
-    bool operator==(const Card& rhs);
+    bool operator==(const Card& rhs) const;
 };
 
 

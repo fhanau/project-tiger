@@ -17,6 +17,10 @@ Deck::~Deck() {
     }
 }
 
+int Deck::getNumReaminingCards() {
+    return remainingCards.size();
+}
+
 void Deck::shuffle() {
     auto rng = std::default_random_engine {};
     std::shuffle(remainingCards.begin(), remainingCards.end(), rng);
@@ -47,7 +51,7 @@ std::vector<Card*> Deck::dealCards(int amount) {
 Card* Deck::dealGivenCards(Card::Suit suit, Card::Face face) {
     for (int i = 0; i < remainingCards.size(); i++) {
         auto card = remainingCards[i];
-        if (*card == Card(face, suit)) {
+        if (*card == Card(suit, face)) {
             dealedCards.push_back(card);
             remainingCards.erase(remainingCards.begin() + i);
             return card;
@@ -79,11 +83,11 @@ void Deck::reset() {
     const Card::Suit suitArr[] = {Card::heart, Card::diamond, Card::spade, Card::club};
     for (auto suit: suitArr) {
         for (int face = 1; face <= 13; face++) {
-            remainingCards.push_back(new Card(static_cast<Card::Face>(face), suit));
+            remainingCards.push_back(new Card(suit, static_cast<Card::Face>(face)));
         }
     }
     if (includeJokers) {
-        remainingCards.push_back(new Card(Card::black_joker, Card::nil));
-        remainingCards.push_back(new Card(Card::red_joker, Card::nil));
+        remainingCards.push_back(new Card(Card::nil, Card::black_joker));
+        remainingCards.push_back(new Card(Card::nil, Card::red_joker));
     }
 }
