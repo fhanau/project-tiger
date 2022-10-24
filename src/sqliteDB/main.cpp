@@ -34,7 +34,7 @@ int main() {
     std::cout << "START\n" << std::endl;
     std::cout << SQLITE_ROW << std::endl;
 
-    if (doesExist2(x) == 0) {
+    if (doesExist(x) == 0) {
         std::cout << "CODE 2: FAILURE" << std::endl;
     } else {
         std::cout << "SUCCESS" << std::endl;
