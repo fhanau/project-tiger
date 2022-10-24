@@ -1,3 +1,4 @@
+include_directories(${CMAKE_SOURCE_DIR}/libraries/sqlite/)
 #add_executable(sqliteDB main.cpp) 
 #target_link_libraries(sqliteDB PRIVATE sqlite::sqlite)
 
