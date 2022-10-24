@@ -21,7 +21,8 @@ Database::Database(const char* db_dir) {
         "most_won       INT         NOT NULL, "
         "most_lost      INT         NOT NULL, "
         "total_money    INT         NOT NULL, "
-        "CONSTRAINT player_host_gametype PRIMARY KEY (player_id, host_id, game_type) );";
+        "CONSTRAINT player_host_gametype PRIMARY KEY "
+        "(player_id, host_id, game_type) );";
 
     this->createTable(command1);
 
@@ -43,7 +44,8 @@ Database::Database(const char* db_dir) {
         "achievement_id     INT  NOT NULL, "
         "description        TEXT NOT NULL, "
         "unlocked           INT  NOT NULL DEFAULT 0, "
-        "CONSTRAINT player_host_achievement PRIMARY KEY (player_id, host_id, achievement_id) );";
+        "CONSTRAINT player_host_achievement PRIMARY KEY "
+        "(player_id, host_id, achievement_id) );";
 
     this->createTable(command3);
 
