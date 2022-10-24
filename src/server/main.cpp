@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     std::string formattedUsername = "username = '" + username + "';";
     std::string findHost = "SELECT * from hosts WHERE " + formattedUsername;
     sqlite3_stmt* result = getDatabase().makeStatement(findHost);
-    if (getDatabase().doesExist(result)) {
+    if (doesExist(result)) {
       // Token required to access specific information
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     std::string command = "SELECT * from hosts WHERE "
     + formattedUsername + formattedPassword;
     sqlite3_stmt* result = getDatabase().makeStatement(command);
-    if (!getDatabase().doesExist(result)) {
+    if (!doesExist(result)) {
       // Token required to access specific information
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
