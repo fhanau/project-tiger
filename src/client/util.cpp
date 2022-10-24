@@ -14,14 +14,14 @@ Requester& req, std::string& session) {
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::string resp = req.createHost(username, password);
-    if (resp.size() > 0) {
+    std::vector<std::string> resp = req.createHost(username, password);
+    if (resp[0].compare("ERROR")) {
       loggedInUsername = username;
-      session = resp;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
-      std::cout << "Session id: " << session << "\n";
     } else {
-      std::cout << "Unsuccessful account creation please try again.\n";
+      std::cout << "Unsuccessful account creation.\n";
+      std::cout << resp[1] << "\n";
     }   
   }
 };
@@ -33,14 +33,15 @@ Requester& req, std::string& session) {
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::string resp = req.loginHost(username, password);
-    if (resp.size() > 0) {
+    std::vector<std::string> resp = req.loginHost(username, password);
+    if (resp[0].compare("ERROR")) {
       loggedInUsername = username;
-      session = resp;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
     } else {
-      std::cout << "Unsuccessful login please try again.\n";
-    }  
+      std::cout << "Unsuccessful login.\n";
+      std::cout << resp[1] << "\n";
+    }   
   }
 };
 

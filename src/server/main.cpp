@@ -15,22 +15,31 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
   ([](std::string username, std::string password) {
-    std::string values = "'" + username + "', '" + password + "');";
-    std::string command = "INSERT INTO hosts(username, password) VALUES(" + values;
-    std::string select = "SELECT * FROM hosts;";
-    getDatabase().insertData(command);
-    getDatabase().selectData(select);
-    return crow::response(getSession());
+    std::string formattedUsername = "username = '" + username + "';";
+    std::string findHost = "SELECT * from hosts WHERE " + formattedUsername;
+    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (getDatabase().doesExist(result)) {
+      // Token required to access specific information
+      return crow::response("ERROR UsernameAlreadyExists");
+    } else {
+      std::string values = "'" + username + "', '" + password + "');";
+      std::string command = "INSERT INTO hosts(username, password) VALUES(" + values;
+      getDatabase().insertData(command);
+      return crow::response(getSession());
+    } 
   });
 
   CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
   std::string password) {
-    int isValidLogin = 1;
-    if (isValidLogin) {
+    std::string formattedUsername = "username = '" + username + "' AND ";
+    std::string formattedPassword = "password = '" + password + "';";
+    std::string command = "SELECT * from hosts WHERE " + formattedUsername + formattedPassword;
+    sqlite3_stmt* result = getDatabase().makeStatement(command);
+    if (!getDatabase().doesExist(result)) {
       // Token required to access specific information
-      return crow::response(getSession());
+      return crow::response("ERROR IncorrectLoginInfo");
     } else {
-      return crow::response("");
+      return crow::response(getSession());
     }
   });
 

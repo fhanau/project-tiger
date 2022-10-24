@@ -4,9 +4,6 @@
 #include "sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-int doesExist(void* NotUsed, int argc, char** argv, char** azColName) {
-  return argc > 0;
-}
 
 Database::Database(const char* db_dir) {
     directory = db_dir;
@@ -217,7 +214,7 @@ DELETE this comment later.
 
 }
 
-int doesExist2(sqlite3_stmt* statement) {
+int doesExist(sqlite3_stmt* statement) {
     if(sqlite3_step(statement) != SQLITE_DONE) {
         return 1;
     } else {
