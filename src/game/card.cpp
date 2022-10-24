@@ -2,12 +2,12 @@
 #include <unordered_map>
 #include <string>
 
-#include "./card.h"
+#include "card.h"
 
 Card::Card(Card::Suit suit, Card::Face face)
 :suit(suit), face(face) {}
 
-Card::Card(Card::Suit suit, Card::Face face, std::string& owner)
+Card::Card(Card::Suit suit, Card::Face face, const std::string& owner)
 :suit(suit), face(face), owner(owner) {}
 
 Card::Card(const Card& card)
@@ -59,7 +59,7 @@ bool Card::comparator(const Card& card1, const Card& card2) const {
 }
 
 bool Card::operator==(const Card& rhs) const {
-    return typeid(*this) == typeid(rhs) 
+    return typeid(*this) == typeid(rhs)
         && this->getFace() == rhs.getFace()
         && this->getSuit() == rhs.getSuit();
 }
