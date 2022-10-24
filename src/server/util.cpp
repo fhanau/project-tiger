@@ -44,7 +44,7 @@ std::string getSession() {
   }
   int randomLocationInMemory = 1000;
   char randomLocationAsLiteral[9];
-  snprintf(randomLocationAsLiteral, sizeof(randomLocationAsLiteral), 
+  snprintf(randomLocationAsLiteral, sizeof(randomLocationAsLiteral),
   "%p", &randomLocationInMemory);
   session = std::string(randomLocationAsLiteral);
   return session;
