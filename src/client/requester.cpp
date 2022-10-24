@@ -9,7 +9,7 @@ std::string Requester::createHost(std::string username, std::string password) {
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
   request.perform();
-  while(response >> tmp) {
+  while (response >> tmp) {
     body.push_back(tmp);
   }
   return body[body.size() - 1];
@@ -24,12 +24,12 @@ std::string Requester::loginHost(std::string username, std::string password) {
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
   request.perform();
-  while(response >> tmp) {
+  while (response >> tmp) {
     body.push_back(tmp);
   }
   return body[body.size() - 1];
 }
-    
+
 std::string Requester::addGameType(std::string gametype, std::string session) {
   std::stringstream response;
   std::string tmp;
@@ -39,7 +39,7 @@ std::string Requester::addGameType(std::string gametype, std::string session) {
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
   request.perform();
-  while(response >> tmp) {
+  while (response >> tmp) {
     body.push_back(tmp);
   }
   return body[body.size() - 1];
