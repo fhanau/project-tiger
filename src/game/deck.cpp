@@ -1,5 +1,5 @@
-#include "./deck.h"
-#include "./card.h"
+#include "deck.h"
+#include "card.h"
 
 Deck::Deck(bool includeJokers) {
     cardCount = (includeJokers ? 54 : 52);
@@ -9,10 +9,10 @@ Deck::Deck(bool includeJokers) {
 }
 
 Deck::~Deck() {
-    for (auto ptr: remainingCards) {
+    for (auto ptr : remainingCards) {
         delete ptr;
     }
-    for (auto ptr: dealedCards) {
+    for (auto ptr : dealedCards) {
         delete ptr;
     }
 }
@@ -63,7 +63,7 @@ Card* Deck::dealGivenCards(Card::Suit suit, Card::Face face) {
 std::vector<Card*> Deck::dealGivenCards(const std::vector<std::pair<Card::Suit,
 Card::Face>>& cards) {
     std::vector<Card*> res;
-    for (auto card: cards) {
+    for (auto card : cards) {
         res.push_back(Deck::dealGivenCards(card.first, card.second));
     }
     return res;
@@ -71,19 +71,22 @@ Card::Face>>& cards) {
 
 void Deck::reset() {
     // clean up existing garbage
-    for (auto ptr: remainingCards) {
+    for (auto ptr : remainingCards) {
         delete ptr;
     }
-    for (auto ptr: dealedCards) {
+    for (auto ptr : dealedCards) {
         delete ptr;
     }
     remainingCards.clear();
     dealedCards.clear();
     // generate a new deck
-    const Card::Suit suitArr[] = {Card::heart, Card::diamond, Card::spade, Card::club};
-    for (auto suit: suitArr) {
+    const Card::Suit suitArr[] = {
+        Card::heart, Card::diamond, Card::spade, Card::club
+    };
+    for (auto suit : suitArr) {
         for (int face = 1; face <= 13; face++) {
-            remainingCards.push_back(new Card(suit, static_cast<Card::Face>(face)));
+            remainingCards.push_back(
+                new Card(suit, static_cast<Card::Face>(face)));
         }
     }
     if (includeJokers) {

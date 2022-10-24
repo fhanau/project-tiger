@@ -39,7 +39,7 @@ class Card {
 
  public:
     Card(Suit suit, Face face);
-    Card(Suit suit, Face face, std::string& owner);
+    Card(Suit suit, Face face, const std::string& owner);
     Card(const Card& card);
     ~Card();
     Suit getSuit() const;
