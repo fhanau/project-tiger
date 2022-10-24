@@ -10,7 +10,7 @@ int main() {
     Database dummy("dummy.db");
     std::string ins1 = "INSERT INTO player_stats(player_id, host_id, ";
     std::string ins2 = "name, game_type, total_wins, total_losses, ";
-    std::string ins3 = "most_won, most_lost, total_money) VALUES(100"; 
+    std::string ins3 = "most_won, most_lost, total_money) VALUES(100";
     std::string ins4 = ", 500, 'Alex', 'RPS', 35, 53, 10000000, 50, ";
     std::string ins5 = "2222)";
     dummy.insertData(ins1 + ins2 + ins3 + ins4 + ins5);
@@ -24,7 +24,9 @@ int main() {
     //dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
 
     sqlite3_stmt* x;
-    x = dummy.makeStatement("SELECT * FROM player_stats WHERE player_id = 2100;");
+    std::string makeStat1 = "SELECT * FROM player_stats WHERE player_id";
+    std::string makeStat2 = " = 2100;";
+    x = dummy.makeStatement(makeStat1 + makeStat2);
     int col = sqlite3_column_count(x);
     int test;
     int count = 0;
@@ -38,7 +40,7 @@ int main() {
         std::cout << "SUCCESS" << std::endl;
         while ((test = sqlite3_step(x)) != SQLITE_DONE) {
             std::cout << "TEST = " << test << std::endl;
-            for(int i = 0; i< col; i++) {
+            for (int i = 0; i< col; i++) {
                 std::cout << i << " Columns 9 = " <<
                 sqlite3_column_count(x) <<" Num = " <<
                 sqlite3_column_type(x, i) << std::endl;
