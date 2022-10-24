@@ -9,9 +9,6 @@
 int main(int argc, char** argv) {
   crow::SimpleApp app;
 
-  // Create a unique session id based on the app object's location in memory
-  // Give this to clients as proof they logged in successfully
-
   CROW_ROUTE(app, "/")([]() {
     return "Welcome to Project Tiger";
   });
