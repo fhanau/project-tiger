@@ -22,7 +22,7 @@ class Database {
     int selectData(std::string command);
     int updateData(std::string command);
     int deleteData(std::string command);
-    int createAccount(std::string command)
+    int createAccount(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
 };
 
