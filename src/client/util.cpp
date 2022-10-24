@@ -2,26 +2,27 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
-
-#include "parser.h"
-#include "requester.h"
-#include "util.h"
+#include "./parser.h"
+#include "./requester.h"
+#include "./util.h"
 
 void handleCreateHost(std::vector<std::string> input,
     std::string& loggedInUsername, Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
+  } else if (loggedInUsername.size() > 0) {
+    std::cout << "Already logged in, please log out first.\n";
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::string resp = req.createHost(username, password);
-    if (resp.size() > 0) {
+    std::vector<std::string> resp = req.createHost(username, password);
+    if (resp[0].compare("ERROR")) {
       loggedInUsername = username;
-      session = resp;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
-      std::cout << "Session id: " << session << "\n";
     } else {
-      std::cout << "Unsuccessful account creation please try again.\n";
+      std::cout << "Unsuccessful account creation.\n";
+      std::cout << resp[1] << "\n";
     }
   }
 }
@@ -30,16 +31,19 @@ void handleLoginHost(std::vector<std::string> input,
     std::string& loggedInUsername, Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
+  } else if (loggedInUsername.size() > 0) {
+    std::cout << "Already logged in. Please log out first.\n";
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::string resp = req.loginHost(username, password);
-    if (resp.size() > 0) {
+    std::vector<std::string> resp = req.loginHost(username, password);
+    if (resp[0].compare("ERROR")) {
       loggedInUsername = username;
-      session = resp;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
     } else {
-      std::cout << "Unsuccessful login please try again.\n";
+      std::cout << "Unsuccessful login.\n";
+      std::cout << resp[1] << "\n";
     }
   }
 }
