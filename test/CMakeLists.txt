@@ -7,8 +7,10 @@ add_executable(
     DatabaseTests.cpp 
     serverApiTests.cpp
     cardTests.cpp
-    ${CMAKE_SOURCE_DIR}/game/card.cpp
     ${CMAKE_SOURCE_DIR}/game/card.h
+    ${CMAKE_SOURCE_DIR}/game/card.cpp
+    ${CMAKE_SOURCE_DIR}/game/deck.h
+    ${CMAKE_SOURCE_DIR}/game/deck.cpp
 )
 
 
