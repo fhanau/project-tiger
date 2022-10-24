@@ -15,7 +15,6 @@ TEST(ServerUtilTest, ReturnsSameUniqueSession) {
   std::string sessionIdFirstCall = getSession();
   std::string sessionIdSecondCall = getSession();
   ASSERT_EQ(sessionIdFirstCall, sessionIdSecondCall);
-<<<<<<< HEAD
 }
 
 TEST(ServerUtilTest, ReturnsSameDatabase) {
@@ -28,6 +27,4 @@ TEST(ServerUtilTest, ReturnsSameDatabase) {
   snprintf(secondLocation, sizeof(secondLocation), "%p", &databaseSecondCall);
   std::string secondMemoryLocationLiteral = std::string(secondLocation);
   ASSERT_EQ(firstMemoryLocationLiteral, secondMemoryLocationLiteral);
-=======
->>>>>>> 58b8acd3fea19e9b4dadfe926c3e0667896b16b0
 }

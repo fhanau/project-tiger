@@ -9,6 +9,7 @@ std::vector<std::string> Requester::createHost(std::string username, std::string
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
   request.perform();
+<<<<<<< HEAD
   int isFirstBodyString = 0;
   while(response >> tmp) {
     if (!isFirstBodyString) {
@@ -28,6 +29,10 @@ std::vector<std::string> Requester::createHost(std::string username, std::string
     if (!tmp.compare("ERROR") || !tmp.compare("SUCCESS")) {
       payload.push_back(tmp);
     }
+=======
+  while (response >> tmp) {
+    body.push_back(tmp);
+>>>>>>> 99ac3ac (Clean up cmake, fix many client linter issues)
   }
   payload.push_back("ERROR");
   payload.push_back("No data from server.");

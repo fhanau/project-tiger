@@ -1,10 +1,9 @@
 #ifndef SRC_SQLITEDB_SQL_H
 #define SRC_SQLITEDB_SQL_H
-
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include "sqlite3.h"
+#include "../libraries/sqlite/sqlite3.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 int doesExist(sqlite3_stmt* statement);

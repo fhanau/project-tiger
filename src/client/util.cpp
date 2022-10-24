@@ -23,7 +23,7 @@ void handleCreateHost(std::vector<std::string> input,
     } else {
       std::cout << "Unsuccessful account creation.\n";
       std::cout << resp[1] << "\n";
-    }
+    }   
   }
 }
 
@@ -44,7 +44,7 @@ void handleLoginHost(std::vector<std::string> input,
     } else {
       std::cout << "Unsuccessful login.\n";
       std::cout << resp[1] << "\n";
-    }
+    }   
   }
 }
 

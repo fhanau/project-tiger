@@ -1,7 +1,8 @@
+
 #include <stdio.h>
 #include <iostream>
-#include "sqlite3.h"
-#include "sql.h"
+#include "../libraries/sqlite/sqlite3.h"
+#include "./sql.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 
