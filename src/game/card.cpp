@@ -13,6 +13,8 @@ Card::Card(Card::Suit suit, Card::Face face, std::string& owner)
 Card::Card(const Card& card)
 :suit(card.suit), face(card.face), owner(card.owner) {}
 
+Card::~Card() {}
+
 Card::Suit Card::getSuit() const {
     return suit;
 }
@@ -54,4 +56,10 @@ void Card::display() const {
 bool Card::comparator(const Card& card1, const Card& card2) const {
     // TODO(Songheng): implement
     return true;
+}
+
+bool Card::operator==(const Card& rhs) {
+    return typeid(this) == typeid(rhs) 
+        && this->getFace() == rhs.getFace()
+        && this->getSuit() == rhs.getSuit();
 }

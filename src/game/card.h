@@ -49,12 +49,8 @@ class Card {
     std::string getOwner() const;
     void display() const;
     bool comparator(const Card& card1, const Card& card2) const;
+    bool operator==(const Card& rhs);
 };
 
-bool operator==(const Card& lhs, const Card& rhs) {
-    return typeid(lhs) == typeid(rhs) 
-        && lhs.getFace() == rhs.getFace()
-        && lhs.getSuit() == rhs.getSuit();
-}
 
 #endif  // SRC_GAME_CARD_H_

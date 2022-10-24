@@ -1,9 +1,6 @@
 #include "gtest/gtest.h"
 
-// TODO: change settings then we can include card directly
-#include "../src/game/card.h"
-#include "../src/game/card.cpp"
-
+#include "card.h"
 
 // class CardTest:public::testing::Test {
 //  protected:
