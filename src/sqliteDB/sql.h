@@ -6,7 +6,7 @@
 #include "../libraries/sqlite/sqlite3.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-int doesExist2(sqlite3_stmt* statement);
+int doesExist(sqlite3_stmt* statement);
 
 class Database {
   private:
@@ -23,7 +23,6 @@ class Database {
     int updateData(std::string command);
     int deleteData(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
-    int doesExist(sqlite3_stmt* statement);
 };
 
 #endif
