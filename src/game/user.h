@@ -6,7 +6,7 @@
 class User {
  private:
     std::string username;
-    // TODO: add other fields 
+    // TODO: add other fields
 
  public:
     User();
