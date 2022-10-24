@@ -4,7 +4,7 @@
 #include <set>
 
 #include "../libraries/Crow/include/crow.h"
-#include "/src/server/util.h"
+#include "util.h"
 
 int main(int argc, char** argv) {
   crow::SimpleApp app;
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     std::string formattedPassword = "password = '" + password + "';";
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
-    //sqlite3_stmt* result = getDatabase().makeStatement(command);
+    // sqlite3_stmt* result = getDatabase().makeStatement(command);
     if (!getDatabase().checkLoginInfo(findHost)) {
       // Token required to access specific information
       return crow::response("ERROR IncorrectLoginInfo");

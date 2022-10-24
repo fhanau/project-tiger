@@ -3,7 +3,7 @@
 #include <string>
 #include <set>
 
-#include "src/server/util.h"
+#include "util.h"
 #include "../sqliteDB/sql.h"
 
 Database getDatabase() {
