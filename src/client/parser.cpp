@@ -8,7 +8,8 @@
 #include "parser.h"
 
 int Parser::verifyInput(std::string input) {
-  std::set<std::string> validCommands = {"create", "login", "help", "logout", "exit", "gametype"};
+  std::set<std::string> validCommands = {"create", "login", "help", "logout",
+    "exit"};
   std::vector<std::string> words = parseWords(input);
   if (words.size() < 1) {
     return 0;
@@ -21,11 +22,11 @@ int Parser::verifyInput(std::string input) {
     currentInput.clear();
     return 0;
   }
-};
+}
 
 std::vector<std::string> Parser::getCleanInput() {
   return currentInput;
-};
+}
 
 std::vector<std::string> Parser::parseWords(std::string input) {
   const char* delimiter = " ";
@@ -36,4 +37,4 @@ std::vector<std::string> Parser::parseWords(std::string input) {
       token = strtok(nullptr, delimiter);
   }
   return words;
-};
+}

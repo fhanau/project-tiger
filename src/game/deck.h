@@ -18,6 +18,7 @@ class Deck {
  public:
     Deck(bool includeJokers=false);
     ~Deck();
+	int getNumReaminingCards();
     void shuffle();
     void reset();
     // deal single/multiple cards
