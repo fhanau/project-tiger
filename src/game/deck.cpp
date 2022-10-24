@@ -1,5 +1,5 @@
-#include "src/game/deck.h"
-#include "src/game/card.h"
+#include "deck.h"
+#include "card.h"
 
 Deck::Deck(bool includeJokers) {
     cardCount = (includeJokers ? 54 : 52);
@@ -9,12 +9,16 @@ Deck::Deck(bool includeJokers) {
 }
 
 Deck::~Deck() {
-    for (auto ptr: remainingCards) {
+    for (auto ptr : remainingCards) {
         delete ptr;
     }
-    for (auto ptr: dealedCards) {
+    for (auto ptr : dealedCards) {
         delete ptr;
     }
+}
+
+int Deck::getNumReaminingCards() {
+    return remainingCards.size();
 }
 
 void Deck::shuffle() {
@@ -47,7 +51,7 @@ std::vector<Card*> Deck::dealCards(int amount) {
 Card* Deck::dealGivenCards(Card::Suit suit, Card::Face face) {
     for (int i = 0; i < remainingCards.size(); i++) {
         auto card = remainingCards[i];
-        if (*card == Card(face, suit)) {
+        if (*card == Card(suit, face)) {
             dealedCards.push_back(card);
             remainingCards.erase(remainingCards.begin() + i);
             return card;
@@ -59,7 +63,7 @@ Card* Deck::dealGivenCards(Card::Suit suit, Card::Face face) {
 std::vector<Card*> Deck::dealGivenCards(const std::vector<std::pair<Card::Suit,
 Card::Face>>& cards) {
     std::vector<Card*> res;
-    for (auto card: cards) {
+    for (auto card : cards) {
         res.push_back(Deck::dealGivenCards(card.first, card.second));
     }
     return res;
@@ -67,23 +71,26 @@ Card::Face>>& cards) {
 
 void Deck::reset() {
     // clean up existing garbage
-    for (auto ptr: remainingCards) {
+    for (auto ptr : remainingCards) {
         delete ptr;
     }
-    for (auto ptr: dealedCards) {
+    for (auto ptr : dealedCards) {
         delete ptr;
     }
     remainingCards.clear();
     dealedCards.clear();
     // generate a new deck
-    const Card::Suit suitArr[] = {Card::heart, Card::diamond, Card::spade, Card::club};
-    for (auto suit: suitArr) {
+    const Card::Suit suitArr[] = {
+        Card::heart, Card::diamond, Card::spade, Card::club
+    };
+    for (auto suit : suitArr) {
         for (int face = 1; face <= 13; face++) {
-            remainingCards.push_back(new Card(static_cast<Card::Face>(face), suit));
+            remainingCards.push_back(
+                new Card(suit, static_cast<Card::Face>(face)));
         }
     }
     if (includeJokers) {
-        remainingCards.push_back(new Card(Card::black_joker, Card::nil));
-        remainingCards.push_back(new Card(Card::red_joker, Card::nil));
+        remainingCards.push_back(new Card(Card::nil, Card::black_joker));
+        remainingCards.push_back(new Card(Card::nil, Card::red_joker));
     }
 }
