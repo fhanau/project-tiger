@@ -2,50 +2,54 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
+#include "./parser.h"
+#include "./requester.h"
+#include "./util.h"
 
-#include "parser.h"
-#include "requester.h"
-#include "util.h"
-
-void handleCreateHost(std::vector<std::string> input, std::string& loggedInUsername,
-Requester& req, std::string& session) {
+void handleCreateHost(std::vector<std::string> input,
+    std::string& loggedInUsername, Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
+  } else if (loggedInUsername.size() > 0) {
+    std::cout << "Already logged in, please log out first.\n";
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::string resp = req.createHost(username, password);
-    if (resp.size() > 0) {
+    std::vector<std::string> resp = req.createHost(username, password);
+    if (resp[0].compare("ERROR")) {
       loggedInUsername = username;
-      session = resp;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
-      std::cout << "Session id: " << session << "\n";
     } else {
-      std::cout << "Unsuccessful account creation please try again.\n";
+      std::cout << "Unsuccessful account creation.\n";
+      std::cout << resp[1] << "\n";
     }   
   }
-};
+}
 
-void handleLoginHost(std::vector<std::string> input, std::string& loggedInUsername, 
-Requester& req, std::string& session) {
+void handleLoginHost(std::vector<std::string> input,
+    std::string& loggedInUsername, Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
+  } else if (loggedInUsername.size() > 0) {
+    std::cout << "Already logged in. Please log out first.\n";
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::string resp = req.loginHost(username, password);
-    if (resp.size() > 0) {
+    std::vector<std::string> resp = req.loginHost(username, password);
+    if (resp[0].compare("ERROR")) {
       loggedInUsername = username;
-      session = resp;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
     } else {
-      std::cout << "Unsuccessful login please try again.\n";
-    }  
+      std::cout << "Unsuccessful login.\n";
+      std::cout << resp[1] << "\n";
+    }   
   }
-};
+}
 
-void handleAddGameType(std::vector<std::string> input, std::string& loggedInUsername, 
-Requester& req, std::string& session) {
+void handleAddGameType(std::vector<std::string> input,
+    std::string& loggedInUsername, Requester& req, std::string& session) {
   if (input.size() != 2) {
     std::cout << "Invalid input for uploading type of game.\n";
   } else if (loggedInUsername.size() == 0) {
@@ -69,21 +73,21 @@ void displayHelp() {
   std::cout << "gametype <string: name of game>\n";
   std::cout << "logout\n";
   std::cout << "exit\n";
-};
+}
 
 void handleLogoutHost(std::string& loggedInUsername, std::string& session) {
   std::cout << "Successfully logged out of " << loggedInUsername << ".\n";
   loggedInUsername = "";
   session = "";
-};
+}
 
 void handleExit() {
   std::cout << "Exiting client.\n";
   exit(0);
 }
 
-void processCleanInput(std::vector<std::string>& cleanInput, std::string& loggedInUsername, 
-Requester& req, std::string &session) {
+void processCleanInput(std::vector<std::string>& cleanInput,
+    std::string& loggedInUsername, Requester& req, std::string &session) {
   std::string command = cleanInput[0];
   if (!command.compare("create")) {
     handleCreateHost(cleanInput, loggedInUsername, req, session);
@@ -98,4 +102,4 @@ Requester& req, std::string &session) {
   } else if (!command.compare("exit")) {
     handleExit();
   }
-};
+}

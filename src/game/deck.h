@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "./card.h"
+#include "card.h"
 
 class Deck {
  private:
@@ -16,8 +16,9 @@ class Deck {
     std::vector<Card*> dealedCards;
 
  public:
-    Deck(bool includeJokers=false);
+    Deck(bool includeJokers = false);
     ~Deck();
+    int getNumReaminingCards();
     void shuffle();
     void reset();
     // deal single/multiple cards
