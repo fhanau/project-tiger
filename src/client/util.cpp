@@ -2,15 +2,16 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
-
-#include "parser.h"
-#include "requester.h"
-#include "util.h"
+#include "./parser.h"
+#include "./requester.h"
+#include "./util.h"
 
 void handleCreateHost(std::vector<std::string> input, std::string& loggedInUsername,
 Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
+  } else if (loggedInUsername.size() > 0) {
+    std::cout << "Already logged in, please log out first.\n";
   } else {
     std::string username = input[1];
     std::string password = input[2];
@@ -30,6 +31,8 @@ void handleLoginHost(std::vector<std::string> input, std::string& loggedInUserna
 Requester& req, std::string& session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
+  } else if (loggedInUsername.size() > 0) {
+    std::cout << "Already logged in. Please log out first.\n";
   } else {
     std::string username = input[1];
     std::string password = input[2];

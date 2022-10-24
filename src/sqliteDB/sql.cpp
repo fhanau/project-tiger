@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <iostream>
 #include "../libraries/sqlite/sqlite3.h"
-#include "sql.h"
+#include "./sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
-    int *c = (int *)count;
+    int *c = reinterpret_cast<int *>(count);
     *c = atoi(argv[0]);
     return 0;
 }
@@ -120,18 +120,19 @@ int Database::insertData(std::string command) {
     return 0;
 }
 
-int Database::createAccount(std::string command) {
+int Database::checkLoginInfo(std::string command) {
     char* messageError;
     int count = 0;
     int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count, &messageError);
+    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count, 
+      &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error when creatingAccount\n";
-	    sqlite3_free(messageError);
+      std::cerr << "Error when checking host information\n";
+	  sqlite3_free(messageError);
     }
-
     return count;
 }
+
 
 int Database::selectData(std::string command) {
     char* messageError;
