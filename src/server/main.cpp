@@ -24,9 +24,10 @@ int main(int argc, char** argv) {
     } else {
       std::string values = "'" + username + "', '" + password + "');";
       std::string command = "INSERT INTO hosts(username, password) VALUES("
-      + values;
+        + values;
       getDatabase().insertData(command);
-      return crow::response(getSession());
+      std::string validResponse = "SUCCESS " + getSession();
+      return crow::response(validResponse);
     }
   });
 
@@ -35,25 +36,26 @@ int main(int argc, char** argv) {
     std::string formattedUsername = "username = '" + username + "' AND ";
     std::string formattedPassword = "password = '" + password + "';";
     std::string command = "SELECT * from hosts WHERE "
-    + formattedUsername + formattedPassword;
+      + formattedUsername + formattedPassword;
     sqlite3_stmt* result = getDatabase().makeStatement(command);
     if (!doesExist(result)) {
       // Token required to access specific information
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
-      return crow::response(getSession());
+      std::string validResponse = "SUCCESS " + getSession();
+      return crow::response(validResponse);
     }
   });
 
   CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
   std::string sessionId) {
     if (sessionId.compare(getSession()) != 0) {
-      return "";
+      return crow::response("ERROR NotLoggedIn");
     }
     std::string values = "'" + type + "');";
     std::string command = "INSERT INTO games(game_name) VALUES(" + values;
     getDatabase().insertData(command);
-    return "SUCCESS";
+    return crow::response("SUCCESS Complete");
   });
 
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
