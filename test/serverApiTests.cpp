@@ -20,7 +20,11 @@ TEST(ServerUtilTest, ReturnsSameUniqueSession) {
 TEST(ServerUtilTest, ReturnsSameDatabase) {
   Database databaseFirstCall = getDatabase();
   Database databaseSecondCall = getDatabase();
-  Database* firstCallPointer = &databaseFirstCall;
-  Database* secondCallPointer = &databaseSecondCall;
-  ASSERT_EQ(databaseFirstCall, databaseSecondCall);
+  char firstLocation[9];
+  snprintf(firstLocation, sizeof(firstLocation), "%p", &databaseFirstCall);
+  std::string firstMemoryLocationLiteral = std::string(firstLocation);
+  char secondLocation[9];
+  snprintf(secondLocation, sizeof(secondLocation), "%p", &databaseSecondCall);
+  std::string secondMemoryLocationLiteral = std::string(secondLocation);
+  ASSERT_EQ(firstMemoryLocationLiteral, secondMemoryLocationLiteral);
 }
