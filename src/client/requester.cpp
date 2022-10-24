@@ -44,3 +44,5 @@ std::string Requester::addGameType(std::string gametype, std::string session) {
   }
   return body[body.size() - 1];
 }
+
+std
