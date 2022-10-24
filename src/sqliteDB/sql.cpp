@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "../libraries/sqlite/sqlite3.h"
-#include "./sql.h"
+#include "src/sqliteDB/sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 
@@ -124,11 +124,11 @@ int Database::checkLoginInfo(std::string command) {
     char* messageError;
     int count = 0;
     int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count, 
+    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
       std::cerr << "Error when checking host information\n";
-	  sqlite3_free(messageError);
+      sqlite3_free(messageError);
     }
     return count;
 }
