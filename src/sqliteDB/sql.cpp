@@ -4,8 +4,11 @@
 #include "sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-int doesExist(void* NotUsed, int argc, char** argv, char** azColName) {
-  return argc > 0;
+
+static int countCallback(void *count, int argc, char **argv, char **azColName) {
+    int *c = reinterpret_cast<int *>(count);
+    *c = atoi(argv[0]);
+    return 0;
 }
 
 Database::Database(const char* db_dir) {
@@ -24,7 +27,8 @@ Database::Database(const char* db_dir) {
         "most_won       INT         NOT NULL, "
         "most_lost      INT         NOT NULL, "
         "total_money    INT         NOT NULL, "
-        "CONSTRAINT player_host_gametype PRIMARY KEY (player_id, host_id, game_type) );";
+        "CONSTRAINT player_host_gametype PRIMARY KEY "
+        "(player_id, host_id, game_type) );";
 
     this->createTable(command1);
 
@@ -46,7 +50,8 @@ Database::Database(const char* db_dir) {
         "achievement_id     INT  NOT NULL, "
         "description        TEXT NOT NULL, "
         "unlocked           INT  NOT NULL DEFAULT 0, "
-        "CONSTRAINT player_host_achievement PRIMARY KEY (player_id, host_id, achievement_id) );";
+        "CONSTRAINT player_host_achievement PRIMARY KEY "
+        "(player_id, host_id, achievement_id) );";
 
     this->createTable(command3);
 
@@ -114,21 +119,20 @@ int Database::insertData(std::string command) {
 
     return 0;
 }
-/*
-int Database::createAccount(std::string command) {
+
+int Database::checkLoginInfo(std::string command) {
     char* messageError;
-
+    int count = 0;
     int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), doesExist, 0, &messageError);
+    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
+      &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error when creatingAccount\n";
-	sqlite3_free(messageError);
-    } else {
-        std::cout << "Added to hosts table successfully!\n";
+      std::cerr << "Error when checking host information\n";
+      sqlite3_free(messageError);
     }
+    return count;
+}
 
-    return doesExist;
-}*/
 
 int Database::selectData(std::string command) {
     char* messageError;
@@ -183,7 +187,6 @@ int Database::deleteData(std::string command) {
 }
 
 sqlite3_stmt* Database::makeStatement(std::string command) {
-
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     return the_Statement;
 
@@ -214,11 +217,10 @@ DELETE this comment later.
     }
 
 */
-
 }
 
-int doesExist2(sqlite3_stmt* statement) {
-    if(sqlite3_step(statement) != SQLITE_DONE) {
+int doesExist(sqlite3_stmt* statement) {
+    if (sqlite3_step(statement) != SQLITE_DONE) {
         return 1;
     } else {
         return 0;

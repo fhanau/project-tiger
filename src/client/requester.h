@@ -12,8 +12,8 @@
 
 class Requester {
   public:
-    std::string createHost(std::string username, std::string password);
-    std::string loginHost(std::string username, std::string password);
+    std::vector<std::string> createHost(std::string username, std::string password);
+    std::vector<std::string> loginHost(std::string username, std::string password);
     std::string addGameType(std::string gametype, std::string session);
   private:
     curlpp::Cleanup cleaner;
