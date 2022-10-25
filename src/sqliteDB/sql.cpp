@@ -7,7 +7,7 @@
 static int existsCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
     *c = 1;
-    return 1;
+    return 0;
 }
 
 Database::Database(const char* db_dir) {
