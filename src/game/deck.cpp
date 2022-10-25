@@ -17,7 +17,7 @@ Deck::~Deck() {
     }
 }
 
-int Deck::getNumReaminingCards() {
+int Deck::getNumRemainingCards() const {
     return remainingCards.size();
 }
 
