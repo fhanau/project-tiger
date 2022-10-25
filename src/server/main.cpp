@@ -98,6 +98,7 @@ int main(int argc, char** argv) {
       int totalGames = getDatabase().totalRows(command);
       return std::to_string(totalGames);
     }
+    return std::to_string("-1");
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
