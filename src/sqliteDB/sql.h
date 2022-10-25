@@ -17,6 +17,7 @@ class Database {
     sqlite3_stmt* the_Statement;
 
  public:
+    // Create a database
     explicit Database(const char* db_dir);
     ~Database();
     int createTable(std::string command);
@@ -31,3 +32,4 @@ class Database {
 };
 
 #endif
+

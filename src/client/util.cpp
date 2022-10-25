@@ -2,9 +2,9 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
-#include "./parser.h"
-#include "./requester.h"
-#include "./util.h"
+#include "parser.h"
+#include "requester.h"
+#include "util.h"
 
 void handleCreateHost(std::vector<std::string> input,
     std::string& loggedInUsername, Requester& req, std::string& session) {

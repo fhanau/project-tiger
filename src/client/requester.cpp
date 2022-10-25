@@ -1,6 +1,7 @@
 #include "requester.h"
 
-std::vector<std::string> Requester::createHost(std::string username, std::string password) {
+std::vector<std::string> Requester::createHost(std::string username,
+    std::string password) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> payload;
@@ -10,7 +11,7 @@ std::vector<std::string> Requester::createHost(std::string username, std::string
   request.setOpt(new curlpp::options::WriteStream(&response));
   request.perform();
   int isFirstBodyString = 0;
-  while(response >> tmp) {
+  while (response >> tmp) {
     if (!isFirstBodyString) {
       isFirstBodyString = 1;
       if (tmp.compare("ERROR") && tmp.compare("SUCCESS")) {
@@ -34,7 +35,8 @@ std::vector<std::string> Requester::createHost(std::string username, std::string
   return payload;
 }
 
-std::vector<std::string> Requester::loginHost(std::string username, std::string password) {
+std::vector<std::string> Requester::loginHost(std::string username,
+    std::string password) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> payload;
@@ -83,7 +85,7 @@ std::string Requester::addGameType(std::string gametype, std::string session) {
   return body[body.size() - 1];
 }
 
-std::vector<std::string> Requester::uploadGameData(std::string session, 
+std::vector<std::string> Requester::uploadGameData(std::string session,
   std::string type, std::string host, std::string user,
   std::string result, std::string earning) {
     std::stringstream response;

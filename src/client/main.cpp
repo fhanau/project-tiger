@@ -16,7 +16,8 @@ int main(int argc, char** argv) {
   std::string loggedInUsername;
   std::string session;
   std::cout << "Welcome to Project Tiger!\n";
-  std::cout << "A list of commands can be displayed by typing 'help' and hitting enter.\n";
+  std::cout << "A list of commands can be displayed by typing 'help' and "
+    "hitting enter.\n";
   std::cout << "Otherwise you can begin entering commands.\n";
   while (true) {
     std::cout << ">" << " ";
@@ -26,7 +27,8 @@ int main(int argc, char** argv) {
       cleanInput = clientParser.getCleanInput();
       processCleanInput(cleanInput, loggedInUsername, req, session);
     } else {
-      std::cout << "Invalid command. Type 'help' and hit enter to see a list of valid commands.\n";
+      std::cout << "Invalid command. Type 'help' and hit enter to see a list "
+        "of valid commands.\n";
     }
   }
   return EXIT_SUCCESS;
