@@ -1,5 +1,6 @@
 #include "deck.h"
 #include "card.h"
+#include <stdexcept>
 
 Deck::Deck(bool includeJokers) {
     cardCount = (includeJokers ? 54 : 52);
@@ -27,6 +28,7 @@ void Deck::shuffle() {
 }
 
 Card* Deck::dealCards() {
+    // Check if cards are available, then deal the last card
     if (remainingCards.size()) {
         auto card = remainingCards.back();
         dealedCards.push_back(card);

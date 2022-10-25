@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <iostream>
-#include "sqlite3.h"
 #include "sql.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
@@ -11,7 +10,7 @@ int main() {
     std::string ins2 = "name, game_type, total_wins, total_losses, ";
     std::string ins3 = "most_won, most_lost, total_money) VALUES(100";
     std::string ins4 = ", 500, 'Alex', 'RPS', 35, 53, 10000000, 50, ";
-    std::string ins5 = "2222)";
+    std::string ins5 = "2222);";
     dummy.insertData(ins1 + ins2 + ins3 + ins4 + ins5);
 
     dummy.selectData("SELECT * FROM player_stats WHERE player_id = 100;");
