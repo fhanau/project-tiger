@@ -7,7 +7,7 @@ The data we will be accumulating will be records/milestones per user (such as be
 ## API
 The server can be accessed on port 18080 using the following API. At present, all API methods are implemented using HTTP GET requests using CROW on the server side and curl for the example clients.  
 
-```/``` URL used to test that the interface works, returns "Welcome to Project Tiger" if the server is working.  
+```/URL```  used to test that the interface works, returns "Welcome to Project Tiger" if the server is working.  
 
 ```/create/<username:string>/<password:string>``` Create a user with the given name and password. This and the following interfaces will be updated to support improved authentication in the second iteration. Returns an error if the user already exists.  
 
