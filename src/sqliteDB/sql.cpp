@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <iostream>
-#include "sqlite3.h"
+#include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
-//static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+// static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 int doesExist(void* NotUsed, int argc, char** argv, char** azColName) {
   return argc > 0;
 }
@@ -31,7 +31,6 @@ Database::Database(const char* db_dir) {
     std::string command2 = "CREATE TABLE IF NOT EXISTS game_list("
         "game_id                INT  NOT NULL, "
         "game_type              TEXT NOT NULL, "
-        "host_CHECK             TEXT NOT NULL, "
         "host_id                INT  NOT NULL, "
         "winning_player_id      INT  NOT NULL, "
         "result                 TEXT NOT NULL, "
@@ -183,7 +182,6 @@ int Database::deleteData(std::string command) {
 }
 
 sqlite3_stmt* Database::makeStatement(std::string command) {
-
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     return the_Statement;
 
@@ -214,15 +212,24 @@ DELETE this comment later.
     }
 
 */
-
 }
 
 int doesExist2(sqlite3_stmt* statement) {
-    if(sqlite3_step(statement) != SQLITE_DONE) {
+    if (sqlite3_step(statement) != SQLITE_DONE) {
+        sqlite3_reset(statement);
         return 1;
     } else {
         return 0;
     }
+}
+
+int Database::getMax(std::string table_name, std::string col_name) {
+    std::string command = "SELECT MAX(" + col_name + ") FROM " + table_name;
+    sqlite3_stmt* stmt = makeStatement(command);
+    sqlite3_step(stmt);
+
+    int the_max = sqlite3_column_int(stmt, 0);
+    return the_max;
 }
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName) {

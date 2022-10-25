@@ -4,13 +4,13 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include "sqlite3.h"
+#include "../libraries/sqlite/sqlite3.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 int doesExist2(sqlite3_stmt* statement);
 
 class Database {
-  private:
+ private:
     sqlite3* DB;
     const char* directory;
     sqlite3_stmt* the_Statement;
@@ -25,6 +25,7 @@ class Database {
     int deleteData(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
     int doesExist(sqlite3_stmt* statement);
+    int getMax(std::string table_name, std::string col_name);
 };
 
 

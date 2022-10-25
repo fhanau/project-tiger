@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "sqlite3.h"
+#include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
@@ -10,16 +10,16 @@ int main() {
     Database dummy("dummy.db");
 
     dummy.insertData("INSERT INTO player_stats(player_id, host_id, name, \
-game_type, total_wins, total_losses, most_won, most_lost, total_money) VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222); ");
+game_type, total_wins, total_losses, most_won, most_lost, total_money) VALUES(200, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222); ");
 
     dummy.selectData("SELECT * FROM player_stats WHERE player_id = 100;");
 
     dummy.updateData("UPDATE player_stats SET player_id = 102 WHERE player_id = 100;");
 
-    //dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
+    // dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
 
     sqlite3_stmt* x;
-    x = dummy.makeStatement("SELECT * FROM player_stats WHERE player_id = 2100;");
+    x = dummy.makeStatement("SELECT * FROM player_stats WHERE player_id = 200;");
     int col = sqlite3_column_count(x);
     int test;
     int count = 0;
@@ -27,20 +27,22 @@ game_type, total_wins, total_losses, most_won, most_lost, total_money) VALUES(10
     std::cout << "START\n" << std::endl;
     std::cout << SQLITE_ROW << std::endl;
 
-    if(doesExist2(x) == 0) {
+    if (doesExist2(x) == 0) {
         std::cout << "CODE 2: FAILURE" << std::endl;
-    }
-    else {
+    } else {
         std::cout << "SUCCESS" << std::endl;
-        while((test = sqlite3_step(x)) != SQLITE_DONE) {
+        while ((test = sqlite3_step(x)) != SQLITE_DONE) {
             std::cout << "TEST = " << test << std::endl;
-            for(int i = 0; i< col; i++) {
+            for (int i = 0; i< col; i++) {
                 std::cout << i << " Columns 9 = " << sqlite3_column_count(x) <<" Num = " << sqlite3_column_type(x, i) << std::endl;
                 std::cout << test << std::endl;
             }
-
         }
     }
+    std::cout << "TEST FINAL = " << test << std::endl;
+    int test_max = dummy.getMax("player_stats", "player_id");// + 1;
+    std::cout << "The max should be 201: " << test_max <<std::endl;
+
 /*
     if(test == SQLITE_DONE) { 
         std::cout << "CODE 1" << std::endl;
