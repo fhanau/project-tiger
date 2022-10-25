@@ -6,7 +6,7 @@
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
-    *c = atoi(argv[0]);
+    ++*c;
     return 0;
 }
 
@@ -194,9 +194,7 @@ int Database::entryExists(std::string command) {
     int exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &row, 0);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in entryExists function." << std::endl;
-        if (errorMsg) {
-            sqlite3_free(errorMsg);
-        }
+        sqlite3_free(errorMsg);
     }
     exit = sqlite3_step(row);
     return exit == SQLITE_ROW;
