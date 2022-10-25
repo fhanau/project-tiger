@@ -6,7 +6,6 @@ int getNumTotalUsers(Database& db) {
     sqlite3_stmt* res = db.makeStatement(
         "SELECT COUNT(*) FROM players;");
     sqlite3_step(res);
-    std::cout << "!!!!!! " << sqlite3_column_int(res, 0) << " !!!!!!\n";
     return sqlite3_column_int(res, 0);
 }
 
@@ -23,4 +22,3 @@ int getNumGames(Database& db, const std::string& game_type) {
     sqlite3_step(res);
     return sqlite3_column_int(res, 0);
 }
-
