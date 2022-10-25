@@ -26,6 +26,7 @@ class Database {
     int checkLoginInfo(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
     int getMax(std::string table_name, std::string col_name);
+    int Database::totalRows(std::string command);
 };
 
 #endif
