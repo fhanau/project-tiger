@@ -15,13 +15,14 @@ class Database {
   sqlite3* DB;
   const char* directory;
   sqlite3_stmt* the_Statement;
+
  public:
   // Create a database stored in file db_dir
   explicit Database(const char* db_dir);
   ~Database();
   // Create an SQL table using schema described in command
   int createTable(std::string command);
-  // Insert data values into SQL table 
+  // Insert data values into SQL table
   int insertData(std::string command);
   // Select SQL data from table
   int selectData(std::string command);
