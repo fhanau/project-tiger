@@ -69,6 +69,19 @@ void handleAddGameType(std::vector<std::string> input,
   }
 }
 
+std::string formatResult(std::vector<std::string> input) {
+  int pointer = 4;
+  std::string result = "";
+  while (pointer < input.size()) {
+    result += input[pointer];
+    if (pointer != input.size() - 1) {
+      result += " ";
+    }
+    pointer++;
+  }
+  return result;
+}
+
 void handleUploadGameData(std::vector<std::string> input,
     std::string& loggedInUsername, Requester& req, std::string& session) {
   if (input.size() < 5) {
@@ -91,19 +104,6 @@ void handleUploadGameData(std::vector<std::string> input,
       std::cout << "ERROR: " << resp[1] << "\n";
     }
   }
-}
-
-std::string formatResult(std::vector<std::string> input) {
-  int pointer = 4;
-  std::string result = "";
-  while (pointer < input.size()) {
-    result += input[pointer];
-    if (pointer != input.size() - 1) {
-      result += " ";
-    }
-    pointer++;
-  }
-  return result;
 }
 
 void displayHelp() {
