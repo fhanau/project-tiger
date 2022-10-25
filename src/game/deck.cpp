@@ -27,6 +27,7 @@ void Deck::shuffle() {
 }
 
 Card* Deck::dealCards() {
+    // Check if cards are available, then deal the last card
     if (remainingCards.size()) {
         auto card = remainingCards.back();
         dealedCards.push_back(card);

@@ -3,6 +3,7 @@
 
 #include <string>
 
+// Class representing a card for card games
 class Card {
  public:
     enum Suit {
@@ -38,7 +39,9 @@ class Card {
     std::string owner;
 
  public:
+    // Create card
     Card(Suit suit, Face face);
+    // Create card with a given owner
     Card(Suit suit, Face face, const std::string& owner);
     Card(const Card& card);
     ~Card();
@@ -47,10 +50,13 @@ class Card {
     bool isOwned() const;
     void setOwner(std::string owner);
     std::string getOwner() const;
+
+    // Print representation of the card to standard output.
     void display() const;
+    // Compare the value of two cards
     bool comparator(const Card& card1, const Card& card2) const;
+    //Operator to test if cards are identical.
     bool operator==(const Card& rhs) const;
 };
-
 
 #endif  // SRC_GAME_CARD_H_
