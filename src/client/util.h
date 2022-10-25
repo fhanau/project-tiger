@@ -21,6 +21,9 @@ void handleLoginHost(std::vector<std::string> input,
 void handleAddGameType(std::vector<std::string> input,
     std::string& loggedInUsername, Requester& req, std::string& session);
 
+// Validates input for requesting public statistics
+void handlePublicStats(std::vector<std::string> input, Requester& req);
+
 // Displays all available commands for clients
 void displayHelp();
 

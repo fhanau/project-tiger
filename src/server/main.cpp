@@ -92,5 +92,13 @@ int main(int argc, char** argv) {
     return "SUCCESS";
   });
 
+  CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
+    if (!type.compare("total-games")) {
+      std::string command = "SELECT * FROM game_list;";
+      int totalGames = getDatabase().totalRows(command);
+      return std::to_string(totalGames);
+    }
+  });
+
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
 }

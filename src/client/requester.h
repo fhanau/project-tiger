@@ -25,6 +25,9 @@ class Requester {
     std::vector<std::string> uploadGameData(std::string session, 
       std::string type, std::string host, std::string user, std::string result,
       std::string earning);
+
+    // Sends GET request to server for publicly available statistics
+    std::string getPublicStats(std::string type);
   private:
     curlpp::Cleanup cleaner;
     curlpp::Easy request;
