@@ -234,6 +234,7 @@ DELETE this comment later.
 // Method that checks if table is empty.
 int doesExist(sqlite3_stmt* statement) {
     if (sqlite3_step(statement) != SQLITE_DONE) {
+        sqlite3_reset(statement);
         return 1;
     } else {
         return 0;

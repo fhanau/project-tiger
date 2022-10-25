@@ -7,6 +7,7 @@
 #include "util.h"
 
 int main(int argc, char** argv) {
+  // Runs server for clients to connect to service
   crow::SimpleApp app;
 
   CROW_ROUTE(app, "/")([]() {
@@ -15,12 +16,12 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
   ([](std::string username, std::string password) {
+    // Receives request from client to make account with username and password
     std::string formattedUsername = username + "';";
     std::string findHost = "SELECT * from hosts WHERE username = '"
       + formattedUsername;
-    /*sqlite3_stmt* result = getDatabase().makeStatement(findHost);*/
-    if (getDatabase().totalRows(findHost) > 0) {
-      // Token required to access specific information
+    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (doesExist(result)) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
       std::string values = "'" + username + "', '" + password + "');";
@@ -34,13 +35,13 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
   std::string password) {
+    // Receives request from client to login with username and password
     std::string formattedUsername = "username = '" + username + "' AND ";
     std::string formattedPassword = "password = '" + password + "';";
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
-    // sqlite3_stmt* result = getDatabase().makeStatement(command);
-    if (getDatabase().totalRows(findHost) == 0) {
-      // Token required to access specific information
+    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (!doesExist(result)) {
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
       std::string validResponse = "SUCCESS " + getSession();
@@ -50,6 +51,8 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
   std::string sessionId) {
+    // Receives request from client to upload new type of game
+    // Must have sessionId to verify that client is logged in
     if (sessionId.compare(getSession()) != 0) {
       return crow::response("ERROR NotLoggedIn");
     }
@@ -62,6 +65,8 @@ int main(int argc, char** argv) {
   CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<string>")
     ([] (std::string sessionId, std::string gametype, std::string host,
       std::string user, std::string result, std::string earning) {
+    // Receives request from client to upload game data to database
+    // Must be logged in to upload game data
     if (sessionId.compare(getSession()) != 0) {
       return "";
     }
@@ -90,22 +95,12 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
-    crow::json::wvalue resp({{"type", ""}});
-    if (isValidTypeOfPublicRequest(type)) {
-      resp["type"] = "ERROR";
-      resp["errorMessage"] = "Invalid type of request for data.";
-      return resp;
+    if (!type.compare("total-games")) {
+      std::string command = "SELECT COUNT(*) FROM game_list;";
+      int totalGames = getDatabase().totalRows(command);
+      return std::to_string(totalGames);
     }
-    // Function for processing valid type
-    std::string result = handlePublicRequest(type);
-    if (!result.compare("ERROR")) {
-      resp["type"] = "ERROR";
-      resp["errorMessage"] = "Error when requesting public game data.";
-      return resp;
-    }
-    resp["type"] = "public";
-    resp["data"] = result;
-    return resp;
+    return std::to_string(-1);
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();

@@ -7,6 +7,7 @@
 #include "requester.h"
 #include "util.h"
 
+// Runs client program for accessing server
 int main(int argc, char** argv) {
   std::string userInput;
   std::vector<std::string> cleanInput;

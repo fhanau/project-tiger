@@ -1,5 +1,6 @@
 #include "deck.h"
 #include "card.h"
+#include <stdexcept>
 
 Deck::Deck(bool includeJokers) {
     cardCount = (includeJokers ? 54 : 52);

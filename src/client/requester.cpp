@@ -122,3 +122,18 @@ std::vector<std::string> Requester::uploadGameData(std::string session,
     payload.push_back("No data from server.");
     return payload;
   }
+
+std::string Requester::getPublicStats(std::string type) {
+  std::stringstream response;
+  std::string tmp;
+  std::vector<std::string> body;
+  std::string path = "public/" + type;
+  std::string url = baseUrl + path;
+  request.setOpt(new curlpp::options::Url(url));
+  request.setOpt(new curlpp::options::WriteStream(&response));
+  request.perform();
+  while (response >> tmp) {
+    body.push_back(tmp);
+  }
+  return body[body.size() - 1];
+}

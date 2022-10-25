@@ -117,6 +117,21 @@ void handleUploadGameData(std::vector<std::string> input,
   }
 }
 
+void handlePublicStats(std::vector<std::string> input, Requester& req) {
+  if (input.size() != 2) {
+    std::cout << "Invalid input for requesting public data.\n";
+    std::cout << "See 'help' for a list of commands.\n";
+  } else {
+    std::string type = input[1];
+    std::string resp = req.getPublicStats(type);
+    if (resp.size() > 0) {
+      std::cout << "Total " << type << ": " << resp << "\n";
+    } else {
+      std::cout << "Could retrieve public data.\n";
+    }
+  }
+}
+
 void displayHelp() {
   std::cout << "Commands available:\n";
   std::cout << "create <string: username> <string: password>\n";
@@ -124,6 +139,7 @@ void displayHelp() {
   std::cout << "gametype <string: name of game>\n";
   std::cout << "upload <string: name of game> <string: winning userid> <int: "
     "money earned> <string: result description>\n";
+  std::cout << "public <string: type of public information>\n";
   std::cout << "logout\n";
   std::cout << "exit\n";
 }
@@ -150,6 +166,8 @@ void processCleanInput(std::vector<std::string>& cleanInput,
     handleAddGameType(cleanInput, loggedInUsername, req, session);
   } else if (!command.compare("upload")) {
     handleUploadGameData(cleanInput, loggedInUsername, req, session);
+  } else if (!command.compare("public")) {
+    handlePublicStats(cleanInput, req);
   } else if (!command.compare("help")) {
     displayHelp();
   } else if (!command.compare("logout")) {
