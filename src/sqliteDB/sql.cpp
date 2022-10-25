@@ -4,11 +4,6 @@
 #include "sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-static int existsCallback(void *count, int argc, char **argv, char **azColName) {
-    int *c = reinterpret_cast<int *>(count);
-    *c = 1;
-    return 0;
-}
 
 Database::Database(const char* db_dir) {
     directory = db_dir;
@@ -189,14 +184,15 @@ int Database::getMax(std::string table_name, std::string col_name) {
 }
 
 int Database::entryExists(std::string command) {
-    int hasResult = 0;
+    sqlite3_stmt *row = 0;
     char* errorMsg;
-    int exit = sqlite3_exec(DB, command.c_str(), existsCallback, &hasResult, &errorMsg);
+    int exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &row, 0);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in entryExists function." << std::endl;
         sqlite3_free(errorMsg);
-    } 
-    return hasResult;
+    }
+    exit = sqlite3_step(row);
+    return exit == SQLITE_ROW;
 }
 
 int Database::totalRows(std::string command) {
