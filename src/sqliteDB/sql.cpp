@@ -4,6 +4,11 @@
 #include "sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+static int countCallback(void *count, int argc, char **argv, char **azColName) {
+    int *c = reinterpret_cast<int *>(count);
+    *c = atoi(argv[0]);
+    return 0;
+}
 
 Database::Database(const char* db_dir) {
     directory = db_dir;
@@ -198,16 +203,16 @@ int Database::entryExists(std::string command) {
 }
 
 int Database::totalRows(std::string command) {
-    sqlite3_stmt* stmt;
-    int exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &stmt, NULL);
+    char* messageError;
+    int count = 0;
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
+      &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error in totalRows function." << std::endl;
+      std::cerr << "Error when checking host information\n";
+      sqlite3_free(messageError);
     }
-    exit = sqlite3_step(stmt);
-    if (exit != SQLITE_ROW) {
-        return 0;
-    }
-    return sqlite3_column_int(stmt, 0);
+    return count;
 }
 
 /*
