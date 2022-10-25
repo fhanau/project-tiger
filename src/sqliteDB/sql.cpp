@@ -3,13 +3,8 @@
 #include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
-<<<<<<< HEAD
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 static int existsCallback(void *count, int argc, char **argv, char **azColName) {
-=======
-// Method that returns how many rows are in a given table.
-static int countCallback(void *count, int argc, char **argv, char **azColName) {
->>>>>>> cdc79b3b17af358d1c557a55fd363085295092a6
     int *c = reinterpret_cast<int *>(count);
     *c = 1;
     return 1;
