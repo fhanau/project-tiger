@@ -126,7 +126,7 @@ int Database::insertData(std::string command) {
     return 0;
 }
 
-int Database::checkLoginInfo(std::string command) {
+int Database::checkExists(std::string command) {
     char* messageError;
     int count = 0;
     int exit = sqlite3_open(directory, &DB);
@@ -146,7 +146,7 @@ char *Database::getId(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), getIdCallback, id,
       &messageError);
     if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking host information\n";
+      std::cerr << "Error when checking that entries exist in table.\n";
       sqlite3_free(messageError);
     }
     return id;

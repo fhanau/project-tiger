@@ -80,7 +80,7 @@ void handleUploadGameData(std::vector<std::string> input,
   } else {
     std::string type = input[1];
     std::string user = input[2];
-    /*int*/std::string earning = std::stoi(input[3]);
+    std::string earning = input[3];
     std::string result = formatResult(input);
     std::vector<std::string> resp = req.uploadGameData(session, type,
       loggedInUsername, user, result, earning);

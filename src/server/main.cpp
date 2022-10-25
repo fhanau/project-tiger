@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     std::string findHost = "SELECT * from hosts WHERE username = '"
       + formattedUsername;
     /*sqlite3_stmt* result = getDatabase().makeStatement(findHost);*/
-    if (getDatabase().checkLoginInfo(findHost)) {
+    if (getDatabase().checkExists(findHost)) {
       // Token required to access specific information
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
     // sqlite3_stmt* result = getDatabase().makeStatement(command);
-    if (!getDatabase().checkLoginInfo(findHost)) {
+    if (!getDatabase().checkExists(findHost)) {
       // Token required to access specific information
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
@@ -66,18 +66,26 @@ int main(int argc, char** argv) {
       return "";
     }
 
+    int gameId = 0;
+    std::string getGamesCommand = "SELECT * FROM game_list LIMIT 1";
+    if (getDatabase().checkExists(getGamesCommand)) {
+      gameId = getDatabase().getMax("game_list", "game_id") + 1;
+    }
+    std::string newGameId = std::to_string(gameId);
+
     std::string val = host + "';";
     std::string getIdCommand = "SELECT * FROM hosts WHERE username = '" + val;
-    char *hostId = getDatabase().getId(getIdCommand);
+    char *host = getDatabase().getId(getIdCommand);
+    std::string hostId = std::string(host);
 
     std::string firstIns = "INSERT into game_list(game_id, game_type, ";
     std::string secondIns = "host_id, winning_player_id, result, ";
     std::string thirdIns = "money_won) VALUES(";
     std::string insert = firstIns + secondIns + thirdIns;
 
-    std::string firstValues = "'" + gametype + "', '" + hostId + "', '";
-    std::string secondValues = user + "', '" + result + "', ";
-    std::string thirdValues = earning + ");";
+    std::string firstValues = newGameId + ", '" + gametype + "', '";
+    std::string secondValues = hostId + "', '" + user + "', '" + result;
+    std::string thirdValues = "', " + earning + ");";
     std::string values = firstValues + secondValues + thirdValues;
 
     std::string command = insert + values;
