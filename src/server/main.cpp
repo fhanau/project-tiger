@@ -75,8 +75,8 @@ int main(int argc, char** argv) {
 
     std::string val = host + "';";
     std::string getIdCommand = "SELECT * FROM hosts WHERE username = '" + val;
-    char *host = getDatabase().getId(getIdCommand);
-    std::string hostId = std::string(host);
+    char *dbHostId = getDatabase().getId(getIdCommand);
+    std::string hostId = std::string(dbHostId);
 
     std::string firstIns = "INSERT into game_list(game_id, game_type, ";
     std::string secondIns = "host_id, winning_player_id, result, ";
