@@ -2,6 +2,7 @@
   "C_Cpp.errorSquiggles": "Enabled",
   "files.associations": {
     "xstring": "cpp",
+    "sstream": "cpp",
     "algorithm": "cpp",
     "any": "cpp",
     "array": "cpp",

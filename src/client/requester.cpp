@@ -82,3 +82,41 @@ std::string Requester::addGameType(std::string gametype, std::string session) {
   }
   return body[body.size() - 1];
 }
+
+std::vector<std::string> Requester::uploadGameData(std::string session, 
+  std::string type, std::string host, std::string user,
+  std::string result, std::string earning) {
+    std::stringstream response;
+    std::string tmp;
+    std::vector<std::string> payload;
+    std::string firstPath = "upload/" + session + "/" + type + "/" + host;
+    std::string secondPath = "/" + user + "/" + result + "/" + earning;
+    std::string path = firstPath + secondPath;
+    std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::Url(url));
+    request.setOpt(new curlpp::options::WriteStream(&response));
+    request.perform();
+    int isFirstBodyString = 0;
+    while (response >> tmp) {
+      if (!isFirstBodyString) {
+        isFirstBodyString = 1;
+        if (tmp.compare("ERROR") && tmp.compare("SUCCESS")) {
+          payload.push_back("ERROR");
+          payload.push_back("Error connecting to server.");
+          return payload;
+        }
+      }
+
+      if (payload.size() > 0) {
+        payload.push_back(tmp);
+        return payload;
+      }
+
+      if (!tmp.compare("ERROR") || !tmp.compare("SUCCESS")) {
+        payload.push_back(tmp);
+      }
+    }
+    payload.push_back("ERROR");
+    payload.push_back("No data from server.");
+    return payload;
+  }

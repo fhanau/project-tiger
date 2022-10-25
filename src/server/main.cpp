@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     std::string findHost = "SELECT * from hosts WHERE username = '"
       + formattedUsername;
     /*sqlite3_stmt* result = getDatabase().makeStatement(findHost);*/
-    if (getDatabase().checkLoginInfo(findHost)) {
+    if (getDatabase().totalRows(findHost) > 0) {
       // Token required to access specific information
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
     // sqlite3_stmt* result = getDatabase().makeStatement(command);
-    if (!getDatabase().checkLoginInfo(findHost)) {
+    if (getDatabase().totalRows(findHost) == 0) {
       // Token required to access specific information
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
@@ -57,6 +57,36 @@ int main(int argc, char** argv) {
     std::string command = "INSERT INTO games(game_name) VALUES(" + values;
     getDatabase().insertData(command);
     return crow::response("SUCCESS Complete");
+  });
+
+  CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<string>")
+    ([] (std::string sessionId, std::string gametype, std::string host,
+      std::string user, std::string result, std::string earning) {
+    if (sessionId.compare(getSession()) != 0) {
+      return "";
+    }
+
+    int gameId = 0;
+    std::string getGamesCommand = "SELECT * FROM game_list LIMIT 1";
+    if (getDatabase().totalRows(getGamesCommand) > 0) {
+      gameId = getDatabase().getMax("game_list", "game_id") + 1;
+    }
+    std::string newGameId = std::to_string(gameId);
+
+    std::string firstIns = "INSERT INTO game_list(game_id, game_type, ";
+    std::string secondIns = "username, winning_player_id, result, ";
+    std::string thirdIns = "money_won) VALUES(";
+    std::string insert = firstIns + secondIns + thirdIns;
+
+    std::string firstValues = newGameId + ", '" + gametype + "', '";
+    std::string secondValues = host + "', '" + user + "', '" + result;
+    std::string thirdValues = "', " + earning + ");";
+    std::string values = firstValues + secondValues + thirdValues;
+
+    std::string command = insert + values;
+    std::cout << command << "\n";
+    getDatabase().insertData(command);
+    return "SUCCESS";
   });
 
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
