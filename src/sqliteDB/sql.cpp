@@ -208,6 +208,16 @@ int Database::deleteData(std::string command) {
 sqlite3_stmt* Database::makeStatement(std::string command) {
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     return the_Statement;
+}
+
+int Database::getMax(std::string table_name, std::string col_name) {
+    std::string command = "SELECT MAX(" + col_name + ") FROM " + table_name;
+    sqlite3_stmt* stmt = makeStatement(command);
+    sqlite3_step(stmt);
+
+    int the_max = sqlite3_column_int(stmt, 0);
+    return the_max;
+}
 
 /*
 DELETE this comment later.
@@ -236,7 +246,6 @@ DELETE this comment later.
     }
 
 */
-}
 
 int doesExist(sqlite3_stmt* statement) {
     if (sqlite3_step(statement) != SQLITE_DONE) {
