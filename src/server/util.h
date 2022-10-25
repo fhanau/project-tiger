@@ -6,10 +6,11 @@
 #include <set>
 #include "../sqliteDB/sql.h"
 
+// Returns singleton class for Database
 Database getDatabase();
-int isValidTypeOfPublicRequest(std::string type);
-std::string requestPublicGameData();
-std::string handlePublicRequest(std::string type);
+
+// Returns unique memory location as string to client
+// Serves as token for verifying that client is logged in
 std::string getSession();
 
 #endif // SRC_SERVER_UTIL_H_

@@ -9,12 +9,19 @@
 #include "curlpp/Easy.hpp"
 #include "curlpp/Options.hpp"
 
-
+// Handles making all GET requests to server using input from client
 class Requester {
   public:
+    // Sends GET request to server to create host and returns server response
     std::vector<std::string> createHost(std::string username, std::string password);
+
+    // Sends GET request to server to login host and returns server response
     std::vector<std::string> loginHost(std::string username, std::string password);
+
+    // Sends GET request to server to add game type and returns server response
     std::string addGameType(std::string gametype, std::string session);
+
+    // Sends GET request to server to upload data and returns server response
     std::vector<std::string> uploadGameData(std::string session, 
       std::string type, std::string host, std::string user, std::string result,
       std::string earning);
