@@ -141,7 +141,7 @@ int Database::checkExists(std::string command) {
 
 char *Database::getId(std::string command) {
     char* messageError;
-    char *id;
+    char *id = "";
     int exit = sqlite3_open(directory, &DB);
     exit = sqlite3_exec(DB, command.c_str(), getIdCallback, id,
       &messageError);

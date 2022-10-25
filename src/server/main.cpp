@@ -89,6 +89,7 @@ int main(int argc, char** argv) {
     std::string values = firstValues + secondValues + thirdValues;
 
     std::string command = insert + values;
+    std::cout << command << "\n";
     getDatabase().insertData(command);
     return "SUCCESS";
   });
