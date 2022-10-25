@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     std::string findHost = "SELECT * from hosts WHERE username = '"
       + formattedUsername;
     /*sqlite3_stmt* result = getDatabase().makeStatement(findHost);*/
-    if (getDatabase().checkExists(findHost)) {
+    if (getDatabase().totalRows(findHost) > 0) {
       // Token required to access specific information
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
     // sqlite3_stmt* result = getDatabase().makeStatement(command);
-    if (!getDatabase().checkExists(findHost)) {
+    if (getDatabase().totalRows(findHost) == 0) {
       // Token required to access specific information
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 
     int gameId = 0;
     std::string getGamesCommand = "SELECT * FROM game_list LIMIT 1";
-    if (getDatabase().checkExists(getGamesCommand)) {
+    if (getDatabase().totalRows(getGamesCommand) > 0) {
       gameId = getDatabase().getMax("game_list", "game_id") + 1;
     }
     std::string newGameId = std::to_string(gameId);
