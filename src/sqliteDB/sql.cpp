@@ -4,11 +4,10 @@
 #include "sql.h"
 
 //static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-
-static int countCallback(void *count, int argc, char **argv, char **azColName) {
+static int existsCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
-    *c = atoi(argv[0]);
-    return 0;
+    *c = 1;
+    return 1;
 }
 
 Database::Database(const char* db_dir) {
@@ -116,19 +115,6 @@ int Database::insertData(std::string command) {
     return 0;
 }
 
-int Database::totalRows(std::string command) {
-    char* messageError;
-    int count = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
-      &messageError);
-    if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking host information\n";
-      sqlite3_free(messageError);
-    }
-    return count;
-}
-
 int Database::selectData(std::string command) {
     char* messageError;
 
@@ -193,6 +179,30 @@ int Database::getMax(std::string table_name, std::string col_name) {
 
     int the_max = sqlite3_column_int(stmt, 0);
     return the_max;
+}
+
+int Database::entryExists(std::string command) {
+    int hasResult = 0;
+    char* errorMsg;
+    int exit = sqlite3_exec(DB, command.c_str(), existsCallback, &hasResult, &errorMsg);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error in entryExists function." << std::endl;
+        sqlite3_free(errorMsg);
+    } 
+    return hasResult;
+}
+
+int Database::totalRows(std::string command) {
+    sqlite3_stmt* stmt;
+    int exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &stmt, NULL);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error in totalRows function." << std::endl;
+    }
+    exit = sqlite3_step(stmt);
+    if (exit != SQLITE_ROW) {
+        return 0;
+    }
+    return sqlite3_column_int(stmt, 0);
 }
 
 /*

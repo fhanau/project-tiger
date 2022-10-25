@@ -7,6 +7,7 @@
 #include "../libraries/sqlite/sqlite3.h"
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+static int existsCallback(void *count, int argc, char **argv, char **azColName);
 int doesExist(sqlite3_stmt* statement);
 
 class Database {
@@ -23,6 +24,7 @@ class Database {
     int selectData(std::string command);
     int updateData(std::string command);
     int deleteData(std::string command);
+    int entryExists(std::string command);
     int totalRows(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
     int getMax(std::string table_name, std::string col_name);
