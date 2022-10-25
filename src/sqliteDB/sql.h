@@ -24,6 +24,7 @@ class Database {
     int updateData(std::string command);
     int deleteData(std::string command);
     int checkLoginInfo(std::string command);
+    char *getId(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
 };
 

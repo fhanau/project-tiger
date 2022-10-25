@@ -59,24 +59,25 @@ int main(int argc, char** argv) {
     return crow::response("SUCCESS Complete");
   });
 
-  CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<int>")
+  CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<string>")
     ([] (std::string sessionId, std::string gametype, std::string host,
       std::string user, std::string result, std::string earning) {
     if (sessionId.compare(getSession()) != 0) {
       return "";
     }
-    std::stringstream ss;
-    ss << earning;
+
+    std::string val = host + "';";
+    std::string getIdCommand = "SELECT * FROM hosts WHERE username = '" + val;
+    char *hostId = getDatabase().getId(getIdCommand);
 
     std::string firstIns = "INSERT into game_list(game_id, game_type, ";
     std::string secondIns = "host_id, winning_player_id, result, ";
     std::string thirdIns = "money_won) VALUES(";
     std::string insert = firstIns + secondIns + thirdIns;
 
-    std::string hostId = "HI";
     std::string firstValues = "'" + gametype + "', '" + hostId + "', '";
     std::string secondValues = user + "', '" + result + "', ";
-    std::string thirdValues = ss.str() + ");";
+    std::string thirdValues = earning + ");";
     std::string values = firstValues + secondValues + thirdValues;
 
     std::string command = insert + values;
