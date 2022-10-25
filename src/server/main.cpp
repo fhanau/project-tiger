@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
     if (!type.compare("total-games")) {
-      std::string command = "SELECT COUNT(game_id) FROM game_list;";
+      std::string command = "SELECT game_id FROM game_list;";
       return std::to_string(getDatabase().totalRows(command));
     }
     return std::to_string(0);
