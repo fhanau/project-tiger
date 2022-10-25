@@ -20,7 +20,8 @@ int main(int argc, char** argv) {
     std::string formattedUsername = username + "';";
     std::string findHost = "SELECT * from hosts WHERE username = '"
       + formattedUsername;
-    if (getDatabase().totalRows(findHost) > 0) {
+    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (doesExist(result)) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
       std::string values = "'" + username + "', '" + password + "');";
@@ -39,7 +40,8 @@ int main(int argc, char** argv) {
     std::string formattedPassword = "password = '" + password + "';";
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
-    if (getDatabase().totalRows(findHost) == 0) {
+    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (!doesExist(result)) {
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
       std::string validResponse = "SUCCESS " + getSession();
@@ -94,7 +96,7 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
     if (!type.compare("total-games")) {
-      std::string command = "SELECT * FROM game_list;";
+      std::string command = "SELECT COUNT(*) FROM game_list;";
       int totalGames = getDatabase().totalRows(command);
       return std::to_string(totalGames);
     }
