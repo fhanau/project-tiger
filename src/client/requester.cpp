@@ -125,7 +125,7 @@ std::string Requester::getPublicStats(std::string type) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> body;
-  std::string path = "public/" + type + "/";
+  std::string path = "public/" + type;
   std::string url = baseUrl + path;
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
