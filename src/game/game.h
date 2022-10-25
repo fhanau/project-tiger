@@ -23,3 +23,4 @@ class Game {
 };
 
 #endif // SRC_GAME_GAME_H_
+

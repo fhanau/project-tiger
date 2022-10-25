@@ -8,6 +8,7 @@
 
 #include "card.h"
 
+// Deck class, to implement card games based on the Card class.
 class Deck {
  private:
     bool includeJokers;
@@ -16,15 +17,24 @@ class Deck {
     std::vector<Card*> dealedCards;
 
  public:
+    // Create a deck.
     Deck(bool includeJokers = false);
     ~Deck();
+
     int getNumReaminingCards();
     void shuffle();
     void reset();
+
     // deal single/multiple cards
     Card* dealCards();
+
+    // Deal a certain number of cards.
     std::vector<Card*> dealCards(int amount);
+
+    // Deal a specific card, if available.
     Card* dealGivenCards(Card::Suit suit, Card::Face face);
+
+    // Deal the following cards as available.
     std::vector<Card*> dealGivenCards(const std::vector<std::pair<Card::Suit,
         Card::Face>>& cards);
 };

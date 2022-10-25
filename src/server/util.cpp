@@ -20,7 +20,7 @@ std::string requestPublicGameData() {
   // Can simplify by just having very basic information and one query for it
   // Can expand to a couple of different types of public data requests
   // Call SQLWrapper.getPublicGameData(); regardless
-  // If an error occurs when quering SQL, return ERROR
+  // If an error occurs when querying SQL, return ERROR
   int isError = 0;
   if (isError) {
     return "ERROR";
