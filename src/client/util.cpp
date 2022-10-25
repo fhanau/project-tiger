@@ -125,8 +125,7 @@ void handlePublicStats(std::vector<std::string> input, Requester& req) {
     std::string type = input[1];
     std::string resp = req.getPublicStats(type);
     if (resp.size() > 0) {
-      std::cout << "Total " << type << ":\n";
-      std::cout << resp;
+      std::cout << "Total " << type << ": " << resp << "\n";
     } else {
       std::cout << "Could retrieve public data.\n";
     }
