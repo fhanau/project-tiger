@@ -23,8 +23,7 @@ class Database {
     int selectData(std::string command);
     int updateData(std::string command);
     int deleteData(std::string command);
-    int checkExists(std::string command);
-    char *getId(std::string command);
+    int totalRows(std::string command);
     sqlite3_stmt* makeStatement(std::string command);
     int getMax(std::string table_name, std::string col_name);
 };

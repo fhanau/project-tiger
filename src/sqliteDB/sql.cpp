@@ -11,13 +11,6 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
     return 0;
 }
 
-static int getIdCallback(void *id, int argc, char**argv, char**azColName) {
-    char *idPointer = reinterpret_cast<char *>(id);
-    std::cout << argv[0];
-    idPointer = argv[0];
-    return 0;
-};
-
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
@@ -123,7 +116,7 @@ int Database::insertData(std::string command) {
     return 0;
 }
 
-int Database::checkExists(std::string command) {
+int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
     int exit = sqlite3_open(directory, &DB);
@@ -135,20 +128,6 @@ int Database::checkExists(std::string command) {
     }
     return count;
 }
-
-char *Database::getId(std::string command) {
-    char* messageError;
-    char id[50];
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), getIdCallback, id,
-      &messageError);
-    if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking that entries exist in table.\n";
-      sqlite3_free(messageError);
-    }
-    return id;
-}
-
 
 int Database::selectData(std::string command) {
     char* messageError;
