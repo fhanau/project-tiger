@@ -6,16 +6,19 @@
 #include <queue>
 #include <unordered_set>
 
-#include "./user.h"
-#include "./deck.h"
+#include "user.h"
+#include "deck.h"
 
 class Game {
  private:
+    int numPlayers;
+    std::string gameType;
     std::vector<User*> players;
     std::queue<User*> playerTurns;
     Deck* deck;
 
  public:
+    Game(int numPlayers, std::string gameType);
     // void play();
     // void getResult();
     // void updateUserData();
@@ -23,4 +26,3 @@ class Game {
 };
 
 #endif // SRC_GAME_GAME_H_
-
