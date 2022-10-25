@@ -2,9 +2,9 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
-#include "./parser.h"
-#include "./requester.h"
-#include "./util.h"
+#include "parser.h"
+#include "requester.h"
+#include "util.h"
 
 void handleCreateHost(std::vector<std::string> input,
     std::string& loggedInUsername, Requester& req, std::string& session) {
@@ -122,7 +122,8 @@ void displayHelp() {
   std::cout << "create <string: username> <string: password>\n";
   std::cout << "login <string: username> <string: password>\n";
   std::cout << "gametype <string: name of game>\n";
-  std::cout << "upload <string: name of game> <string: winning userid> <int: money earned> <string: result description>\n";
+  std::cout << "upload <string: name of game> <string: winning userid> <int: "
+    "money earned> <string: result description>\n";
   std::cout << "logout\n";
   std::cout << "exit\n";
 }

@@ -8,7 +8,7 @@ Table: players
 class StatTest:public::testing::Test {
  protected:
     void SetUp() override {
-        db.deleteData("DELETE FROM players;");        
+        db.deleteData("DELETE FROM players;");
         db.deleteData("DELETE FROM player_stats;");
         db.deleteData("DELETE FROM game_list;");
         db.deleteData("DELETE FROM achievements;");
