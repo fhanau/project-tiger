@@ -3,8 +3,7 @@
 #include "sqlite3.h"
 #include "sql.h"
 
-//static int callback(void* NotUsed, int argc, char** argv, char** azColName);
-
+// Method that returns how many rows are in a given table.
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
     *c = atoi(argv[0]);
@@ -14,7 +13,7 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
-    // Create the 6 tables
+    // Create the 6 tables named:
     // player_stats, game_list, achievements,
     // players, hosts, games.
     std::string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
@@ -79,6 +78,7 @@ Database::Database(const char* db_dir) {
 
 Database::~Database() {}
 
+// Method for creating tables in the database.
 int Database::createTable(std::string command) {
     char* messageError;
 
@@ -103,6 +103,7 @@ int Database::createTable(std::string command) {
     return 0;
 }
 
+// Method for inserting data into specific tables
 int Database::insertData(std::string command) {
     char* messageError;
 
@@ -120,6 +121,7 @@ int Database::insertData(std::string command) {
     return 0;
 }
 
+// Method for inserting data into specific tables
 int Database::checkLoginInfo(std::string command) {
     char* messageError;
     int count = 0;
@@ -133,7 +135,7 @@ int Database::checkLoginInfo(std::string command) {
     return count;
 }
 
-
+// Method that prints out data from a table, given SQL query.
 int Database::selectData(std::string command) {
     char* messageError;
 
@@ -152,6 +154,7 @@ int Database::selectData(std::string command) {
     return 0;
 }
 
+// Method to update table data, given SQL command.
 int Database::updateData(std::string command) {
     char* messageError;
 
@@ -169,6 +172,7 @@ int Database::updateData(std::string command) {
     return 0;
 }
 
+// Method to delete data, given SQL command.
 int Database::deleteData(std::string command) {
     char* messageError;
 
@@ -186,11 +190,14 @@ int Database::deleteData(std::string command) {
     return 0;
 }
 
+// Method that return sqlite statement, given SQL command.
+// sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     return the_Statement;
 }
 
+// Method that returns the maximum value of a column of a table.
 int Database::getMax(std::string table_name, std::string col_name) {
     std::string command = "SELECT MAX(" + col_name + ") FROM " + table_name;
     sqlite3_stmt* stmt = makeStatement(command);
@@ -228,6 +235,7 @@ DELETE this comment later.
 
 */
 
+// Method that checks if table is empty.
 int doesExist(sqlite3_stmt* statement) {
     if (sqlite3_step(statement) != SQLITE_DONE) {
         return 1;
@@ -236,6 +244,7 @@ int doesExist(sqlite3_stmt* statement) {
     }
 }
 
+// Method used for printing data. Used for the selectData() method.
 static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     for (int i = 0; i < argc; i++) {
         // column name and value
