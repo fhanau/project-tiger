@@ -21,7 +21,7 @@ class Deck {
     Deck(bool includeJokers = false);
     ~Deck();
 
-    int getNumReaminingCards();
+    int getNumRemainingCards() const;
     void shuffle();
     void reset();
 
