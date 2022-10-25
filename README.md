@@ -1,6 +1,8 @@
 # project-tiger
 ## About
-
+Project Tiger will offer data analytics for games and competitions. These analytics will be between records/milestones/statistics for each user that clients will host to general analytics regarding total user counts per day, week, month, etc. , most common winning strategies, and general overall user results. Basically, our server provides analytics for our clients to have access too.  
+The clients will be organizations that host games and/or competitions. Basically, any client that desires analytics regarding competitive play and milestone tracking will be able to utilize our API. Our clients will be allowed to display this data for its users and they can decide which data to showcase publicly, privately per each of their users, or retain internally for research purposes. With regards to research purposes, our clients could be able to use information we provide to make decisions as to how to further develop their applications.  
+The data we will be accumulating will be records/milestones per user (such as best result achieved, biggest bet won, biggest bet lost, total number of games, win-loss ratio). In order to keep track of these records, our server will store the username of all the users that our clients have. With regards to created data, our server can calculate the win-loss ratio and predict best possible move suggestions depending on which game is being played. The other forms of data are game logs, which contain metadata such as number of players, player ids, moves made, and money wagered. These game logs will be made accessible to all of our clients’ users to search for with game ids.  
 
 ### Build directions
 ```
