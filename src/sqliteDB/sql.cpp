@@ -206,29 +206,22 @@ int Database::getMax(std::string table_name, std::string col_name) {
 /*
 DELETE this comment later.
 - The variable the_Statement will return the first row of the selected query.
-
 - run step(the_Statement to return current row and point to next row after)
 - SQLITE_DONE = reached end of query.
 - sqlite3_column_type returns number code to signify type
     - 1 = int
     - 3 = text/char
-
 - sqlite3_column_int(stmt, i)
 - sqlite3_column_text(stmt, i)
-
-
     sqlite3_stmt* x;
     x = dummy.makeStatement("SELECT * FROM player_stats WHERE player_id = 102;");
     int col = sqlite3_column_count(x);
-
     while(sqlite3_step(x) != SQLITE_DONE) {
         
         for(int i = 0; i< col; i++) {
             std::cout << "Num = " << sqlite3_column_type(x, i) << std::endl;
         }
-
     }
-
 */
 
 // Method that checks if table is empty.
