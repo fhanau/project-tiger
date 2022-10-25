@@ -25,8 +25,8 @@ Database::Database(const char* db_dir) {
     // player_stats, game_list, achievements,
     // players, hosts, games.
     std::string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
-        "player_id      INT         NOT NULL, "
-        "host_id        INT         NOT NULL, "
+        "player_id      CHAR(50)    NOT NULL, "
+        "username       CHAR(50)    NOT NULL, "
         "name           CHAR(50)    NOT NULL, "
         "game_type      CHAR(50)    NOT NULL, "
         "total_wins     INT         NOT NULL, "
@@ -35,44 +35,41 @@ Database::Database(const char* db_dir) {
         "most_lost      INT         NOT NULL, "
         "total_money    INT         NOT NULL, "
         "CONSTRAINT player_host_gametype PRIMARY KEY "
-        "(player_id, host_id, game_type) );";
+        "(player_id, username, game_type) );";
 
     this->createTable(command1);
 
     std::string command2 = "CREATE TABLE IF NOT EXISTS game_list("
         "game_id                INT  NOT NULL, "
         "game_type              TEXT NOT NULL, "
-        "host_id                INT  NOT NULL, "
-        "winning_player_id      INT  NOT NULL, "
+        "username               CHAR(50)  NOT NULL, "
+        "winning_player_id      CHAR(50)  NOT NULL, "
         "result                 TEXT NOT NULL, "
         "money_won              INT  NOT NULL, "
-        "CONSTRAINT game_host PRIMARY KEY (game_id, host_id) );";
+        "CONSTRAINT game_host PRIMARY KEY (game_id, username) );";
 
     this->createTable(command2);
 
     std::string command3 = "CREATE TABLE IF NOT EXISTS achievements("
-        "player_id          INT  NOT NULL, "
-        "host_id            INT  NOT NULL, "
+        "player_id          CHAR(50)  NOT NULL, "
+        "username           CHAR(50)  NOT NULL, "
         "achievement_id     INT  NOT NULL, "
         "description        TEXT NOT NULL, "
         "unlocked           INT  NOT NULL DEFAULT 0, "
         "CONSTRAINT player_host_achievement PRIMARY KEY "
-        "(player_id, host_id, achievement_id) );";
+        "(player_id, username, achievement_id) );";
 
     this->createTable(command3);
 
     std::string command4 = "CREATE TABLE IF NOT EXISTS players("
-        "player_id  INT      NOT NULL, "
-        "host_id    INT      NOT NULL, "
-        "name       CHAR(50) NOT NULL, "
-        "lname      CHAR(50) NOT NULL, "
-        "CONSTRAINT player_host PRIMARY KEY (player_id, host_id) );";
+        "player_id  CHAR(50) NOT NULL, "
+        "username   CHAR(50) NOT NULL, "
+        "CONSTRAINT player_host PRIMARY KEY (player_id, username) );";
 
     this->createTable(command4);
 
     std::string command5 = "CREATE TABLE IF NOT EXISTS hosts("
-        "host_id  INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "username CHAR(50) NOT NULL, "
+        "username CHAR(50) PRIMARY KEY NOT NULL, "
         "password CHAR(50) NOT NULL );";
 
     this->createTable(command5);

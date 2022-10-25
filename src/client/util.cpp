@@ -16,14 +16,18 @@ void handleCreateHost(std::vector<std::string> input,
   } else {
     std::string username = input[1];
     std::string password = input[2];
-    std::vector<std::string> resp = req.createHost(username, password);
-    if (resp[0].compare("ERROR")) {
-      loggedInUsername = username;
-      session = resp[1];
-      std::cout << "Successfully logged into " << loggedInUsername << ".\n";
+    if (username.size() > 50 || password.size() > 50) {
+      std::cout << "Username and password must be under 50 characters each.\n";
     } else {
-      std::cout << "Unsuccessful account creation.\n";
-      std::cout << "ERROR: " << resp[1] << "\n";
+      std::vector<std::string> resp = req.createHost(username, password);
+      if (resp[0].compare("ERROR")) {
+        loggedInUsername = username;
+        session = resp[1];
+        std::cout << "Successfully logged into " << loggedInUsername << ".\n";
+      } else {
+        std::cout << "Unsuccessful account creation.\n";
+        std::cout << "ERROR: " << resp[1] << "\n";
+      }
     }
   }
 }
@@ -60,11 +64,15 @@ void handleAddGameType(std::vector<std::string> input,
     std::cout << "See 'help' for a list of commands.\n";
   } else {
     std::string gametype = input[1];
-    std::string resp = req.addGameType(gametype, session);
-    if (resp.size() > 0) {
-      std::cout << "Successfully added gametype to server.\n";
+    if (gametype.size() > 50) {
+      std::cout << "Game name must be less than 50 characters.\n";
     } else {
-      std::cout << "Could not add gametype to server.\n";
+      std::string resp = req.addGameType(gametype, session);
+      if (resp.size() > 0) {
+        std::cout << "Successfully added gametype to server.\n";
+      } else {
+        std::cout << "Could not add gametype to server.\n";
+      }
     }
   }
 }
@@ -88,11 +96,14 @@ void handleUploadGameData(std::vector<std::string> input,
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
   } else if (loggedInUsername.size() == 0) {
-    std::cout << "Must be logged in to upload game data." << " ";
+    std::cout << "Must be logged in to upload game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
   } else {
     std::string type = input[1];
     std::string user = input[2];
+    if (type.size() > 50 || user.size() > 50) {
+      std::cout << "Game name and player name must be under 50 characters.\n";
+    }
     std::string earning = input[3];
     std::string result = formatResult(input);
     std::vector<std::string> resp = req.uploadGameData(session, type,
@@ -100,7 +111,7 @@ void handleUploadGameData(std::vector<std::string> input,
     if (resp[0].compare("ERROR")) {
       std::cout << "Successfully uploaded game data.\n";
     } else {
-      std::cout << "Unsuccessful game data upload\n";
+      std::cout << "Unsuccessful game data upload.\n";
       std::cout << "ERROR: " << resp[1] << "\n";
     }
   }
