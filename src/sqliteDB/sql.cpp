@@ -78,9 +78,8 @@ Database::Database(const char* db_dir) {
     this->createTable(command6);
 
     std::string playerTrigger = "CREATE TRIGGER IF NOT EXISTS add_player AFTER INSERT ON game_list"
-        " BEGIN SET NOCOUNT ON; INSERT INTO players(player_id, username) SELECT winning_player_id, username FROM INSERTED WHERE "
-        "inserted.winning_player_id, inserted.username NOT IN (SELECT inserted.winning_player_id, inserted.username FROM game_list)"
-        " END;";
+        " BEGIN INSERT IGNORE INTO players(player_id, username) "
+        "VALUES(new.winning_player_id, new.username); END;";
     this->addTrigger(playerTrigger);
 }
 
