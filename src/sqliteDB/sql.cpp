@@ -70,6 +70,12 @@ Database::Database(const char* db_dir) {
         "game_name CHAR(50) NOT NULL PRIMARY KEY );";
 
     this->createTable(command6);
+
+    std::string playerTrigger = "CREATE TRIGGER add_player AFTER INSERT ON game_list"
+        "BEGIN"
+        "INSERT INTO players(player_id, username) VALUES(new.winning_player_id, new.username);"
+        "END";
+    this->addTrigger(playerTrigger);
 }
 
 Database::~Database() {}
@@ -211,6 +217,20 @@ int Database::totalRows(std::string command) {
       sqlite3_free(messageError);
     }
     return count;
+}
+
+int Database::addTrigger(std::string command) {
+    char *messageError;
+    int exit = sqlite3_open(directory, &DB);
+
+    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, 0);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error in addTrigger function." << std::endl;
+        sqlite3_free(messageError);
+    } else {
+        std::cout << "trigger added" << std::endl;
+    }
+    return 0;
 }
 
 /*

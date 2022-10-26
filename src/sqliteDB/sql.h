@@ -15,6 +15,7 @@ class Database {
   sqlite3* DB;
   const char* directory;
   sqlite3_stmt* the_Statement;
+  int addTrigger(std::string command);
 
  public:
   // Create a database stored in file db_dir
