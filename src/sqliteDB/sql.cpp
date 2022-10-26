@@ -81,7 +81,7 @@ Database::Database(const char* db_dir) {
         " BEGIN IF NOT EXISTS (SELECT * FROM players WHERE "
         "player_id = new.winning_player_id AND username = new.username) "
         "BEGIN INSERT INTO players(player_id, username) "
-        "VALUES(new.winning_player_id, new.username); END END;";
+        "VALUES(new.winning_player_id, new.username); END; END;";
     this->addTrigger(playerTrigger);
 }
 
@@ -247,6 +247,7 @@ int Database::addTrigger(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), NULL, 0, 0);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in addTrigger function." << std::endl;
+        std::cerr << messageError << "\n";
         sqlite3_free(messageError);
     } else {
         std::cout << "trigger added" << std::endl;
