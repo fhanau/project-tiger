@@ -77,9 +77,10 @@ Database::Database(const char* db_dir) {
 
     this->createTable(command6);
 
-    std::string playerTrigger = "CREATE TRIGGER add_player AFTER INSERT ON game_list"
-        " BEGIN INSERT IGNORE INTO players(player_id, username) "
-        "VALUES(new.winning_player_id, new.username); END;";
+    std::string playerTrigger = "CREATE OR ALTER TRIGGER add_player ON game_list AFTER INSERT"
+        "IF EXISTS (SELECT * FROM players p INNER JOIN inserted i on i.winning_player_id"
+        "= p.player_id AND i.username= p.username) BEGIN END ELSE BEGIN INSERT"
+        " INTO players(player_id, username) SELECT winning_player_id, username FROM inserted END GO";
     this->addTrigger(playerTrigger);
 }
 
