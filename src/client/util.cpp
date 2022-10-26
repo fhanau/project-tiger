@@ -125,7 +125,7 @@ void handlePublicStats(std::vector<std::string> input, Requester& req) {
     std::string type = input[1];
     std::string resp = req.getPublicStats(type);
     if (resp.size() > 0) {
-      std::cout << "Total " << type << ": " << resp << "\n";
+      std::cout << type << ": " << resp << "\n";
     } else {
       std::cout << "Could retrieve public data.\n";
     }
@@ -137,9 +137,10 @@ void displayHelp() {
   std::cout << "create <string: username> <string: password>\n";
   std::cout << "login <string: username> <string: password>\n";
   std::cout << "gametype <string: name of game>\n";
-  std::cout << "upload <string: name of game> <string: winning userid> <int: "
-    "money earned> <string: result description>\n";
-  std::cout << "public <string: type of public information>\n";
+  std::cout << "upload <string: name of game> <string: winning userid>" << " ";
+  std::cout << "<int: money earned> <string: result description>\n";
+  std::cout << "public <string: ['total-games', 'total-players'," << " ";
+  std::cout << "'total-types']>\n";
   std::cout << "logout\n";
   std::cout << "exit\n";
 }

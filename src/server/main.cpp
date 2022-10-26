@@ -20,8 +20,8 @@ int main(int argc, char** argv) {
     std::string formattedUsername = username + "';";
     std::string findHost = "SELECT * from hosts WHERE username = '"
       + formattedUsername;
-    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
-    if (doesExist(result)) {
+    //sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (getDatabase().totalRows(findHost) > 0) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
       std::string values = "'" + username + "', '" + password + "');";
@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
     std::string formattedPassword = "password = '" + password + "';";
     std::string findHost = "SELECT * from hosts WHERE "
       + formattedUsername + formattedPassword;
-    sqlite3_stmt* result = getDatabase().makeStatement(findHost);
-    if (!doesExist(result)) {
+    //sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    if (getDatabase().totalRows(findHost) == 0) {
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
       std::string validResponse = "SUCCESS " + getSession();
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 
     int gameId = 0;
     std::string getGamesCommand = "SELECT * FROM game_list LIMIT 1";
-    if (getDatabase().totalRows(getGamesCommand) > 0) {
+    if (getDatabase().entryExists(getGamesCommand) > 0) {
       gameId = getDatabase().getMax("game_list", "game_id") + 1;
     }
     std::string newGameId = std::to_string(gameId);
@@ -89,18 +89,16 @@ int main(int argc, char** argv) {
     std::string values = firstValues + secondValues + thirdValues;
 
     std::string command = insert + values;
-    std::cout << command << "\n";
     getDatabase().insertData(command);
     return "SUCCESS";
   });
 
   CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
     if (!type.compare("total-games")) {
-      std::string command = "SELECT COUNT(*) FROM game_list;";
-      int totalGames = getDatabase().totalRows(command);
-      return std::to_string(totalGames);
+      std::string command = "SELECT game_id FROM game_list;";
+      return std::to_string(getDatabase().totalRows(command));
     }
-    return std::to_string(-1);
+    return std::to_string(0);
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();
