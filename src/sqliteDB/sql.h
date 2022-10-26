@@ -8,6 +8,7 @@
 
 static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName);
+static int maxCallback(void *count, int argc, char**argv, char **azColName);
 int doesExist(sqlite3_stmt* statement);
 
 class Database {
@@ -39,6 +40,7 @@ class Database {
   sqlite3_stmt* makeStatement(std::string command);
   // Get the maximum value of a column in an sql table
   int getMax(std::string table_name, std::string col_name);
+  int getMax2(std::string command);
 };
 
 #endif

@@ -10,6 +10,12 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
     return 0;
 }
 
+static int maxCallback(void *count, int argc, char**argv, char **azColName) {
+    int *c = reinterpret_cast<int *>(count);
+    *c = std::stoi(argv[0]);
+    return 0;
+}
+
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
@@ -114,6 +120,7 @@ int Database::insertData(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in insertData function." << std::endl;
+        std::cerr << messageError << "\n";
         sqlite3_free(messageError);
     } else {
         std::cout << "Records inserted Successfully!" << std::endl;
@@ -191,6 +198,19 @@ int Database::getMax(std::string table_name, std::string col_name) {
 
     int the_max = sqlite3_column_int(stmt, 0);
     return the_max;
+}
+
+int Database::getMax2(std::string command) {
+    char* messageError;
+    int count = 0;
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), maxCallback, &count,
+      &messageError);
+    if (exit != SQLITE_OK) {
+      std::cerr << "Error when checking host information\n";
+      sqlite3_free(messageError);
+    }
+    return count;
 }
 
 int Database::entryExists(std::string command) {

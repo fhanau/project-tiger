@@ -74,7 +74,8 @@ int main(int argc, char** argv) {
     int gameId = 0;
     std::string getGamesCommand = "SELECT game_id FROM game_list LIMIT 1";
     if (getDatabase().totalRows(getGamesCommand) > 0) {
-      gameId = getDatabase().getMax("game_list", "game_id") + 1;
+      std::string maxCommand = "SELECT MAX(game_id) FROM game_list;";
+      gameId = getDatabase().getMax2(maxCommand);
     }
     std::string newGameId = std::to_string(gameId);
 
@@ -89,6 +90,7 @@ int main(int argc, char** argv) {
     std::string values = firstValues + secondValues + thirdValues;
 
     std::string command = insert + values;
+    std::cout << command << "\n";
     getDatabase().insertData(command);
     return "SUCCESS";
   });
