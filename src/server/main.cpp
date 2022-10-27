@@ -90,6 +90,16 @@ int main(int argc, char** argv) {
     std::string values = firstValues + secondValues + thirdValues;
 
     std::string command = insert + values;
+
+    std::string playerPrompt = "SELECT * FROM players WHERE player_id= '";
+    std::string playerValues = user + "' AND username = '" + host + "';";
+    std::string playerCommand = playerPrompt + playerValues;
+    if (getDatabase().totalRows(playerCommand) == 0) {
+      std::string newPlayerPrompt = "INSERT INTO players(player_id, username)";
+      std::string newPlayerValues = " VALUES('" + user + "', '" + host + "');";
+      std::string newPlayerCommand = newPlayerPrompt + newPlayerValues;
+      getDatabase().insertData(newPlayerCommand);
+    }
     getDatabase().insertData(command);
     return "SUCCESS";
   });
