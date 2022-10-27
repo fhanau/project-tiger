@@ -77,11 +77,14 @@ Database::Database(const char* db_dir) {
 
     this->createTable(command6);
 
-    std::string playerTrigger = "CREATE OR ALTER TRIGGER add_player ON game_list AFTER INSERT"
-        "IF NOT EXISTS (SELECT * FROM players p INNER JOIN inserted i on i.winning_player_id"
-        "= p.player_id AND i.username= p.username) BEGIN INSERT"
-        " INTO players(player_id, username) SELECT winning_player_id, username FROM inserted END;";
-    this->addTrigger(playerTrigger);
+    std::string addPlayerTrigger = "CREATE OR ALTER TRIGGER add_player AFTER INSERT ON game_list "
+        "BEGIN INSERT INTO players(player_id, username) VALUES(new.winning_player_id, new.username); END;";
+    this->addTrigger(addPlayerTrigger);
+
+    std::string checkDuplicatePlayerTrigger = "CREATE OR ALTER TRIGGER no_dup_player AFTER INSERT ON players "
+        "IF EXISTS (SELECT * FROM players WHERE player_id = new.player_id "
+        "AND username = new.username;) BEGIN ROLLBACK END;";
+    this->addTrigger(checkDuplicatePlayerTrigger);
 }
 
 Database::~Database() {}
