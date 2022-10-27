@@ -87,13 +87,18 @@ int main(int argc, char** argv) {
         + gametype + "', 1, 0, " + earning + ", 0, " + earning + ");";
       getDatabase().insertData(newStatsCommand);
     } else {
-      std::string mostWonCommand = "SELECT most_won, total_wins, total_money FROM player_stats WHERE "
+      std::string mostWonCommand = "SELECT most_won FROM player_stats WHERE "
         "player_id = '" + player + "' AND username = '" + host + "' AND "
         "game_type = '" + gametype + "';";
-      int** stats = getDatabase().getPlayerStatsForUpdate(mostWonCommand);
-      int mostWon = *stats[0];
-      int totalWins = *stats[1] + 1;
-      int totalMoney = *stats[2] + stoi(earning);
+      int mostWon = getDatabase().getIntValue(mostWonCommand);
+      std::string totalWinsCommand = "SELECT total_wins FROM player_stats WHERE "
+        "player_id = '" + player + "' AND username = '" + host + "' AND "
+        "game_type = '" + gametype + "';";
+      int totalWins = getDatabase().getIntValue(totalWinsCommand) + 1;
+      std::string totalMoneyCommand = "SELECT total_money FROM player_stats WHERE "
+        "player_id = '" + player + "' AND username = '" + host + "' AND "
+        "game_type = '" + gametype + "';";
+      int totalMoney = getDatabase().getIntValue(totalMoneyCommand) + stoi(earning);
       int newMostWon = mostWon ? mostWon > stoi(earning) : stoi(earning);
       std::cout << std::to_string(newMostWon) << "is new most won.\n";
       std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "

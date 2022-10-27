@@ -25,14 +25,6 @@ static int mostWonCallback(void *count, int argc, char**argv, char**azColName) {
     return 0;
 }
 
-static int playerStatsCallback(void *rt, int columns, char**data, char**columnNames) {
-    int **stats = reinterpret_cast<int **>(rt);
-    *stats[0] = std::stoi(data[0]);
-    *stats[1] = std::stoi(data[1]);
-    *stats[2] = std::stoi(data[2]);
-    return 0;
-}
-
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
@@ -249,7 +241,7 @@ int Database::totalRows(std::string command) {
     return count;
 }
 
-int Database::getMostWon(std::string command) {
+int Database::getIntValue(std::string command) {
     char *messageError;
     int amountWon = 0;
     int exit = sqlite3_open(directory, &DB);
@@ -260,19 +252,6 @@ int Database::getMostWon(std::string command) {
         sqlite3_free(messageError);
     }
     return amountWon;
-}
-
-int** Database::getPlayerStatsForUpdate(std::string command) {
-    char *messageError;
-    int *stats[3];
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), playerStatsCallback, stats,
-        &messageError);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error when getting player stats\n";
-        sqlite3_free(messageError);
-    }
-    return stats;
 }
 
 int Database::addTrigger(std::string command) {

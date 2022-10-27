@@ -41,8 +41,7 @@ class Database {
   // Get the maximum value of a column in an sql table
   int getMax(std::string table_name, std::string col_name);
   int getMax2(std::string command);
-  int getMostWon(std::string command);
-  int** getPlayerStatsForUpdate(std::string command);
+  int getIntValue(std::string command);
 };
 
 #endif
