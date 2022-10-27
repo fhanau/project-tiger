@@ -208,6 +208,18 @@ int Database::getMax2(std::string command) {
     return count;
 }
 
+int Database::entryExists(std::string command) {
+    sqlite3_stmt *row = 0;
+    char* errorMsg;
+    int exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &row, 0);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error in entryExists function." << std::endl;
+        sqlite3_free(errorMsg);
+    }
+    exit = sqlite3_step(row);
+    return exit == SQLITE_ROW;
+}
+
 int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
@@ -221,6 +233,20 @@ int Database::totalRows(std::string command) {
     return count;
 }
 
+int Database::addTrigger(std::string command) {
+    char *messageError;
+    int exit = sqlite3_open(directory, &DB);
+
+    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, 0);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error in addTrigger function." << std::endl;
+        std::cerr << messageError << "\n";
+        sqlite3_free(messageError);
+    } else {
+        std::cout << "trigger added" << std::endl;
+    }
+    return 0;
+}
 
 /*
 DELETE this comment later.
