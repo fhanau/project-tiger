@@ -103,7 +103,6 @@ int main(int argc, char** argv) {
       if (mostWon > newMostWon) {
         newMostWon = mostWon;
       }
-      std::cout << std::to_string(newMostWon) << " is new most won.\n";
       std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
         + std::to_string(totalWins) + ", most_won = " + std::to_string(newMostWon) +
         ", total_money = " + std::to_string(totalMoney) + " WHERE player_id = '"

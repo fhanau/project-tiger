@@ -18,9 +18,6 @@ static int maxCallback(void *count, int argc, char**argv, char **azColName) {
 
 static int mostWonCallback(void *count, int argc, char**argv, char**azColName) {
     int *mostWon = reinterpret_cast<int *>(count);
-    std::cout << "Total columns: " << argc << "\n";
-    std::cout << "Column Name: " << azColName[0] << "\n";
-    std::cout << "Value: " << argv[0] << "\n";
     *mostWon = std::stoi(argv[0]);
     return 0;
 }
