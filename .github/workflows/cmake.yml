@@ -27,7 +27,7 @@ jobs:
         submodules: recursive
 
     - name: Install asio headers
-      run: sudo apt-get install --no-install-recommends --fix-missing -y libasio-dev
+      run: sudo apt update && sudo apt-get install --no-install-recommends --fix-missing -y libasio-dev
 
     - name: Install curl globally
       run: sudo apt-get install --no-install-recommends --fix-missing -y curl libcurl4-openssl-dev libcurlpp-dev
