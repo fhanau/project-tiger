@@ -160,6 +160,7 @@ int Database::updateData(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in updateData function." << std::endl;
+        std::cerr << messageError << "\n";
         sqlite3_free(messageError);
     } else {
         std::cout << "Records updated Successfully!" << std::endl;

@@ -99,8 +99,11 @@ int main(int argc, char** argv) {
         "player_id = '" + player + "' AND username = '" + host + "' AND "
         "game_type = '" + gametype + "';";
       int totalMoney = getDatabase().getIntValue(totalMoneyCommand) + stoi(earning);
-      int newMostWon = mostWon ? mostWon > stoi(earning) : stoi(earning);
-      std::cout << std::to_string(newMostWon) << "is new most won.\n";
+      int newMostWon = stoi(earning);
+      if (mostWon > newMostWon) {
+        newMostWon = mostWon;
+      }
+      std::cout << std::to_string(newMostWon) << " is new most won.\n";
       std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
         + std::to_string(totalWins) + ", most_won = " + std::to_string(newMostWon) +
         ", total_money = " + std::to_string(totalMoney) + " WHERE player_id = '"
