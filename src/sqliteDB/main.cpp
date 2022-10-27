@@ -6,25 +6,23 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 
 int main() {
     Database dummy("dummy.db");
-    std::string ins1 = "INSERT INTO player_stats(player_id, host_id, ";
-    std::string ins2 = "name, game_type, total_wins, total_losses, ";
-    std::string ins3 = "most_won, most_lost, total_money) VALUES(100";
-    std::string ins4 = ", 500, 'Alex', 'RPS', 35, 53, 10000000, 50, ";
-    std::string ins5 = "2222);";
-    dummy.insertData(ins1 + ins2 + ins3 + ins4 + ins5);
+    std::string statsCommand = "INSERT INTO player_stats(player_id, host_id, name, "
+      "game_type, total_wins, total_losses, most_won, most_lost, total_money) "
+      "VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222);";
+    dummy.insertData(statsCommand);
 
     dummy.selectData("SELECT * FROM player_stats WHERE player_id = 100;");
 
-    std::string sel1 = "UPDATE player_stats SET player_id = 102 WHERE ";
-    std::string sel2 = "player_id = 100;";
-    dummy.updateData(sel1 + sel2);
+    std::string updateCommand = "UPDATE player_stats SET player_id = 102 "
+    "WHERE player_id = 100;";
+    dummy.updateData(updateCommand);
 
     //dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
 
     sqlite3_stmt* x;
-    std::string makeStat1 = "SELECT * FROM player_stats WHERE player_id";
-    std::string makeStat2 = " = 2100;";
-    x = dummy.makeStatement(makeStat1 + makeStat2);
+    std::string getStatsCommand = "SELECT * FROM player_stats WHERE player_id "
+        "= 2100;";
+    x = dummy.makeStatement(getStatsCommand);
     int col = sqlite3_column_count(x);
     int test;
     int count = 0;

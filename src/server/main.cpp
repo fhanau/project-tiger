@@ -17,16 +17,13 @@ int main(int argc, char** argv) {
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
   ([](std::string username, std::string password) {
     // Receives request from client to make account with username and password
-    std::string formattedUsername = username + "';";
-    std::string findHost = "SELECT * from hosts WHERE username = '"
-      + formattedUsername;
-    //sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    std::string findHost = "SELECT * from hosts WHERE username = '" +
+      username + "';";
     if (getDatabase().totalRows(findHost) > 0) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
-      std::string values = "'" + username + "', '" + password + "');";
       std::string command = "INSERT INTO hosts(username, password) VALUES("
-        + values;
+        "'" + username + "', '" + password + "');";
       getDatabase().insertData(command);
       std::string validResponse = "SUCCESS " + getSession();
       return crow::response(validResponse);
@@ -36,30 +33,14 @@ int main(int argc, char** argv) {
   CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
   std::string password) {
     // Receives request from client to login with username and password
-    std::string formattedUsername = "username = '" + username + "' AND ";
-    std::string formattedPassword = "password = '" + password + "';";
-    std::string findHost = "SELECT * from hosts WHERE "
-      + formattedUsername + formattedPassword;
-    //sqlite3_stmt* result = getDatabase().makeStatement(findHost);
+    std::string findHost = "SELECT * from hosts WHERE username = '" + username
+      + "' AND password = '" + password + "';";
     if (getDatabase().totalRows(findHost) == 0) {
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
       std::string validResponse = "SUCCESS " + getSession();
       return crow::response(validResponse);
     }
-  });
-
-  CROW_ROUTE(app, "/gametype/<string>/<string>")([] (std::string type,
-  std::string sessionId) {
-    // Receives request from client to upload new type of game
-    // Must have sessionId to verify that client is logged in
-    if (sessionId.compare(getSession()) != 0) {
-      return crow::response("ERROR NotLoggedIn");
-    }
-    std::string values = "'" + type + "');";
-    std::string command = "INSERT INTO games(game_name) VALUES(" + values;
-    getDatabase().insertData(command);
-    return crow::response("SUCCESS Complete");
   });
 
   CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<string>")
@@ -79,28 +60,43 @@ int main(int argc, char** argv) {
     }
     std::string newGameId = std::to_string(gameId);
 
-    std::string firstIns = "INSERT INTO game_list(game_id, game_type, ";
-    std::string secondIns = "username, winning_player_id, result, ";
-    std::string thirdIns = "money_won) VALUES(";
-    std::string insert = firstIns + secondIns + thirdIns;
+    std::string gameCommand = "INSERT INTO game_list(game_id, game_type, "
+      "username, winning_player_id, result, money_won) VALUES(" + 
+      newGameId + ", '" + gametype + "', '" + host + "', '" + user + 
+      "', '" + result + "', " + earning + ");";
 
-    std::string firstValues = newGameId + ", '" + gametype + "', '";
-    std::string secondValues = host + "', '" + user + "', '" + result;
-    std::string thirdValues = "', " + earning + ");";
-    std::string values = firstValues + secondValues + thirdValues;
-
-    std::string command = insert + values;
-
-    std::string playerPrompt = "SELECT * FROM players WHERE player_id= '";
-    std::string playerValues = user + "' AND username = '" + host + "';";
-    std::string playerCommand = playerPrompt + playerValues;
-    if (getDatabase().totalRows(playerCommand) == 0) {
-      std::string newPlayerPrompt = "INSERT INTO players(player_id, username)";
-      std::string newPlayerValues = " VALUES('" + user + "', '" + host + "');";
-      std::string newPlayerCommand = newPlayerPrompt + newPlayerValues;
-      getDatabase().insertData(newPlayerCommand);
+    std::string gameTypeCommand = "SELECT * FROM games(game_name) WHERE "
+      "game_name = '" + gametype + "';";
+    if (getDatabase().totalRows(gameTypeCommand) == 0) {
+      std::string newGameTypeCommand = "INSERT INTO games(game_name) VALUES('"
+        + gametype + "');";
+      getDatabase().insertData(newGameTypeCommand);
     }
-    getDatabase().insertData(command);
+
+    std::string playerCommand = "SELECT * FROM players WHERE player_id= '"
+      + user + "' AND username = '" + host + "';";
+    
+    if (getDatabase().totalRows(playerCommand) == 0) {
+      std::string newPlayerCommand = "INSERT INTO players(player_id, username)"
+        " VALUES('" + user + "', '" + host + "');";
+      getDatabase().insertData(newPlayerCommand);
+
+      // Need to change tests since "name" field should be removed
+      // Also how would we know how much that lost or total losses?
+      std::string newStatsCommand = "INSERT INTO player_stats(player_id, "
+        "username, game_type, total_wins, total_losses, most_won, "
+        "most_lost, total_money) VALUES('" + user + "', '" + host + "', '"
+        + gametype + "', 1, 0, " + earning + ", 0, " + earning + ");";
+      getDatabase().insertData(newStatsCommand);
+    } else {
+      std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
+        "total_wins + 1, most_won = GREATEST(most_won, " + earning + "), "
+        "total_money = total_money + " + earning + " WHERE player_id = '"
+        + user + "' AND username = '" + host + "', AND game_type = '" +
+        gametype + "';";
+      getDatabase().updateData(updateStatsCommand);
+    }
+    getDatabase().insertData(gameCommand);
     return "SUCCESS";
   });
 
@@ -108,8 +104,18 @@ int main(int argc, char** argv) {
     if (!type.compare("total-games")) {
       std::string command = "SELECT game_id FROM game_list;";
       return std::to_string(getDatabase().totalRows(command));
+    } else if (!type.compare("total-hosts")) {
+      std::string command = "SELECT (username) FROM hosts;";
+      return std::to_string(getDatabase().totalRows(command));
+    } else if (!type.compare("total-players")) {
+      std::string command = "SELECT (player_id) FROM players;";
+      return std::to_string(getDatabase().totalRows(command));
+    } else if (!type.compare("total-types")) {
+      std::string command = "SELECT (game_name) FROM games;";
+      return std::to_string(getDatabase().totalRows(command));
+    } else {
+      return std::to_string(0);
     }
-    return std::to_string(0);
   });
 
   app.bindaddr("127.0.0.1").port(18080).multithreaded().run();

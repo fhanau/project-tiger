@@ -25,7 +25,6 @@ Database::Database(const char* db_dir) {
     std::string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
         "player_id      CHAR(50)    NOT NULL, "
         "username       CHAR(50)    NOT NULL, "
-        "name           CHAR(50)    NOT NULL, "
         "game_type      CHAR(50)    NOT NULL, "
         "total_wins     INT         NOT NULL, "
         "total_losses   INT         NOT NULL, "
