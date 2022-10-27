@@ -89,9 +89,14 @@ int main(int argc, char** argv) {
         + gametype + "', 1, 0, " + earning + ", 0, " + earning + ");";
       getDatabase().insertData(newStatsCommand);
     } else {
+      std::string mostWonCommand = "SELECT most_won FROM player_stats WHERE "
+        "player_id = '" + player + "' AND username = '" + host + "' AND "
+        "game_type = '" + gametype + "';";
+      int mostWon = getDatabase().getMostWon(mostWonCommand);
+      int newMostWon = mostWon ? mostWon > stoi(earning) : stoi(earning);
       std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
-        "total_wins + 1, most_won = GREATEST(most_won, " + earning + "), "
-        "total_money = total_money + " + earning + " WHERE player_id = '"
+        "total_wins + 1, most_won = " + std::to_string(newMostWon) +
+        ", total_money = total_money + " + earning + " WHERE player_id = '"
         + player + "' AND username = '" + host + "', AND game_type = '" +
         gametype + "';";
       getDatabase().updateData(updateStatsCommand);

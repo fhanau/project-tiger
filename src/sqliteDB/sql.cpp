@@ -16,6 +16,15 @@ static int maxCallback(void *count, int argc, char**argv, char **azColName) {
     return 0;
 }
 
+static int mostWonCallback(void *count, int argc, char**argv, char**azColName) {
+    int *mostWon = reinterpret_cast<int *>(count);
+    std::cout << "Total columns: " << argc;
+    std::cout << "Column Name: " << azColName[0];
+    std::cout << "Value: " << argv[0];
+    *mostWon = std::stoi(argv[0]);
+    return 0;
+}
+
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
@@ -226,10 +235,23 @@ int Database::totalRows(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking host information\n";
+      std::cerr << "Error when getting total rows\n";
       sqlite3_free(messageError);
     }
     return count;
+}
+
+int Database::getMostWon(std::string command) {
+    char *messageError;
+    int amountWon = 0;
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), mostWonCallback, &amountWon,
+        &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error when getting most won\n";
+        sqlite3_free(messageError);
+    }
+    return amountWon;
 }
 
 int Database::addTrigger(std::string command) {
