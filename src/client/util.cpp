@@ -113,8 +113,8 @@ void displayHelp() {
   std::cout << "Commands available:\n";
   std::cout << "create <string: username> <string: password>\n";
   std::cout << "login <string: username> <string: password>\n";
-  std::cout << "upload <string: name of game> <string: winning userid>" << " ";
-  std::cout << "<int: money earned> <string: result description>\n";
+  std::cout << "upload <string: name of game> <string: playerid>" << " ";
+  std::cout << "<int: win/loss amount> <string: result description>\n";
   std::cout << "public <string: ['total-games', 'total-players'," << " ";
   std::cout << "'total-types', 'total-hosts']>\n";
   std::cout << "logout\n";
