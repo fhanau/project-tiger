@@ -77,8 +77,9 @@ Database::Database(const char* db_dir) {
 
     this->createTable(command6);
 
-    std::string addPlayerTrigger = "CREATE OR ALTER TRIGGER add_player AFTER INSERT ON game_list "
-        "BEGIN INSERT INTO players(player_id, username) VALUES(new.winning_player_id, new.username); END;";
+    std::string addPlayerTrigger = "CREATE TRIGGER add_player AFTER INSERT ON game_list"
+        " BEGIN INSERT INTO players(player_id, username) "
+        "VALUES(new.winning_player_id, new.username); END;";
     this->addTrigger(addPlayerTrigger);
 
     std::string checkDuplicatePlayerTrigger = "CREATE OR ALTER TRIGGER no_dup_player AFTER INSERT ON players "
