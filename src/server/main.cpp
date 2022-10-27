@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
       std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
         + std::to_string(totalWins) + ", most_won = " + std::to_string(newMostWon) +
         ", total_money = " + std::to_string(totalMoney) + " WHERE player_id = '"
-        + player + "' AND username = '" + host + "', AND game_type = '" +
+        + player + "' AND username = '" + host + "' AND game_type = '" +
         gametype + "';";
       getDatabase().updateData(updateStatsCommand);
     }
