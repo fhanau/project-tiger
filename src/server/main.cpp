@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     std::string newGameId = std::to_string(gameId);
 
     std::string gameCommand = "INSERT INTO game_list(game_id, game_type, "
-      "username, winning_player_id, result, money_won) VALUES(" + 
+      "username, player_id, result, earning) VALUES(" + 
       newGameId + ", '" + gametype + "', '" + host + "', '" + player + 
       "', '" + result + "', " + earning + ");";
 
@@ -73,42 +73,69 @@ int main(int argc, char** argv) {
 
     std::string playerCommand = "SELECT * FROM players WHERE player_id = '"
       + player + "' AND username = '" + host + "';";
-    
+    int earningValue = std::stoi(earning);
+
     if (getDatabase().totalRows(playerCommand) == 0) {
       std::string newPlayerCommand = "INSERT INTO players(player_id, username)"
         " VALUES('" + player + "', '" + host + "');";
       getDatabase().insertData(newPlayerCommand);
 
-      // Need to change tests since "name" field should be removed
-      // Also how would we know how much that lost or total losses?
-      std::string newStatsCommand = "INSERT INTO player_stats(player_id, "
+      if (earningValue <= 0) {
+        std::string newStatsCommand = "INSERT INTO player_stats(player_id, "
+        "username, game_type, total_wins, total_losses, most_won, "
+        "most_lost, total_money) VALUES('" + player + "', '" + host + "', '"
+        + gametype + "', 0, 1, 0, " + earning + ", 0);";
+        getDatabase().insertData(newStatsCommand);
+      } else {
+        std::string newStatsCommand = "INSERT INTO player_stats(player_id, "
         "username, game_type, total_wins, total_losses, most_won, "
         "most_lost, total_money) VALUES('" + player + "', '" + host + "', '"
         + gametype + "', 1, 0, " + earning + ", 0, " + earning + ");";
-      getDatabase().insertData(newStatsCommand);
+        getDatabase().insertData(newStatsCommand);
+      }  
     } else {
-      std::string mostWonCommand = "SELECT most_won FROM player_stats WHERE "
-        "player_id = '" + player + "' AND username = '" + host + "' AND "
-        "game_type = '" + gametype + "';";
-      int mostWon = getDatabase().getIntValue(mostWonCommand);
-      std::string totalWinsCommand = "SELECT total_wins FROM player_stats WHERE "
-        "player_id = '" + player + "' AND username = '" + host + "' AND "
-        "game_type = '" + gametype + "';";
-      int totalWins = getDatabase().getIntValue(totalWinsCommand) + 1;
-      std::string totalMoneyCommand = "SELECT total_money FROM player_stats WHERE "
-        "player_id = '" + player + "' AND username = '" + host + "' AND "
-        "game_type = '" + gametype + "';";
-      int totalMoney = getDatabase().getIntValue(totalMoneyCommand) + stoi(earning);
-      int newMostWon = stoi(earning);
-      if (mostWon > newMostWon) {
-        newMostWon = mostWon;
-      }
-      std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
-        + std::to_string(totalWins) + ", most_won = " + std::to_string(newMostWon) +
-        ", total_money = " + std::to_string(totalMoney) + " WHERE player_id = '"
-        + player + "' AND username = '" + host + "' AND game_type = '" +
-        gametype + "';";
-      getDatabase().updateData(updateStatsCommand);
+      if (earningValue > 0) {
+        std::string mostWonCommand = "SELECT most_won FROM player_stats WHERE "
+          "player_id = '" + player + "' AND username = '" + host + "' AND "
+          "game_type = '" + gametype + "';";
+        int mostWon = getDatabase().getIntValue(mostWonCommand);
+        std::string totalWinsCommand = "SELECT total_wins FROM player_stats WHERE "
+          "player_id = '" + player + "' AND username = '" + host + "' AND "
+          "game_type = '" + gametype + "';";
+        int totalWins = getDatabase().getIntValue(totalWinsCommand) + 1;
+        std::string totalMoneyCommand = "SELECT total_money FROM player_stats WHERE "
+          "player_id = '" + player + "' AND username = '" + host + "' AND "
+          "game_type = '" + gametype + "';";
+        int totalMoney = getDatabase().getIntValue(totalMoneyCommand) + stoi(earning);
+        int newMostWon = stoi(earning);
+        if (mostWon > newMostWon) {
+          newMostWon = mostWon;
+        }
+        std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
+          + std::to_string(totalWins) + ", most_won = " + std::to_string(newMostWon) +
+          ", total_money = " + std::to_string(totalMoney) + " WHERE player_id = '"
+          + player + "' AND username = '" + host + "' AND game_type = '" +
+          gametype + "';";
+        getDatabase().updateData(updateStatsCommand);
+      } else {
+        std::string mostLostCommand = "SELECT most_lost FROM player_stats WHERE "
+          "player_id = '" + player + "' AND username = '" + host + "' AND "
+          "game_type = '" + gametype + "';";
+        int mostLoss = getDatabase().getIntValue(mostLostCommand);
+        std::string totalLostCommand = "SELECT total_losses FROM player_stats WHERE "
+          "player_id = '" + player + "' AND username = '" + host + "' AND "
+          "game_type = '" + gametype + "';";
+        int totalLosses = getDatabase().getIntValue(totalLostCommand) + 1;
+        int newMostLoss = stoi(earning);
+        if (mostLoss < newMostLoss) {
+          newMostLoss = mostLoss;
+        }
+        std::string updateStatsCommand = "UPDATE player_stats SET total_losses = "
+          + std::to_string(totalLosses) + ", most_lost = " + std::to_string(newMostLoss)
+          + " WHERE player_id = '" + player + "' AND username = '" + host + 
+          "' AND game_type = '" + gametype + "';";
+        getDatabase().updateData(updateStatsCommand);
+      }     
     }
     getDatabase().insertData(gameCommand);
     return "SUCCESS";

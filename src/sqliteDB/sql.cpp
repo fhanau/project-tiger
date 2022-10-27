@@ -46,9 +46,9 @@ Database::Database(const char* db_dir) {
         "game_id                INT  NOT NULL, "
         "game_type              TEXT NOT NULL, "
         "username               CHAR(50)  NOT NULL, "
-        "winning_player_id      CHAR(50)  NOT NULL, "
+        "player_id      CHAR(50)  NOT NULL, "
         "result                 TEXT NOT NULL, "
-        "money_won              INT  NOT NULL, "
+        "earning              INT  NOT NULL, "
         "CONSTRAINT game_host PRIMARY KEY (game_id, username) );";
 
     this->createTable(command2);
@@ -201,31 +201,6 @@ int Database::getMax(std::string table_name, std::string col_name) {
     return the_max;
 }
 
-int Database::getMax2(std::string command) {
-    char* messageError;
-    int count = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), maxCallback, &count,
-      &messageError);
-    if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking host information\n";
-      sqlite3_free(messageError);
-    }
-    return count;
-}
-
-int Database::entryExists(std::string command) {
-    sqlite3_stmt *row = 0;
-    char* errorMsg;
-    int exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &row, 0);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in entryExists function." << std::endl;
-        sqlite3_free(errorMsg);
-    }
-    exit = sqlite3_step(row);
-    return exit == SQLITE_ROW;
-}
-
 int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
@@ -251,42 +226,6 @@ int Database::getIntValue(std::string command) {
     }
     return amountWon;
 }
-
-int Database::addTrigger(std::string command) {
-    char *messageError;
-    int exit = sqlite3_open(directory, &DB);
-
-    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, 0);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in addTrigger function." << std::endl;
-        std::cerr << messageError << "\n";
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "trigger added" << std::endl;
-    }
-    return 0;
-}
-
-/*
-DELETE this comment later.
-- The variable the_Statement will return the first row of the selected query.
-- run step(the_Statement to return current row and point to next row after)
-- SQLITE_DONE = reached end of query.
-- sqlite3_column_type returns number code to signify type
-    - 1 = int
-    - 3 = text/char
-- sqlite3_column_int(stmt, i)
-- sqlite3_column_text(stmt, i)
-    sqlite3_stmt* x;
-    x = dummy.makeStatement("SELECT * FROM player_stats WHERE player_id = 102;");
-    int col = sqlite3_column_count(x);
-    while(sqlite3_step(x) != SQLITE_DONE) {
-        
-        for(int i = 0; i< col; i++) {
-            std::cout << "Num = " << sqlite3_column_type(x, i) << std::endl;
-        }
-    }
-*/
 
 // Method that checks if table is empty.
 int doesExist(sqlite3_stmt* statement) {

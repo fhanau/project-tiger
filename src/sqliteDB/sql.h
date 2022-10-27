@@ -32,15 +32,12 @@ class Database {
   int updateData(std::string command);
   // Delete entries in SQL table
   int deleteData(std::string command);
-  // Check if entry exists in SQL table
-  int entryExists(std::string command);
   // Get the total number of rows in an SQL table
   int totalRows(std::string command);
   // Create sqlite3 statement used for processing rows
   sqlite3_stmt* makeStatement(std::string command);
   // Get the maximum value of a column in an sql table
   int getMax(std::string table_name, std::string col_name);
-  int getMax2(std::string command);
   int getIntValue(std::string command);
 };
 
