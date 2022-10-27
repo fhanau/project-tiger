@@ -16,7 +16,7 @@ add_subdirectory(client)
 add_subdirectory(libraries/Crow)
 add_subdirectory(libraries/sqlite)
 set(CURLPP_BUILD_SHARED_LIBS OFF)
-add_subdirectory(libraries/curlpp)
+add_subdirectory(libraries/curlpp EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/openssl-cmake EXCLUDE_FROM_ALL)
 
 #While tests are done elsewhere, import them here since they also need the settings above.
