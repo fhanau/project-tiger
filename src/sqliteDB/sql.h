@@ -42,6 +42,7 @@ class Database {
   int getMax(std::string table_name, std::string col_name);
   int getMax2(std::string command);
   int getMostWon(std::string command);
+  int** getPlayerStatsForUpdate(std::string command);
 };
 
 #endif
