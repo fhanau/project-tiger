@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
       "game_name = '" + gametype + "';";
     int totalGameTypes = getDatabase().totalRows(gameTypeCommand);
     if (totalGameTypes == 0) {
-      std::string newGameTypeCommand = "INSERT IGNORE INTO games(game_name) VALUES('"
+      std::string newGameTypeCommand = "INSERT INTO games(game_name) VALUES('"
         + gametype + "');";
       getDatabase().insertData(newGameTypeCommand);
     }
