@@ -45,54 +45,54 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<string>")
     ([] (std::string sessionId, std::string gametype, std::string host,
-      std::string user, std::string result, std::string earning) {
+      std::string player, std::string result, std::string earning) {
     // Receives request from client to upload game data to database
     // Must be logged in to upload game data
     if (sessionId.compare(getSession()) != 0) {
       return "";
     }
 
-    int gameId = 0;
-    std::string getGamesCommand = "SELECT game_id FROM game_list LIMIT 1";
-    if (getDatabase().totalRows(getGamesCommand) > 0) {
-      std::string maxCommand = "SELECT MAX(game_id) FROM game_list;";
-      gameId = getDatabase().getMax2(maxCommand) + 1;
-    }
+    std::string getGamesCommand = "SELECT game_id FROM game_list;";
+    int totalGames = getDatabase().totalRows(getGamesCommand);
+    std::cout << "Total Games Played: " << totalGames << "\n";
+    int gameId = totalGames + 1;
+    
     std::string newGameId = std::to_string(gameId);
 
     std::string gameCommand = "INSERT INTO game_list(game_id, game_type, "
       "username, winning_player_id, result, money_won) VALUES(" + 
-      newGameId + ", '" + gametype + "', '" + host + "', '" + user + 
+      newGameId + ", '" + gametype + "', '" + host + "', '" + player + 
       "', '" + result + "', " + earning + ");";
 
-    std::string gameTypeCommand = "SELECT * FROM games(game_name) WHERE "
+    std::string gameTypeCommand = "SELECT * FROM games WHERE "
       "game_name = '" + gametype + "';";
-    if (getDatabase().totalRows(gameTypeCommand) == 0) {
-      std::string newGameTypeCommand = "INSERT INTO games(game_name) VALUES('"
+    int totalGameTypes = getDatabase().totalRows(gameTypeCommand);
+    if (totalGameTypes == 0) {
+      std::string newGameTypeCommand = "INSERT IGNORE INTO games(game_name) VALUES('"
         + gametype + "');";
       getDatabase().insertData(newGameTypeCommand);
     }
 
-    std::string playerCommand = "SELECT * FROM players WHERE player_id= '"
-      + user + "' AND username = '" + host + "';";
+    std::string playerCommand = "SELECT * FROM players WHERE player_id = '"
+      + player + "' AND username = '" + host + "';";
     
     if (getDatabase().totalRows(playerCommand) == 0) {
       std::string newPlayerCommand = "INSERT INTO players(player_id, username)"
-        " VALUES('" + user + "', '" + host + "');";
+        " VALUES('" + player + "', '" + host + "');";
       getDatabase().insertData(newPlayerCommand);
 
       // Need to change tests since "name" field should be removed
       // Also how would we know how much that lost or total losses?
       std::string newStatsCommand = "INSERT INTO player_stats(player_id, "
         "username, game_type, total_wins, total_losses, most_won, "
-        "most_lost, total_money) VALUES('" + user + "', '" + host + "', '"
+        "most_lost, total_money) VALUES('" + player + "', '" + host + "', '"
         + gametype + "', 1, 0, " + earning + ", 0, " + earning + ");";
       getDatabase().insertData(newStatsCommand);
     } else {
       std::string updateStatsCommand = "UPDATE player_stats SET total_wins = "
         "total_wins + 1, most_won = GREATEST(most_won, " + earning + "), "
         "total_money = total_money + " + earning + " WHERE player_id = '"
-        + user + "' AND username = '" + host + "', AND game_type = '" +
+        + player + "' AND username = '" + host + "', AND game_type = '" +
         gametype + "';";
       getDatabase().updateData(updateStatsCommand);
     }
