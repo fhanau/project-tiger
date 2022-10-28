@@ -22,7 +22,8 @@ static int intCallback(void *intPointer, int argc, char**argv,
 static int textCallback(void *stringPointer, int argc, char**argv,
   char**azColName) {
     char **textPointer = reinterpret_cast<char **>(stringPointer);
-    *textPointer = reinterpret_cast<char *>(realloc(*textPointer, sizeof(argv[0])));
+    *textPointer = reinterpret_cast<char *>(
+        realloc(*textPointer, sizeof(argv[0])));
     strncpy(*textPointer, argv[0], sizeof(argv[0]));
     return 0;
 }
