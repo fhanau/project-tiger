@@ -138,7 +138,7 @@ std::string Requester::getPublicStats(std::string type) {
   return body[body.size() - 1];
 }
 
-std::string Requester::getTotalEarningsAll(std::string &session, 
+std::string Requester::getTotalEarningsAll(std::string &session,
   std::string &host) {
     std::stringstream response;
     std::string tmp;
@@ -154,7 +154,7 @@ std::string Requester::getTotalEarningsAll(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalEarningsGame(std::string &session, 
+std::string Requester::getTotalEarningsGame(std::string &session,
   std::string &host, std::string &gametype) {
     std::stringstream response;
     std::string tmp;
@@ -171,7 +171,7 @@ std::string Requester::getTotalEarningsGame(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalEarningsPlayer(std::string &session, 
+std::string Requester::getTotalEarningsPlayer(std::string &session,
   std::string &host, std::string &player) {
     std::stringstream response;
     std::string tmp;
@@ -187,7 +187,7 @@ std::string Requester::getTotalEarningsPlayer(std::string &session,
     return body[body.size() - 1];
 }
   
-std::string Requester::getTotalWinsAll(std::string &session, 
+std::string Requester::getTotalWinsAll(std::string &session,
   std::string &host) {
     std::stringstream response;
     std::string tmp;
@@ -203,7 +203,7 @@ std::string Requester::getTotalWinsAll(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalWinsGame(std::string &session, 
+std::string Requester::getTotalWinsGame(std::string &session,
   std::string &host, std::string &gametype) {
     std::stringstream response;
     std::string tmp;
@@ -219,7 +219,7 @@ std::string Requester::getTotalWinsGame(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalWinsPlayer(std::string &session, 
+std::string Requester::getTotalWinsPlayer(std::string &session,
   std::string &host, std::string &player) {
     std::stringstream response;
     std::string tmp;
@@ -235,7 +235,7 @@ std::string Requester::getTotalWinsPlayer(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalLossesAll(std::string &session, 
+std::string Requester::getTotalLossesAll(std::string &session,
   std::string &host) {
     std::stringstream response;
     std::string tmp;
@@ -251,7 +251,7 @@ std::string Requester::getTotalLossesAll(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalLossesGame(std::string &session, 
+std::string Requester::getTotalLossesGame(std::string &session,
   std::string &host, std::string &gametype) {
     std::stringstream response;
     std::string tmp;
@@ -267,7 +267,7 @@ std::string Requester::getTotalLossesGame(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalLossesPlayer(std::string &session, 
+std::string Requester::getTotalLossesPlayer(std::string &session,
   std::string &host, std::string &player) {
     std::stringstream response;
     std::string tmp;
@@ -283,7 +283,7 @@ std::string Requester::getTotalLossesPlayer(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getMostWinningPlay(std::string &session, 
+std::string Requester::getMostWinningPlay(std::string &session,
   std::string &host, std::string &gametype) {
     std::stringstream response;
     std::string tmp;

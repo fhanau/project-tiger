@@ -244,7 +244,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
 
 void displayPrivateHelp() {
   std::cout << "Commands available for private data requests:\n";
-  std::cout << "private total-earnings-all\n";  
+  std::cout << "private total-earnings-all\n";
   std::cout << "private total-earnings-game <string: game name>\n";
   std::cout << "private total-earnings-player <string: playerid>\n";
   std::cout << "private total-wins-all\n";

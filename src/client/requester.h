@@ -32,11 +32,11 @@ class Requester {
   std::string getPublicStats(std::string type);
 
   // Sends GET request to server for total earnings across all games
-  std::string getTotalEarningsAll(std::string &session, 
+  std::string getTotalEarningsAll(std::string &session,
     std::string &host);
 
   // Sends GET request to server for total earnings for a game
-  std::string getTotalEarningsGame(std::string &session, 
+  std::string getTotalEarningsGame(std::string &session,
     std::string &host, std::string &gametype);
 
   // Sends GET request to server for total earnings for a player
@@ -47,15 +47,15 @@ class Requester {
   std::string getTotalWinsAll(std::string &session, std::string &host);
 
   // Sends GET request to server for total wins for a game
-  std::string getTotalWinsGame(std::string &session, 
+  std::string getTotalWinsGame(std::string &session,
     std::string &host, std::string &gametype);
 
   // Sends GET request to server for total wins for a &
-  std::string getTotalWinsPlayer(std::string &session, 
+  std::string getTotalWinsPlayer(std::string &session,
     std::string &host, std::string &player);
 
   // Sends GET request to server for total losses across all games
-  std::string getTotalLossesAll(std::string &session, 
+  std::string getTotalLossesAll(std::string &session,
     std::string &host);
 
   // Sends GET request to server for total losses for a game
@@ -63,11 +63,11 @@ class Requester {
     std::string &gametype);
 
   // Sends GET request to server for total losses for a player
-  std::string getTotalLossesPlayer(std::string &session, 
+  std::string getTotalLossesPlayer(std::string &session,
     std::string &host, std::string &player);
 
   // Sends GET request to server for play that has won the most for a game
-  std::string getMostWinningPlay(std::string &session, std::string &host, 
+  std::string getMostWinningPlay(std::string &session, std::string &host,
     std::string &gametype);
  private:
   curlpp::Cleanup cleaner;
