@@ -54,29 +54,6 @@ void handleLoginHost(std::vector<std::string> &input,
   }
 }
 
-void handleAddGameType(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
-  if (input.size() != 2) {
-    std::cout << "Invalid input for uploading type of game.\n";
-    std::cout << "See 'help' for a list of commands.\n";
-  } else if (loggedInUsername.size() == 0) {
-    std::cout << "Must be logged in to add game type." << " ";
-    std::cout << "See 'help' for a list of commands.\n";
-  } else {
-    std::string gametype = input[1];
-    if (gametype.size() > 50) {
-      std::cout << "Game name must be less than 50 characters.\n";
-    } else {
-      std::string resp = req.addGameType(gametype, session);
-      if (resp.size() > 0) {
-        std::cout << "Successfully added gametype to server.\n";
-      } else {
-        std::cout << "Could not add gametype to server.\n";
-      }
-    }
-  }
-}
-
 std::string formatResult(std::vector<std::string> &input) {
   int pointer = 4;
   std::string result = "";
@@ -140,7 +117,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
     } else {
       std::string type = input[1];
       if (!type.compare("total-earnings-all")) {
-        std::string resp = req.getPrivateTotalEarningsAll(session, host);
+        std::string resp = req.getTotalEarningsAll(session, host);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -152,7 +129,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getPrivateTotalEarningsGame(session, host,
+          std::string resp = req.getTotalEarningsGame(session, host,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -166,7 +143,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string playerid = input[2];
-          std::string resp = req.getPrivateTotalEarningsPlayer(session, host,
+          std::string resp = req.getTotalEarningsPlayer(session, host,
             playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -175,7 +152,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           }
         }
       } else if (!type.compare("total-wins-all")) {
-        std::string resp = req.getPrivateTotalWinsAll(session, host);
+        std::string resp = req.getTotalWinsAll(session, host);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -187,7 +164,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getPrivateTotalWinsGame(session, host,
+          std::string resp = req.getTotalWinsGame(session, host,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -201,7 +178,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string playerid = input[2];
-          std::string resp = req.getPrivateTotalWinsPlayer(session, host,
+          std::string resp = req.getTotalWinsPlayer(session, host,
             playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -210,7 +187,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           }
         }
       } else if (!type.compare("total-losses-all")) {
-        std::string resp = req.getPrivateTotalLossesAll(session, host);
+        std::string resp = req.getTotalLossesAll(session, host);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -222,7 +199,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getPrivateTotalLossesGame(session, host,
+          std::string resp = req.getTotalLossesGame(session, host,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -236,7 +213,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string playerid = input[2];
-          std::string resp = req.getPrivateTotalLossesPlayer(session, host,
+          std::string resp = req.getTotalLossesPlayer(session, host,
             playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -250,7 +227,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getPrivateM(session, host,
+          std::string resp = req.getMostWinningPlay(session, host,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -283,9 +260,8 @@ void displayHelp() {
   std::cout << "Commands available:\n";
   std::cout << "create <string: username> <string: password>\n";
   std::cout << "login <string: username> <string: password>\n";
-  std::cout << "gametype <string: name of game>\n";
-  std::cout << "upload <string: name of game> <string: winning userid>" << " ";
-  std::cout << "<int: money earned> <string: result description>\n";
+  std::cout << "upload <string: name of game> <string: playerid>" << " ";
+  std::cout << "<int: win/loss amount> <string: result description>\n";
   std::cout << "public <string: ['total-games', 'total-players'," << " ";
   std::cout << "'total-types']>\n";
   std::cout << "help-private\n";
@@ -311,8 +287,6 @@ void processCleanInput(std::vector<std::string>& cleanInput,
     handleCreateHost(cleanInput, loggedInUsername, req, session);
   } else if (!command.compare("login")) {
     handleLoginHost(cleanInput, loggedInUsername, req, session);
-  } else if (!command.compare("gametype")) {
-    handleAddGameType(cleanInput, loggedInUsername, req, session);
   } else if (!command.compare("upload")) {
     handleUploadGameData(cleanInput, loggedInUsername, req, session);
   } else if (!command.compare("public")) {
