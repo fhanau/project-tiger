@@ -16,6 +16,12 @@ static int maxCallback(void *count, int argc, char**argv, char **azColName) {
     return 0;
 }
 
+static int mostWonCallback(void *count, int argc, char**argv, char**azColName) {
+    int *mostWon = reinterpret_cast<int *>(count);
+    *mostWon = std::stoi(argv[0]);
+    return 0;
+}
+
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
@@ -25,7 +31,6 @@ Database::Database(const char* db_dir) {
     std::string command1 = "CREATE TABLE IF NOT EXISTS player_stats("
         "player_id      CHAR(50)    NOT NULL, "
         "username       CHAR(50)    NOT NULL, "
-        "name           CHAR(50)    NOT NULL, "
         "game_type      CHAR(50)    NOT NULL, "
         "total_wins     INT         NOT NULL, "
         "total_losses   INT         NOT NULL, "
@@ -41,9 +46,9 @@ Database::Database(const char* db_dir) {
         "game_id                INT  NOT NULL, "
         "game_type              TEXT NOT NULL, "
         "username               CHAR(50)  NOT NULL, "
-        "winning_player_id      CHAR(50)  NOT NULL, "
+        "player_id      CHAR(50)  NOT NULL, "
         "result                 TEXT NOT NULL, "
-        "money_won              INT  NOT NULL, "
+        "earning              INT  NOT NULL, "
         "CONSTRAINT game_host PRIMARY KEY (game_id, username) );";
 
     this->createTable(command2);
@@ -152,6 +157,7 @@ int Database::updateData(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in updateData function." << std::endl;
+        std::cerr << messageError << "\n";
         sqlite3_free(messageError);
     } else {
         std::cout << "Records updated Successfully!" << std::endl;
@@ -195,19 +201,6 @@ int Database::getMax(std::string table_name, std::string col_name) {
     return the_max;
 }
 
-int Database::getMax2(std::string command) {
-    char* messageError;
-    int count = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), maxCallback, &count,
-      &messageError);
-    if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking host information\n";
-      sqlite3_free(messageError);
-    }
-    return count;
-}
-
 int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
@@ -215,33 +208,24 @@ int Database::totalRows(std::string command) {
     exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
-      std::cerr << "Error when checking host information\n";
+      std::cerr << "Error when getting total rows\n";
       sqlite3_free(messageError);
     }
     return count;
 }
 
-
-/*
-DELETE this comment later.
-- The variable the_Statement will return the first row of the selected query.
-- run step(the_Statement to return current row and point to next row after)
-- SQLITE_DONE = reached end of query.
-- sqlite3_column_type returns number code to signify type
-    - 1 = int
-    - 3 = text/char
-- sqlite3_column_int(stmt, i)
-- sqlite3_column_text(stmt, i)
-    sqlite3_stmt* x;
-    x = dummy.makeStatement("SELECT * FROM player_stats WHERE player_id = 102;");
-    int col = sqlite3_column_count(x);
-    while(sqlite3_step(x) != SQLITE_DONE) {
-        
-        for(int i = 0; i< col; i++) {
-            std::cout << "Num = " << sqlite3_column_type(x, i) << std::endl;
-        }
+int Database::getIntValue(std::string command) {
+    char *messageError;
+    int amountWon = 0;
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), mostWonCallback, &amountWon,
+        &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error when getting most won\n";
+        sqlite3_free(messageError);
     }
-*/
+    return amountWon;
+}
 
 // Method that checks if table is empty.
 int doesExist(sqlite3_stmt* statement) {
