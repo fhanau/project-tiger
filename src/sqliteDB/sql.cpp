@@ -22,9 +22,10 @@ static int intCallback(void *intPointer, int argc, char**argv,
 static int textCallback(void *stringPointer, int argc, char**argv,
   char**azColName) {
     char **textPointer = reinterpret_cast<char **>(stringPointer);
+    int textLength = sizeof(argv[0]);
     *textPointer = reinterpret_cast<char *>(
-        realloc(*textPointer, sizeof(argv[0])));
-    strncpy(*textPointer, argv[0], sizeof(argv[0]));
+        realloc(*textPointer, textLength));
+    strncpy(*textPointer, argv[0], textLength);
     return 0;
 }
 
@@ -235,7 +236,7 @@ int Database::getIntValue(std::string command) {
 
 std::string Database::getTextValue(std::string command) {
     char *messageError;
-    char *value = "";
+    char *value;
     int exit = sqlite3_open(directory, &DB);
     exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
