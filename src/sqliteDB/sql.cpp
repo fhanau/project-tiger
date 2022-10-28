@@ -10,15 +10,19 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
     return 0;
 }
 
-static int maxCallback(void *count, int argc, char**argv, char **azColName) {
-    int *c = reinterpret_cast<int *>(count);
-    *c = std::stoi(argv[0]);
-    return 0;
+
+static int intCallback(void *intPointer, int argc, char**argv, 
+    char**azColName) {
+        int *mostWon = reinterpret_cast<int *>(intPointer);
+        *mostWon = std::stoi(argv[0]);
+        return 0;
 }
 
-static int mostWonCallback(void *count, int argc, char**argv, char**azColName) {
-    int *mostWon = reinterpret_cast<int *>(count);
-    *mostWon = std::stoi(argv[0]);
+static int textCallback(void *stringPointer, int argc, char**argv, 
+  char**azColName) {
+    char **textPointer = reinterpret_cast<char **>(stringPointer);
+    *textPointer = (char *)realloc(*textPointer, sizeof(argv[0]));
+    strncpy(*textPointer, argv[0], sizeof(argv[0]));
     return 0;
 }
 
@@ -216,15 +220,28 @@ int Database::totalRows(std::string command) {
 
 int Database::getIntValue(std::string command) {
     char *messageError;
-    int amountWon = 0;
+    int value = 0;
     int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), mostWonCallback, &amountWon,
+    exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error when getting most won\n";
+        std::cerr << "Error when getting int value\n";
         sqlite3_free(messageError);
     }
-    return amountWon;
+    return value;
+}
+
+std::string Database::getTextValue(std::string command) {
+    char *messageError;
+    char *value = "";
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
+        &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error when getting text value\n";
+        sqlite3_free(messageError);
+    }
+    return std::string(value);
 }
 
 // Method that checks if table is empty.
