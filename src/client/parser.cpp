@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <set>
+#include <sstream>
 #include <vector>
 #include <cstring>
 
@@ -31,10 +32,10 @@ std::vector<std::string> Parser::getCleanInput() {
 std::vector<std::string> Parser::parseWords(std::string input) {
   const char* delimiter = " ";
   std::vector<std::string> words;
-  char *token = strtok(const_cast<char*>(input.c_str()), delimiter);
-  while (token != nullptr) {
-      words.push_back(std::string(token));
-      token = strtok(nullptr, delimiter);
+  std::string temp;
+  std::istringstream ss(input);
+  while (std::getline(ss, temp, ',')) {
+      words.push_back(temp);
   }
   return words;
 }

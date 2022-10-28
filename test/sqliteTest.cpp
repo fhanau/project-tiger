@@ -34,5 +34,5 @@ TEST(Creating_Database, Return_Total_Number_Columns) {
     EXPECT_EQ(players_count, 2);
     EXPECT_EQ(achieve_count, 5);
     EXPECT_EQ(hosts_count, 2);
-    EXPECT_EQ(games_count, 1);  
+    EXPECT_EQ(games_count, 1);
 }

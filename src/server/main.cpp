@@ -43,9 +43,10 @@ int main(int argc, char** argv) {
     }
   });
 
-  CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/<string>/<string>")
-    ([] (std::string sessionId, std::string gametype, std::string host,
-      std::string player, std::string result, std::string earning) {
+  CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/"
+    "<string>/<string>")([] (std::string sessionId, std::string gametype,
+    std::string host, std::string player, std::string result,
+    std::string earning) {
     // Receives request from client to upload game data to database
     // Must be logged in to upload game data
     if (sessionId.compare(getSession()) != 0) {
@@ -186,10 +187,10 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
-      std::string allPlayerEarningsCommand = "SELECT total_money FROM "
+      std::string totalEarnCommand = "SELECT total_money FROM "
         "player_stats WHERE username = '" + host + "' AND player_id = '" +
         player + "';";
-      return std::to_string(getDatabase().getIntValue(allPlayerEarningsCommand));
+      return std::to_string(getDatabase().getIntValue(totalEarnCommand));
   });
 
   CROW_ROUTE(app, "/private/total-wins-all/<string>/<string>")
@@ -207,10 +208,10 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
-      std::string allGameEarningsCommand = "SELECT COUNT(game_id) FROM "
+      std::string allGameWinsCommand = "SELECT COUNT(game_id) FROM "
         "game_list WHERE username = '" + host + "' AND game_type = '" +
         gametype + "' AND earning > 0;";
-      return std::to_string(getDatabase().getIntValue(allGameEarningsCommand));
+      return std::to_string(getDatabase().getIntValue(allGameWinsCommand));
   });
 
   CROW_ROUTE(app, "/private/total-wins-player/<string>/<string>/<string>")
@@ -218,10 +219,10 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
-      std::string allPlayerEarningsCommand = "SELECT total_wins FROM "
+      std::string playerWinsCommand = "SELECT total_wins FROM "
         "player_stats WHERE username = '" + host + "' AND player_id = '" +
         player + "';";
-      return std::to_string(getDatabase().getIntValue(allPlayerEarningsCommand));
+      return std::to_string(getDatabase().getIntValue(playerWinsCommand));
   });
 
   CROW_ROUTE(app, "/private/total-losses-all/<string>/<string>")

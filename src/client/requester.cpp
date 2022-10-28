@@ -186,7 +186,7 @@ std::string Requester::getTotalEarningsPlayer(std::string &session,
     }
     return body[body.size() - 1];
 }
-  
+
 std::string Requester::getTotalWinsAll(std::string &session,
   std::string &host) {
     std::stringstream response;

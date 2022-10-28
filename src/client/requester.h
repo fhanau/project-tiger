@@ -40,9 +40,8 @@ class Requester {
     std::string &host, std::string &gametype);
 
   // Sends GET request to server for total earnings for a player
-  std::string getTotalEarningsPlayer(std::string &session, 
+  std::string getTotalEarningsPlayer(std::string &session,
     std::string &host, std::string &player);
-  
   // Sends GET request to server for total wins across all games
   std::string getTotalWinsAll(std::string &session, std::string &host);
 
@@ -69,6 +68,7 @@ class Requester {
   // Sends GET request to server for play that has won the most for a game
   std::string getMostWinningPlay(std::string &session, std::string &host,
     std::string &gametype);
+
  private:
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
