@@ -9,7 +9,8 @@
 static int callback(void *count, int argc, char **argv, char **azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName);
 static int intCallback(void *intPointer, int argc, char**argv, char**azColName);
-static int textCallback(void *stringPointer, int argc, char**argv, char**azColName);
+static int textCallback(void *stringPointer, int argc, char**argv,
+  char**azColName);
 int doesExist(sqlite3_stmt* statement);
 
 class Database {
