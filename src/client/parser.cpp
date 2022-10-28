@@ -9,11 +9,7 @@
 
 int Parser::verifyInput(std::string input) {
   std::set<std::string> validCommands = {"create", "login", "help", "logout",
-<<<<<<< HEAD
     "exit", "gametype", "upload", "public", "private", "help-private"};
-=======
-    "exit", "upload", "public"};
->>>>>>> trunk
   std::vector<std::string> words = parseWords(input);
   if (words.size() < 1) {
     return 0;
