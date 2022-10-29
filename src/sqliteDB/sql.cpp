@@ -15,14 +15,20 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 static int intCallback(void *intPointer, int argc, char**argv,
     char**azColName) {
         int *mostWon = reinterpret_cast<int *>(intPointer);
+        std::cout << azColName[0] << ": " << argv[0] << "\n";
         *mostWon = std::stoi(argv[0]);
         return 0;
 }
 
 static int textCallback(void *stringPointer, int argc, char**argv,
   char**azColName) {
+    for (int i = 0; i < argc; i++) {
+        // column name and value
+        std::cout << azColName[i] << ": " << argv[i] << std::endl;
+    }
     char **textPointer = reinterpret_cast<char **>(stringPointer);
     int textLength = sizeof(argv[0]);
+    std::cout << "Size of pointer before realloc: " << textLength << "\n";
     *textPointer = reinterpret_cast<char *>(
         realloc(*textPointer, textLength));
     strncpy(*textPointer, argv[0], textLength);

@@ -200,6 +200,7 @@ int main(int argc, char** argv) {
       }
       std::string allWinsCommand = "SELECT SUM(total_wins) FROM player_stats"
         "WHERE username = '" + host + "';";
+      std::cout << allWinsCommand << "\n";
       return std::to_string(getDatabase().getIntValue(allWinsCommand));
   });
 
