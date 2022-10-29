@@ -26,8 +26,9 @@ static int textCallback(void *stringPointer, int argc, char**argv,
         // column name and value
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
     }
+    std::cout << "Made it just before textPointer cast\n"; 
     char *textPointer = (char *)stringPointer;
-    int textLength = sizeof(argv[0]);
+    int textLength = 4;//sizeof(argv[0]);
     std::cout << "Text Length: " << textLength << "\n";
     if (textLength > 100) {
         std::cout << "Size of pointer before realloc: " << textLength << "\n";
