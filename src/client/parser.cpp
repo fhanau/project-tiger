@@ -34,7 +34,7 @@ std::vector<std::string> Parser::parseWords(std::string input) {
   std::vector<std::string> words;
   std::string temp;
   std::istringstream ss(input);
-  while (std::getline(ss, temp, ',')) {
+  while (std::getline(ss, temp, delimiter)) {
       words.push_back(temp);
   }
   return words;
