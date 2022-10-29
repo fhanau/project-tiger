@@ -111,7 +111,7 @@ void handlePublicStats(std::vector<std::string> &input, Requester& req) {
 
 void handlePrivateStats(std::vector<std::string> &input, Requester& req,
   std::string &host, std::string &session) {
-    if (input.size() > 2) {
+    if (input.size() < 2) {
       std::cout << "Invalid input for requesting private data.\n";
       std::cout << "See 'help' for a list of commands.\n";
     } else {
