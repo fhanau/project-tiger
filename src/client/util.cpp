@@ -248,7 +248,7 @@ void displayPrivateHelp() {
   std::cout << "private total-earnings-game <string: game name>\n";
   std::cout << "private total-earnings-player <string: playerid>\n";
   std::cout << "private total-wins-all\n";
-  std::cout << "private total-wins-game <string: game name>\n"; //not working
+  std::cout << "private total-wins-game <string: game name>\n";
   std::cout << "private total-wins-player <string: playerid>\n";
   std::cout << "private total-losses-all\n";
   std::cout << "private total-losses-game <string: game name>\n";

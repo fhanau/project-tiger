@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
         return std::to_string(-1);
       }
       std::string allWinsCommand = "SELECT SUM(total_wins) FROM player_stats"
-        "WHERE username = '" + host + "';";
+        " WHERE username = '" + host + "';";
       std::cout << allWinsCommand << "\n";
       return std::to_string(getDatabase().getIntValue(allWinsCommand));
   });

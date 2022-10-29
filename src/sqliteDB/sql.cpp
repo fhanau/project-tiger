@@ -26,12 +26,14 @@ static int textCallback(void *stringPointer, int argc, char**argv,
         // column name and value
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
     }
-    char **textPointer = reinterpret_cast<char **>(stringPointer);
+    char *textPointer = reinterpret_cast<char *>(stringPointer);
     int textLength = sizeof(argv[0]);
-    std::cout << "Size of pointer before realloc: " << textLength << "\n";
-    *textPointer = reinterpret_cast<char *>(
-        realloc(*textPointer, textLength));
-    strncpy(*textPointer, argv[0], textLength);
+    if (textLength > 100) {
+        std::cout << "Size of pointer before realloc: " << textLength << "\n";
+        textPointer = reinterpret_cast<char *>(
+        realloc(textPointer, textLength));
+    }
+    strncpy(textPointer, argv[0], textLength);
     return 0;
 }
 
@@ -242,15 +244,17 @@ int Database::getIntValue(std::string command) {
 
 std::string Database::getTextValue(std::string command) {
     char *messageError;
-    char *value;
+    char *value = reinterpret_cast<char *>(malloc(100));
     int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
+    exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
         &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error when getting text value\n";
         sqlite3_free(messageError);
     }
-    return std::string(value);
+    std::string result = std::string(value);
+    free(value);
+    return result;
 }
 
 // Method that checks if table is empty.
