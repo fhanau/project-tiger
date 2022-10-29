@@ -28,11 +28,13 @@ static int textCallback(void *stringPointer, int argc, char**argv,
     }
     char *textPointer = (char *)stringPointer;
     int textLength = sizeof(argv[0]);
+    std::cout << "Text Length: " << textLength << "\n";
     if (textLength > 100) {
         std::cout << "Size of pointer before realloc: " << textLength << "\n";
         textPointer = (char *)realloc(textPointer, textLength);
     }
     strncpy(textPointer, argv[0], textLength);
+    std::cout << "Result: " << textPointer << ", argv[0]: " << argv[0] << "Length: " << textLength << "\n";
     return 0;
 }
 

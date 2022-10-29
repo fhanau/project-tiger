@@ -114,6 +114,9 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
     if (input.size() < 2) {
       std::cout << "Invalid input for requesting private data.\n";
       std::cout << "See 'help' for a list of commands.\n";
+    } else if (host.size() == 0) {
+      std::cout << "Must be logged in to request private stats.\n";
+      std::cout << "See 'help' for a list of commands.\n";
     } else {
       std::string type = input[1];
       if (!type.compare("total-earnings-all")) {
