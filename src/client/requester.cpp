@@ -176,7 +176,8 @@ std::string Requester::getTotalEarningsPlayer(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-earnings-player/" + host + "/" + player;
+    std::string path = "private/total-earnings-player/" + session + "/" + host
+      + "/" + player;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -192,7 +193,7 @@ std::string Requester::getTotalWinsAll(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-wins-all";
+    std::string path = "private/total-wins-all/" + session + "/" + host;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -208,7 +209,8 @@ std::string Requester::getTotalWinsGame(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-wins-game/" + host + "/" + gametype;
+    std::string path = "private/total-wins-game/" + session + "/" + host +
+      "/" + gametype;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -224,7 +226,8 @@ std::string Requester::getTotalWinsPlayer(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-wins-player/" + host + "/" + player;
+    std::string path = "private/total-wins-player/" + session + "/" + host +
+      "/" + player;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -240,7 +243,7 @@ std::string Requester::getTotalLossesAll(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-losses-all";
+    std::string path = "private/total-losses-all/" + session + "/" + host;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -256,7 +259,8 @@ std::string Requester::getTotalLossesGame(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-losses-game/" + host + "/" + gametype;
+    std::string path = "private/total-losses-game/" + session + "/" + host +
+      "/" + gametype;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -272,7 +276,8 @@ std::string Requester::getTotalLossesPlayer(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/total-losses-player/" + host + "/" + player;
+    std::string path = "private/total-losses-player/" + session + "/" + host +
+      "/" + player;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -288,7 +293,8 @@ std::string Requester::getMostWinningPlay(std::string &session,
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/most-winning-play/" + host + "/" + gametype;
+    std::string path = "private/most-winning-play/" + session + "/" + host +
+      "/" + gametype;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
