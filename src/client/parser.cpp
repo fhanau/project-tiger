@@ -30,11 +30,10 @@ std::vector<std::string> Parser::getCleanInput() {
 }
 
 std::vector<std::string> Parser::parseWords(std::string input) {
-  const char* delimiter = " ";
   std::vector<std::string> words;
   std::string temp;
   std::istringstream ss(input);
-  while (std::getline(ss, temp, delimiter)) {
+  while (std::getline(ss, temp, ' ')) {
       words.push_back(temp);
   }
   return words;
