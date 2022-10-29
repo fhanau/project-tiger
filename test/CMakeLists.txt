@@ -1,7 +1,7 @@
 include_directories(${CMAKE_SOURCE_DIR}/game/)
 include_directories(${CMAKE_SOURCE_DIR}/sqliteDB/)
 
-add_subdirectory(googletest)
+add_subdirectory(googletest EXCLUDE_FROM_ALL)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 set(TESTS DatabaseTests.cpp serverApiTests.cpp sqliteTest.cpp cardTests.cpp deckTests.cpp statTests.cpp)
