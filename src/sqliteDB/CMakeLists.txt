@@ -1,5 +1,5 @@
-include_directories(${CMAKE_SOURCE_DIR}/libraries/sqlite/)
-#add_executable(sqliteDB main.cpp) 
+include_directories(${TIGER_SOURCE_DIR}/libraries/sqlite/)
+#add_executable(sqliteDB main.cpp)
 #target_link_libraries(sqliteDB PRIVATE sqlite::sqlite)
 
 #add_library(sqlite3 STATIC ../libraries/sqlite/sqlite3.c ../libraries/sqlite/sqlite3.h ../libraries/sqlite/sqlite3ext.h ../libraries/sqlite/shell.c)
