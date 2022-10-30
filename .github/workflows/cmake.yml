@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "trunk" ]
 
-defaults:
-  run:
-    working-directory: src
-
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
