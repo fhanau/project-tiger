@@ -12,13 +12,9 @@ class StatTest:public::testing::Test {
         db.deleteData("DELETE FROM player_stats;");
         db.deleteData("DELETE FROM game_list;");
         db.deleteData("DELETE FROM achievements;");
-
-        db.insertData("INSERT INTO players(player_id, username) \
-            VALUES('1', 'jack'), \
-            ('2', 'lucy'); "
-        );
+        db.insertData("INSERT INTO players(player_id, username)"
+            " VALUES('1', 'jack'), ('2', 'lucy');");
     }
-    
     Database db = Database("dummy1.db");
 };
 
