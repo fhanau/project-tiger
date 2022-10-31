@@ -99,6 +99,7 @@ TEST(Database_Update, Check_Update_method) {
             check = 0;
         }
         EXPECT_EQ(check, 1);
+        break;
     }
 
     sqlite3_reset(seven);
