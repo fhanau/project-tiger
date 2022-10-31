@@ -166,5 +166,4 @@ TEST(Database_Drop, Check_Drop_method) {
     int totalTables = sqlite3_column_int(testt, 0);
 
     EXPECT_EQ(totalTables, 0);
-
 }

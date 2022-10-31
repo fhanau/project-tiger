@@ -4,7 +4,7 @@
 #include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
-//static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+// static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
     ++*c;
@@ -218,7 +218,6 @@ int Database::dropTable(std::string command) {
 // Method that return sqlite statement, given SQL command.
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
-    
     int exit = sqlite3_open(directory, &DB);
     exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     sqlite3_reset(the_Statement);
