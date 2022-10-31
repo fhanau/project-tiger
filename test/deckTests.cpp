@@ -13,7 +13,7 @@ TEST(deckTest1, testConstructor) {
     auto cards = deck.dealCards(52);
     // check no duplicate card exists
     std::set<std::pair<int, int>> card_set;
-    for (auto& card: cards) {
+    for (auto& card : cards) {
         auto p = std::make_pair<int, int>(card->getSuit(), card->getFace());
         EXPECT_EQ(card_set.find(p), card_set.end());
         card_set.insert(p);
@@ -40,7 +40,7 @@ TEST(deckTest3, testDealGivenCards) {
     card = deck.dealGivenCards(Card::club, Card::ace);
     EXPECT_TRUE(nullptr == card);
     EXPECT_EQ(deck.getNumRemainingCards(), 51);
-    
+
     // deal multiple given cards
     auto cards = deck.dealGivenCards({
         {Card::heart, Card::ace},
@@ -49,7 +49,8 @@ TEST(deckTest3, testDealGivenCards) {
     });
     EXPECT_EQ(deck.getNumRemainingCards(), 48);
     ASSERT_EQ(cards.size(), 3);
-    for (auto card: cards) {
+    for (auto card : cards) {
         EXPECT_EQ(card->getFace(), Card::ace);
     }
 }
+

@@ -18,20 +18,18 @@ class StatTest:public::testing::Test {
         // insert test data
         db.insertData(
             "INSERT INTO players(player_id, username)"
-            "VALUES('player1', 'username1')," 
+            "VALUES('player1', 'username1'),"
             "('player2', 'username2'),"
             "('player3', 'username4'),"
-            "('player4', 'username4');"
-        );
+            "('player4', 'username4');");
         db.insertData(
             "INSERT INTO player_stats(player_id, username, game_type, "
             "total_wins, total_losses, most_won, most_lost, total_money) "
             "VALUES('player1', 'username1', 'RPS', 1, 1, 1, 1, 0),"
-            "('player1', 'username1', 'BlackJack', 1, 1, 1, 2, 0),"  
-            "('player2', 'username2', 'RPS', 1, 1, 1, 0, 0)," 
-            "('player3', 'username3', 'BlackJack', 1, 0, 1, -1, 0)," 
-            "('player4', 'username4', 'BlackJack', 0, 1, 1, -1, 0);" 
-        );
+            "('player1', 'username1', 'BlackJack', 1, 1, 1, 2, 0),"
+            "('player2', 'username2', 'RPS', 1, 1, 1, 0, 0),"
+            "('player3', 'username3', 'BlackJack', 1, 0, 1, -1, 0),"
+            "('player4', 'username4', 'BlackJack', 0, 1, 1, -1, 0);");
         db.insertData(
             "INSERT INTO game_list(game_id, game_type, username, "
             "player_id, result, earning) "
@@ -41,8 +39,7 @@ class StatTest:public::testing::Test {
             "(110, 'RPS', 'username2', 'player2', '', '-1'),"
             "(200, 'BlackJack', 'username1', 'player1', '', '-1'),"
             "(200, 'BlackJack', 'username3', 'player3', '', '-1'),"
-            "(200, 'BlackJack', 'username4', 'player4', '', '2');"
-        );
+            "(200, 'BlackJack', 'username4', 'player4', '', '2');");
     }
     Database db = Database("dummy5.db");
 };
