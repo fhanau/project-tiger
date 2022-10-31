@@ -40,5 +40,6 @@ jobs:
     #Disable Github actions testing for now, looks difficult to set up
     - name: Test
       # Execute tests defined by the CMake configuration.
-      run: cmake --build ${{github.workspace}}/build --target tiger-test --config ${{env.BUILD_TYPE}} -- -j 2
-           build/tests/tiger-test
+      run: |
+        cmake --build ${{github.workspace}}/build --target tiger-test --config ${{env.BUILD_TYPE}} -- -j 2;
+        ${{github.workspace}}/build/tests/tiger-test
