@@ -266,6 +266,15 @@ int doesExist(sqlite3_stmt* statement) {
     }
 }
 
+int Database::doesExist(sqlite3_stmt* statement) {
+    if (sqlite3_step(statement) != SQLITE_DONE) {
+        sqlite3_reset(statement);
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 // Method used for printing data. Used for the selectData() method.
 static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     for (int i = 0; i < argc; i++) {

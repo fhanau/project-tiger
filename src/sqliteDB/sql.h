@@ -44,6 +44,8 @@ class Database {
   int getIntValue(std::string command);
   // Get the text value of a result column from an SQL query
   std::string getTextValue(std::string command);
+  // Check if a query result exists in a specific table
+  int doesExist(sqlite3_stmt* statement);
 };
 
 #endif
