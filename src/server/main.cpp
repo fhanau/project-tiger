@@ -261,7 +261,7 @@ int main(int argc, char** argv) {
   CROW_ROUTE(app, "/private/most-winning-play/<string>/<string>/<string>")
     ([] (std::string session, std::string host, std::string gametype) {
       if (getSession().compare(session)) {
-        return std::string("Invalid sessionid, Logout and login again.\n");
+        return std::string("Invalid sessionid. Logout and login again.\n");
       }
       std::string mostWinningPlayCommand = "SELECT result, COUNT(result) AS "
         "'value_occurrence' FROM game_list WHERE username = '" + host +

@@ -17,6 +17,24 @@ The server can be accessed on port 18080 using the following API. At present, al
 
 ```/public/<type:string>``` Request public game data of a given type. Returns an error if the type is invalid or there is an error when querying the data.  
 
+```private/total-earnings-all/<sessionId:string>/<host:string>``` Request total earnings for all players for a client. Must be logged in otherwise server returns -1.
+
+```private/total-earnings-game/<sessionId:string>/<host:string>/<gameName:string>``` Request total earnings for a specific game for a client. Must be logged in otherwise server returns -1.
+
+```private/total-earnings-all/<sessionId:string>/<host:string>/<player:string>``` Request total earnings for a specific player for a client. Must be logged in otherwise server returns -1.
+
+```private/total-wins-all/<sessionId:string>/<host:string>``` Request total wins for all players for a client. Must be logged in otherwise server returns -1.
+
+```private/total-wins-game/<sessionId:string>/<host:string>/<gameName:string>``` Request total wins for a specific game for a client. Must be logged in otherwise server returns -1.
+
+```private/total-wins-all/<sessionId:string>/<host:string>/<playerId:string>``` Request total wins for a specific player for a client. Must be logged in otherwise server returns -1.
+
+```private/total-losses-all/<sessionId:string>/<host:string>``` Request total losses for all players for a client. Must be logged in otherwise server returns -1.
+
+```private/total-losses-game/<sessionId:string>/<host:string>/<gameName:string>``` Request total losses for a specific game for a client. Must be logged in otherwise server returns -1.
+
+```private/total-losses-all/<sessionId:string>/<host:string>/<playerId:string>``` Request total losses for a specific player for a client. Must be logged in otherwise server returns -1.
+
 ### Build directions
 ```
 #install required libraries
