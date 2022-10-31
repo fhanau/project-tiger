@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <iostream>
+#include <cstring>
 #include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
@@ -10,15 +11,28 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
     return 0;
 }
 
-static int maxCallback(void *count, int argc, char**argv, char **azColName) {
-    int *c = reinterpret_cast<int *>(count);
-    *c = std::stoi(argv[0]);
-    return 0;
+
+static int intCallback(void *intPointer, int argc, char**argv,
+    char**azColName) {
+        int *mostWon = reinterpret_cast<int *>(intPointer);
+        std::cout << azColName[0] << ": " << argv[0] << "\n";
+        *mostWon = std::stoi(argv[0]);
+        return 0;
 }
 
-static int mostWonCallback(void *count, int argc, char**argv, char**azColName) {
-    int *mostWon = reinterpret_cast<int *>(count);
-    *mostWon = std::stoi(argv[0]);
+static int textCallback(void *stringPointer, int argc, char**argv,
+  char**azColName) {
+    for (int i = 0; i < argc; i++) {
+        // column name and value
+        std::cout << azColName[i] << ": " << argv[i] << std::endl;
+    }
+    char *textPointer = (char *)stringPointer;
+    int textLength = sizeof(argv[0]);
+    if (textLength > 100) {
+        std::cout << "Size of pointer before realloc: " << textLength << "\n";
+        textPointer = (char *)realloc(textPointer, textLength);
+    }
+    strncpy(textPointer, argv[0], textLength);
     return 0;
 }
 
@@ -216,15 +230,30 @@ int Database::totalRows(std::string command) {
 
 int Database::getIntValue(std::string command) {
     char *messageError;
-    int amountWon = 0;
+    int value = 0;
     int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), mostWonCallback, &amountWon,
+    exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error when getting most won\n";
+        std::cerr << "Error when getting int value\n";
         sqlite3_free(messageError);
     }
-    return amountWon;
+    return value;
+}
+
+std::string Database::getTextValue(std::string command) {
+    char *messageError;
+    char *value = (char *)malloc(100);
+    int exit = sqlite3_open(directory, &DB);
+    exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
+        &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error when getting text value\n";
+        sqlite3_free(messageError);
+    }
+    std::string result = std::string(value);
+    free(value);
+    return result;
 }
 
 // Method that checks if table is empty.
