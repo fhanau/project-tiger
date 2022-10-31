@@ -180,6 +180,22 @@ int Database::updateData(std::string command) {
     return 0;
 }
 
+// Method to drop table, given SQL command
+int Database::dropTable(std::string command) {
+    char* messageError;
+    int exit = sqlite3_open(directory, &DB);
+    /* An open database, SQL to be evaluated, 
+	Callback function, 1st argument to callback, Error msg written here */
+    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << "Error in dropTable function." << std::endl;
+        sqlite3_free(messageError);
+    } else {
+        std::cout << "Table Dropped Successfully!" << std::endl;
+    }
+    return 0;
+}
+
 // Method to delete data, given SQL command.
 int Database::deleteData(std::string command) {
     char* messageError;
