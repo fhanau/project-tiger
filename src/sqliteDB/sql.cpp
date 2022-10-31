@@ -202,6 +202,7 @@ int Database::deleteData(std::string command) {
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
+    sqlite3_reset(the_Statement);
     return the_Statement;
 }
 
@@ -258,6 +259,15 @@ std::string Database::getTextValue(std::string command) {
 
 // Method that checks if table is empty.
 int doesExist(sqlite3_stmt* statement) {
+    if (sqlite3_step(statement) != SQLITE_DONE) {
+        sqlite3_reset(statement);
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int Database::doesExist(sqlite3_stmt* statement) {
     if (sqlite3_step(statement) != SQLITE_DONE) {
         sqlite3_reset(statement);
         return 1;
