@@ -6,9 +6,10 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 
 int main() {
     Database dummy("dummy.db");
-    std::string statsCommand = "INSERT INTO player_stats(player_id, host_id, name, "
-      "game_type, total_wins, total_losses, most_won, most_lost, total_money) "
-      "VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, 2222);";
+    std::string statsCommand = "INSERT INTO player_stats(player_id, host_id,"
+      " name, game_type, total_wins, total_losses, most_won, most_lost, "
+      "total_money) VALUES(100, 500, 'Alex', 'RPS', 35, 53, 10000000, 50, "
+      "2222);";
     dummy.insertData(statsCommand);
 
     dummy.selectData("SELECT * FROM player_stats WHERE player_id = 100;");
