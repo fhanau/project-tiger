@@ -149,3 +149,22 @@ TEST(Database_Delete, Check_Delete_method) {
     EXPECT_EQ(hosts_count, 0);
     EXPECT_EQ(games_count, 0);
 }
+
+TEST(Database_Drop, Check_Drop_method) {
+    Database del_table = Database("delete.db");
+
+    del_table.dropTable("DROP TABLE IF EXISTS player_stats;");
+
+    std::string string1 = "SELECT COUNT(*) as theCount FROM sqlite_master ";
+    std::string string2 = "WHERE type = 'table' AND name='player_stats';";
+    std::string longString = string1 + string2;
+
+    sqlite3_stmt* testt = del_table.makeStatement(longString);
+
+    int exit = sqlite3_step(testt);
+
+    int totalTables = sqlite3_column_int(testt, 0);
+
+    EXPECT_EQ(totalTables, 0);
+
+}
