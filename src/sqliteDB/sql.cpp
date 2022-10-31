@@ -225,7 +225,7 @@ int Database::dropTable2(std::string command) {
         std::cerr << "Error in dropTable function." << std::endl;
         sqlite3_free(messageError);
     } else {
-        std::cout << "Table reomved Successfully!" << std::endl;
+        std::cout << "Table removed Successfully!" << std::endl;
     }
 
     return 0;
