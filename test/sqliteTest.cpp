@@ -2,7 +2,7 @@
 #include "../src/sqliteDB/sql.h"
 
 
-TEST(Database_Functionality, Check_All_Functions_Work) {
+TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     Database del_table = Database("delete.db");
     int players_stats_count;
     int game_list_count;
@@ -78,9 +78,12 @@ TEST(Database_Functionality, Check_All_Functions_Work) {
     EXPECT_EQ(achieve_count, 5);
     EXPECT_EQ(hosts_count, 2);
     EXPECT_EQ(games_count, 1);
+}
 
+TEST(Database_Update, Check_Update_method) {
+    Database del_table = Database("delete.db");
 
-    command1 = "UPDATE games SET game_name = 'RPS2'"
+    std::string command1 = "UPDATE games SET game_name = 'RPS2'"
         "WHERE game_name = 'RPS';";
     del_table.updateData(command1);
     sqlite3_stmt* seven = del_table.makeStatement("SELECT * FROM games");
@@ -96,9 +99,20 @@ TEST(Database_Functionality, Check_All_Functions_Work) {
             check = 0;
         }
         EXPECT_EQ(check, 1);
+        break;
     }
 
     sqlite3_reset(seven);
+}
+
+TEST(Database_Delete, Check_Delete_method) {
+    Database del_table = Database("delete.db");
+    int players_stats_count;
+    int game_list_count;
+    int players_count;
+    int achieve_count;
+    int hosts_count;
+    int games_count;
 
     del_table.deleteData("DELETE FROM player_stats;");
     del_table.deleteData("DELETE FROM game_list;");
