@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
 project (TIGER VERSION 0.1)
 set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-pessimizing-move -Wno-missing-field-initializers")
@@ -26,7 +27,7 @@ add_subdirectory(test)
 add_custom_target(all-tests DEPENDS code-tests run-tiger-test)
 add_custom_target(run-tiger-test
   DEPENDS tiger-test
-  COMMAND test/tiger-test || (exit 0))
+  COMMAND tiger-test || (exit 0))
 
 add_custom_target(code-tests)
 add_dependencies(code-tests code-spell code-lint code-analyze)
