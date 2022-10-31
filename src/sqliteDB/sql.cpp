@@ -198,7 +198,7 @@ int Database::deleteData(std::string command) {
     return 0;
 }
 
-int Database::dropTable(std::string command) {
+int Database::dropTable2(std::string command) {
     char* messageError;
 
     int exit = sqlite3_open(directory, &DB);

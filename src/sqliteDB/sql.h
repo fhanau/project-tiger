@@ -46,8 +46,8 @@ class Database {
   std::string getTextValue(std::string command);
   // Check if a query result exists in a specific table
   int doesExist(sqlite3_stmt* statement);
-  // Delete a table from the database.
-  int dropTable(std::string command);
+  // Delete a table from the database. Alex Brebenel version.
+  int dropTable2(std::string command);
 };
 
 #endif

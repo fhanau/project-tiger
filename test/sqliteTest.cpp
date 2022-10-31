@@ -153,7 +153,7 @@ TEST(Database_Delete, Check_Delete_method) {
 TEST(Database_Drop, Check_Drop_method) {
     Database del_table = Database("delete.db");
 
-    del_table.dropTable("DROP TABLE IF EXISTS player_stats;");
+    del_table.dropTable2("DROP TABLE IF EXISTS player_stats;");
 
     std::string string1 = "SELECT COUNT(*) as theCount FROM sqlite_master ";
     std::string string2 = "WHERE type = 'table' AND name='player_stats';";
