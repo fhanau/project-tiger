@@ -202,6 +202,7 @@ int Database::deleteData(std::string command) {
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
+    sqlite3_reset(the_Statement);
     return the_Statement;
 }
 

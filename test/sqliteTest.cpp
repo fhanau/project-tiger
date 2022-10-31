@@ -84,15 +84,14 @@ TEST(Database_Functionality, Check_All_Functions_Work) {
 
     command1 = "UPDATE games SET game_name = 'RPS2'"
         "WHERE game_name = 'RPS';";
-    sqlite3_stmt* seven = del_table.makeStatement(command1);
+    del_table.updateData(command1);
+    sqlite3_stmt* seven = del_table.makeStatement("SELECT * FROM games");
     
     int check = 2;
 
     while(sqlite3_step(seven) != SQLITE_DONE) {
-
         const char *value = (const char *)sqlite3_column_text(seven, 0);
         const char *answer = "RPS2";
-        std::cout << value << std::endl;
         if (strcmp(value, answer) == 0) {
             check = 1;
         } else {
@@ -101,7 +100,7 @@ TEST(Database_Functionality, Check_All_Functions_Work) {
         EXPECT_EQ(check, 1);
     }
 
-    sqlite3_reset(one);
+    sqlite3_reset(seven);
     
     del_table.deleteData("DELETE FROM player_stats;");
     del_table.deleteData("DELETE FROM game_list;");
