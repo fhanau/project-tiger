@@ -4,7 +4,7 @@
 #include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
-// static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+// static int callback(void* NotUsed, int argc, char** argv, char** azColName) ;
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
     ++*c;
