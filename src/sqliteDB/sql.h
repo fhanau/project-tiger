@@ -21,7 +21,7 @@ class Database {
   int addTrigger(std::string command);
 
  public:
-  // Create a database stored in file db_dir 
+  // Create a database stored in file db_dir
   explicit Database(const char* db_dir);
   ~Database();
   // Create an SQL table using schema described in command
