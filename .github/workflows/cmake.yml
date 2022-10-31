@@ -41,5 +41,5 @@ jobs:
     - name: Test
       # Execute tests defined by the CMake configuration.
       run: |
-        cmake --build ${{github.workspace}}/build --target tiger-test --config ${{env.BUILD_TYPE}} -- -j 2;
-        ${{github.workspace}}/build/tests/tiger-test
+           cmake --build ${{github.workspace}}/build --target tiger-test --config ${{env.BUILD_TYPE}} -- -j 2;
+           ${{github.workspace}}/build/tests/tiger-test
