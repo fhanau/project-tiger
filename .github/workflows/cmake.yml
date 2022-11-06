@@ -33,25 +33,35 @@ jobs:
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --target client server --config ${{env.BUILD_TYPE}} -- -j 2
-    #Disable Github actions testing for now, looks difficult to set up
     - name: GTest
       # Execute tests defined by the CMake configuration.
       run: |
            cmake --build ${{github.workspace}}/build --target tiger-test -- -j 2;
            ${{github.workspace}}/build/tiger-test
-  code-checks:
+  code-lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
     - name: Install dependencies
-      run: sudo apt update && sudo apt install --no-install-recommends --fix-missing -y libasio-dev libcurl4-openssl-dev cppcheck && python -m pip install --upgrade pip && pip install codespell cpplint
+      run: sudo apt update && sudo apt install --no-install-recommends --fix-missing -y libasio-dev libcurl4-openssl-dev && python -m pip install --upgrade pip && pip install codespell cpplint
     - name: Set up CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
     - name: Spell check
       run: cmake --build ${{github.workspace}}/build --target code-spell-ci
     - name: Linting
       run: cmake --build ${{github.workspace}}/build --target code-lint-ci
+#Move static analysis into a separate job since it can be slow
+  code-analyze:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Install dependencies
+      run: sudo apt update && sudo apt install --no-install-recommends --fix-missing -y libasio-dev libcurl4-openssl-dev cppcheck
+    - name: Set up CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
     - name: Static Analysis
       run: cmake --build ${{github.workspace}}/build --target code-analyze-ci
