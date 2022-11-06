@@ -38,10 +38,9 @@ jobs:
       # Execute tests defined by the CMake configuration.
       run: |
            cmake --build ${{github.workspace}}/build --target tiger-test -- -j 2;
-           ${{github.workspace}}/build/tests/tiger-test
+           ${{github.workspace}}/build/tiger-test
   code-checks:
     runs-on: ubuntu-latest
-    needs: build
     steps:
     - uses: actions/checkout@v3
       with:
