@@ -18,7 +18,7 @@ class Deck {
 
  public:
     // Create a deck.
-    Deck(bool includeJokers = false);
+    Deck(bool _includeJokers = false);
     ~Deck();
 
     int getNumRemainingCards() const;
