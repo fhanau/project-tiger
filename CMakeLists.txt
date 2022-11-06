@@ -41,7 +41,8 @@ add_custom_target(code-lint
   COMMAND cpplint --recursive --filter=-legal/copyright,-build/include_subdir,-build/header_guard,-runtime/explicit,-readability/todo,-readability/casting,-whitespace/comments ${TIGER_CODE_FILES} || (exit 0))
 add_custom_target(code-analyze
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
-  COMMAND cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --suppress=uninitMemberVar --max-configs=4 ${TIGER_CODE_FILES})
+  #make sure to not analyze library headers, avoids warnings that don't apply to us and much faster
+  COMMAND cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --max-configs=4 --suppress='*:libraries/*' --config-exclude=libraries ${TIGER_CODE_FILES})
 
 #tests for CI, at most 20 linting/static analyzer issues
 add_custom_target(code-lint-ci
@@ -52,4 +53,4 @@ add_custom_target(code-spell-ci
   COMMAND codespell ${TIGER_CODE_FILES} ${TIGER_TEXT_FILES})
 add_custom_target(code-analyze-ci
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
-  COMMAND test `cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --suppress=uninitMemberVar --max-configs=4 --template='{line}' -q ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 20)
+  COMMAND test `cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --max-configs=4 --suppress='*:libraries/*' --config-exclude=libraries --template='{line}' -q ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 20)
