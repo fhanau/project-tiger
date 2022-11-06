@@ -34,6 +34,8 @@ class Database {
   int updateData(std::string command);
   // Delete entries in SQL table
   int deleteData(std::string command);
+  // Drop table, given SQL command
+  int dropTable(std::string command);
   // Get the total number of rows in an SQL table
   int totalRows(std::string command);
   // Create sqlite3 statement used for processing rows
@@ -44,6 +46,10 @@ class Database {
   int getIntValue(std::string command);
   // Get the text value of a result column from an SQL query
   std::string getTextValue(std::string command);
+  // Check if a query result exists in a specific table
+  int doesExist(sqlite3_stmt* statement);
+  // Delete a table from the database. Alex Brebenel version.
+  int dropTable2(std::string command);
 };
 
 #endif

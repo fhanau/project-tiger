@@ -1,0 +1,145 @@
+[  0%] Built target gtest
+[ 33%] Built target gtest_main
+[ 33%] Built target gmock
+[100%] Built target tiger-test
+Running main() from /Users/felixhanau/Downloads/ASE/project-tiger/test/googletest/googletest/src/gtest_main.cc
+[==========] Running 16 tests from 13 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from DatabaseTest0
+[ RUN      ] DatabaseTest0.HandlesInvalidCommand
+[       OK ] DatabaseTest0.HandlesInvalidCommand (0 ms)
+[----------] 1 test from DatabaseTest0 (0 ms total)
+
+[----------] 2 tests from ServerUtilTest
+[ RUN      ] ServerUtilTest.ReturnsUniqueSession
+[       OK ] ServerUtilTest.ReturnsUniqueSession (0 ms)
+[ RUN      ] ServerUtilTest.ReturnsSameUniqueSession
+[       OK ] ServerUtilTest.ReturnsSameUniqueSession (0 ms)
+[----------] 2 tests from ServerUtilTest (0 ms total)
+
+[----------] 1 test from Database_Create_and_Insert
+[ RUN      ] Database_Create_and_Insert.Check_Insert_and_Create_methods
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Records inserted Successfully!
+Records inserted Successfully!
+Records inserted Successfully!
+Records inserted Successfully!
+Records inserted Successfully!
+Records inserted Successfully!
+[       OK ] Database_Create_and_Insert.Check_Insert_and_Create_methods (12 ms)
+[----------] 1 test from Database_Create_and_Insert (12 ms total)
+
+[----------] 1 test from Database_Update
+[ RUN      ] Database_Update.Check_Update_method
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Records updated Successfully!
+[       OK ] Database_Update.Check_Update_method (3 ms)
+[----------] 1 test from Database_Update (3 ms total)
+
+[----------] 1 test from Database_Delete
+[ RUN      ] Database_Delete.Check_Delete_method
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Records deleted Successfully!
+Records deleted Successfully!
+Records deleted Successfully!
+Records deleted Successfully!
+Records deleted Successfully!
+Records deleted Successfully!
+[       OK ] Database_Delete.Check_Delete_method (14 ms)
+[----------] 1 test from Database_Delete (14 ms total)
+
+[----------] 1 test from Database_Drop
+[ RUN      ] Database_Drop.Check_Drop_method
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table removed Successfully!
+[       OK ] Database_Drop.Check_Drop_method (3 ms)
+[----------] 1 test from Database_Drop (3 ms total)
+
+[----------] 1 test from cardTest1
+[ RUN      ] cardTest1.testGetter
+[       OK ] cardTest1.testGetter (0 ms)
+[----------] 1 test from cardTest1 (0 ms total)
+
+[----------] 1 test from cardTest2
+[ RUN      ] cardTest2.testOwner
+[       OK ] cardTest2.testOwner (0 ms)
+[----------] 1 test from cardTest2 (0 ms total)
+
+[----------] 1 test from cardTest3
+[ RUN      ] cardTest3.testOperatorOverloading
+[       OK ] cardTest3.testOperatorOverloading (0 ms)
+[----------] 1 test from cardTest3 (0 ms total)
+
+[----------] 1 test from deckTest1
+[ RUN      ] deckTest1.testConstructor
+[       OK ] deckTest1.testConstructor (0 ms)
+[----------] 1 test from deckTest1 (0 ms total)
+
+[----------] 1 test from deckTest2
+[ RUN      ] deckTest2.testDealArbitraryCards
+[       OK ] deckTest2.testDealArbitraryCards (0 ms)
+[----------] 1 test from deckTest2 (0 ms total)
+
+[----------] 1 test from deckTest3
+[ RUN      ] deckTest3.testDealGivenCards
+[       OK ] deckTest3.testDealGivenCards (0 ms)
+[----------] 1 test from deckTest3 (0 ms total)
+
+[----------] 3 tests from StatTest
+[ RUN      ] StatTest.testGetNumTotalUsers
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Records deleted Successfully!
+Records deleted Successfully!
+Records deleted Successfully!
+Records deleted Successfully!
+Records inserted Successfully!
+Records inserted Successfully!
+Records inserted Successfully!
+[       OK ] StatTest.testGetNumTotalUsers (11 ms)
+[ RUN      ] StatTest.testGetNumGames
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+[       OK ] StatTest.testGetNumGames (6 ms)
+[ RUN      ] StatTest.testGetTotalPlayersForGame
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+Table created Successfully
+[       OK ] StatTest.testGetTotalPlayersForGame (6 ms)
+[----------] 3 tests from StatTest (25 ms total)
+
+[----------] Global test environment tear-down
+[==========] 16 tests from 13 test suites ran. (60 ms total)
+[  PASSED  ] 16 tests.
+[100%] Built target run-tiger-test
