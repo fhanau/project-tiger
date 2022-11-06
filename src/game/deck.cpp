@@ -2,7 +2,8 @@
 #include "deck.h"
 #include "card.h"
 
-Deck::Deck(bool includeJokers) {
+Deck::Deck(bool _includeJokers) {
+    includeJokers = _includeJokers;
     cardCount = (includeJokers ? 54 : 52);
     Deck::reset();
     // random shuffle by default
