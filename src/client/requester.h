@@ -13,61 +13,64 @@
 class Requester {
  public:
   // Sends GET request to server to create host and returns server response
-  std::vector<std::string> createHost(std::string username,
-   std::string password);
+  std::vector<std::string> createHost(const std::string username,
+   const std::string password);
 
   // Sends GET request to server to login host and returns server response
-  std::vector<std::string> loginHost(std::string username,
-   std::string password);
+  std::vector<std::string> loginHost(const std::string username,
+   const std::string password);
 
   // Sends GET request to server to add type of game
-  std::string addGameType(std::string gametype, std::string session);
+  std::string addGameType(const std::string gametype,
+    const std::string session);
 
   // Sends GET request to server to upload data and returns server response
-  std::vector<std::string> uploadGameData(std::string session,
-   std::string type, std::string host, std::string user, std::string result,
-   std::string earning);
+  std::vector<std::string> uploadGameData(const std::string session,
+   const std::string type, const std::string host, const std::string user,
+   const std::string result, const std::string earning);
 
   // Sends GET request to server for publicly available statistics
-  std::string getPublicStats(std::string type);
+  std::string getPublicStats(const std::string type);
 
   // Sends GET request to server for total earnings across all games
-  std::string getTotalEarningsAll(std::string &session,
-    std::string &host);
+  std::string getTotalEarningsAll(const std::string &session,
+    const std::string &host);
 
   // Sends GET request to server for total earnings for a game
-  std::string getTotalEarningsGame(std::string &session,
-    std::string &host, std::string &gametype);
+  std::string getTotalEarningsGame(const std::string &session,
+    const std::string &host, const std::string &gametype);
 
   // Sends GET request to server for total earnings for a player
-  std::string getTotalEarningsPlayer(std::string &session,
-    std::string &host, std::string &player);
+  std::string getTotalEarningsPlayer(const std::string &session,
+    const std::string &host, const std::string &player);
+
   // Sends GET request to server for total wins across all games
-  std::string getTotalWinsAll(std::string &session, std::string &host);
+  std::string getTotalWinsAll(const std::string &session,
+    const std::string &host);
 
   // Sends GET request to server for total wins for a game
-  std::string getTotalWinsGame(std::string &session,
-    std::string &host, std::string &gametype);
+  std::string getTotalWinsGame(const std::string &session,
+    const std::string &host, const std::string &gametype);
 
   // Sends GET request to server for total wins for a &
-  std::string getTotalWinsPlayer(std::string &session,
-    std::string &host, std::string &player);
+  std::string getTotalWinsPlayer(const std::string &session,
+    const std::string &host, const std::string &player);
 
   // Sends GET request to server for total losses across all games
-  std::string getTotalLossesAll(std::string &session,
-    std::string &host);
+  std::string getTotalLossesAll(const std::string &session,
+    const std::string &host);
 
   // Sends GET request to server for total losses for a game
-  std::string getTotalLossesGame(std::string &session, std::string &host,
-    std::string &gametype);
+  std::string getTotalLossesGame(const std::string &session,
+    const std::string &host, const std::string &gametype);
 
   // Sends GET request to server for total losses for a player
-  std::string getTotalLossesPlayer(std::string &session,
-    std::string &host, std::string &player);
+  std::string getTotalLossesPlayer(const std::string &session,
+    const std::string &host, const std::string &player);
 
   // Sends GET request to server for play that has won the most for a game
-  std::string getMostWinningPlay(std::string &session, std::string &host,
-    std::string &gametype);
+  std::string getMostWinningPlay(const std::string &session,
+    const std::string &host, const std::string &gametype);
 
  private:
   curlpp::Cleanup cleaner;
