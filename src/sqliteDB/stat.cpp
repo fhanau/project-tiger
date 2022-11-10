@@ -10,13 +10,16 @@ int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
     return sqlite3_column_int(res, 0);
 }
 
-std::string runQueryWithSingleReturn(Database& db, const std::string& sql_command) {
+std::string runQueryWithSingleReturn(Database& db,
+    const std::string& sql_command) {
     sqlite3_stmt* res;
     res = db.makeStatement(sql_command);
     sqlite3_step(res);
     // check https://en.cppreference.com/w/cpp/language/reinterpret_cast
     // const unsigned char* -> const char* -> string
-    std::string ret{ reinterpret_cast<const char*>(sqlite3_column_text(res, 0)) };
+    std::string ret{reinterpret_cast<const char*>(
+        sqlite3_column_text(res, 0)
+        )};
     return ret;
 }
 

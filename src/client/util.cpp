@@ -7,7 +7,7 @@
 #include "util.h"
 
 void handleCreateHost(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
+    const std::string &loggedInUsername, Requester& req, const std::string &session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -33,7 +33,7 @@ void handleCreateHost(std::vector<std::string> &input,
 }
 
 void handleLoginHost(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
+    const std::string &loggedInUsername, Requester& req, const std::string &session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -68,7 +68,7 @@ std::string formatResult(std::vector<std::string> &input) {
 }
 
 void handleUploadGameData(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
+    const std::string &loggedInUsername, Requester& req, const std::string &session) {
   if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -272,7 +272,7 @@ void displayHelp() {
   std::cout << "exit\n";
 }
 
-void handleLogoutHost(std::string& loggedInUsername, std::string& session) {
+void handleLogoutHost(const std::string &loggedInUsername, const std::string &session) {
   std::cout << "Successfully logged out of " << loggedInUsername << ".\n";
   loggedInUsername = "";
   session = "";
@@ -284,7 +284,7 @@ void handleExit() {
 }
 
 void processCleanInput(std::vector<std::string>& cleanInput,
-    std::string& loggedInUsername, Requester& req, std::string &session) {
+    const std::string &loggedInUsername, Requester& req, std::string &session) {
   std::string command = cleanInput[0];
   if (!command.compare("create")) {
     handleCreateHost(cleanInput, loggedInUsername, req, session);
