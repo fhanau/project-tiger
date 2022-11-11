@@ -7,7 +7,7 @@
 #include "sql.h"
 
 
-int getNumTotalUsers(const Database& db);
+int getNumTotalUsers(Database& db);
 
 // if game_type == "", then return # all games
 int getNumGames(Database& db, const std::string& game_type);
