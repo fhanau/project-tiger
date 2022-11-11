@@ -281,7 +281,7 @@ std::string Database::getTextValue(std::string command) {
     int exit = sqlite3_open(directory, &DB);
     sqlite3_stmt* queryResult = makeStatement(command);
     exit = sqlite3_step(queryResult);
-    if (exit != SQLITE_OK) {
+    if (exit != SQLITE_ROW) {
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
         sqlite3_free(messageError);
