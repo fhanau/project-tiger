@@ -18,8 +18,7 @@ std::string runQueryWithSingleReturn(Database& db,
     // check https://en.cppreference.com/w/cpp/language/reinterpret_cast
     // const unsigned char* -> const char* -> string
     std::string ret{reinterpret_cast<const char*>(
-        sqlite3_column_text(res, 0)
-        )};
+        sqlite3_column_text(res, 0))};
     return ret;
 }
 
