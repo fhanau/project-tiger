@@ -21,3 +21,9 @@ set(TEST_DB_DEPS
 )
 add_executable(tiger-test ${TESTS} ${TEST_DEPS} ${TEST_GAME_DEPS} ${TEST_DB_DEPS})
 target_link_libraries(tiger-test PRIVATE Crow::Crow GTest::gtest_main GTest::gmock ${CMAKE_DL_LIBS})
+
+#This is just a mockup of how the client would be used for testing. To actually use the client in automated testing, we'd want to have it operate while the server is running, run the server with code coverage so we can get better coverage of the server frontend, and capture the client output to compare it with a file containing expected output.
+add_custom_target(client-based-tests
+  DEPENDS client
+  #This command will freeze if the server is not running.
+  COMMAND cat ${TIGER_TEST_DIR}/client-commands.sh | ${CMAKE_BINARY_DIR}/client)
