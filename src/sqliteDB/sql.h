@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include "../libraries/sqlite/sqlite3.h"
+#include <sqlite3.h>
 
 static int callback(void *count, int argc, char **argv, char **azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName);
