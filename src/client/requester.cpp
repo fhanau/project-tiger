@@ -93,7 +93,7 @@ std::vector<std::string> Requester::uploadGameData(std::string *session,
     std::string tmp;
     std::vector<std::string> payload;
     std::string firstPath = "upload/" + *session + "/" + *type + "/" + *host;
-    std::string secondPath = "/" + *user + "/" + *result + "/" + earning;
+    std::string secondPath = "/" + *user + "/" + *result + "/" + *earning;
     std::string path = firstPath + secondPath;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
