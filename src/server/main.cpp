@@ -258,15 +258,27 @@ int main(int argc, char** argv) {
       return std::to_string(getDatabase().getIntValue(allPlayerLossesCommand));
   });
 
+  CROW_ROUTE(app, "/private/most-common-play/<string>/<string>/<string>")
+    ([] (std::string session, std::string host, std::string gametype) {
+      if (getSession().compare(session)) {
+        return std::string("Invalid sessionid. Logout and login again.\n");
+      }
+      std::string mostCommonPlayCommand = "SELECT result, COUNT(result) AS "
+        "'value_occurrence' FROM game_list WHERE username = '" + host +
+        "' AND game_type = '" + gametype + "' GROUP BY result ORDER BY "
+        "'value_occurence' DESC LIMIT 1;";
+      return getDatabase().getTextValue(mostCommonPlayCommand);
+  });
+
   CROW_ROUTE(app, "/private/most-winning-play/<string>/<string>/<string>")
     ([] (std::string session, std::string host, std::string gametype) {
       if (getSession().compare(session)) {
         return std::string("Invalid sessionid. Logout and login again.\n");
       }
-      std::string mostWinningPlayCommand = "SELECT a.result, COUNT(a.result) AS "
-        "'value_occurrence' FROM (SELECT result, earning FROM game_list WHERE username = '" + host +
-        "' AND game_type = '" + gametype + "' AND earning > 0) AS a WHERE earning > 0 GROUP BY a.result ORDER BY "
-        "'value_occurence' DESC LIMIT 1;";
+      std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
+        " FROM (SELECT result, COUNT(result) AS 'theCount' game_list WHERE "
+        "earning > 0 AND username = '" + host + "' AND game_type = '" +
+        gametype + "' GROUP BY result)";
       return getDatabase().getTextValue(mostWinningPlayCommand);
   });
 
