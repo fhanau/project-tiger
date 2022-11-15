@@ -280,13 +280,8 @@ std::string Database::getTextValue(std::string command) {
     char *messageError;
     int exit = sqlite3_open(directory, &DB);
     sqlite3_stmt* queryResult = makeStatement(command);
-    std::cout << "Made it to before step call \n";
     exit = sqlite3_step(queryResult);
-    std::cout << "Right before we check exit it is : " << exit << "\n";
     if (exit != SQLITE_ROW) {
-        if (exit == SQLITE_DONE) {
-            return "Stat not found for requested data";
-        }
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
         sqlite3_free(messageError);
