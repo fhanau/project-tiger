@@ -289,12 +289,12 @@ std::string Requester::getTotalLossesPlayer(const std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getMostWinningPlay(const std::string &session,
+std::string Requester::getMostCommonPlay(const std::string &session,
   const std::string &host, const std::string &gametype) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path = "private/most-winning-play/" + session + "/" + host +
+    std::string path = "private/most-common-play/" + session + "/" + host +
       "/" + gametype;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));

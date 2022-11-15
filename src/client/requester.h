@@ -68,8 +68,8 @@ class Requester {
   std::string getTotalLossesPlayer(const std::string &session,
     const std::string &host, const std::string &player);
 
-  // Sends GET request to server for play that has won the most for a game
-  std::string getMostWinningPlay(const std::string &session,
+  // Sends GET request to server for most common result for a game
+  std::string getMostCommonPlay(const std::string &session,
     const std::string &host, const std::string &gametype);
 
  private:
