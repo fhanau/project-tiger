@@ -75,6 +75,7 @@ class Requester {
   // Sends GET request to server for most common result for winners
   std::string getMostWinningPlay(std::string *session,
     std::string *host, std::string *gametype);
+
  private:
   curlpp::Cleanup cleaner;
   curlpp::Easy request;

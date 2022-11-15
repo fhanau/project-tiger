@@ -101,8 +101,7 @@ Database::~Database() {}
 
 // Method for creating tables in the database.
 int Database::createTable(std::string command) {
-    char* messageError;
-
+    char* messageError = "Error in createTable";
     try {
         int exit = 0;
         exit = sqlite3_open(directory, &DB);
@@ -126,7 +125,7 @@ int Database::createTable(std::string command) {
 
 // Method for inserting data into specific tables
 int Database::insertData(std::string command) {
-    char* messageError;
+    char* messageError = "Error in insertData";
 
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
@@ -144,7 +143,7 @@ int Database::insertData(std::string command) {
 }
 
 int Database::selectData(std::string command) {
-    char* messageError;
+    char* messageError = "Error in selectData";
 
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
@@ -163,7 +162,7 @@ int Database::selectData(std::string command) {
 
 // Method to update table data, given SQL command.
 int Database::updateData(std::string command) {
-    char* messageError;
+    char* messageError = "Error in updateData";
 
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
@@ -182,7 +181,7 @@ int Database::updateData(std::string command) {
 
 // Method to drop table, given SQL command
 int Database::dropTable(std::string command) {
-    char* messageError;
+    char* messageError = "Error in dropTable";
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
@@ -198,7 +197,7 @@ int Database::dropTable(std::string command) {
 
 // Method to delete data, given SQL command.
 int Database::deleteData(std::string command) {
-    char* messageError;
+    char* messageError = "Error in deleteData";
 
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
@@ -215,7 +214,7 @@ int Database::deleteData(std::string command) {
 }
 
 int Database::dropTable2(std::string command) {
-    char* messageError;
+    char* messageError = "Error in dropTable2";
 
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
@@ -251,7 +250,7 @@ int Database::getMax(std::string table_name, std::string col_name) {
 }
 
 int Database::totalRows(std::string command) {
-    char* messageError;
+    char* messageError = "Error in totalRows";
     int count = 0;
     int exit = sqlite3_open(directory, &DB);
     exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
@@ -264,7 +263,7 @@ int Database::totalRows(std::string command) {
 }
 
 int Database::getIntValue(std::string command) {
-    char *messageError;
+    char *messageError = "Error in getIntValue";
     int value = 0;
     int exit = sqlite3_open(directory, &DB);
     exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
@@ -277,7 +276,7 @@ int Database::getIntValue(std::string command) {
 }
 
 std::string Database::getTextValue(std::string command) {
-    char *messageError;
+    char *messageError = "Error in getTextValue";
     int exit = sqlite3_open(directory, &DB);
     sqlite3_stmt* queryResult = makeStatement(command);
     exit = sqlite3_step(queryResult);
@@ -285,7 +284,6 @@ std::string Database::getTextValue(std::string command) {
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
         sqlite3_free(messageError);
-        
     }
     const unsigned char* value = sqlite3_column_text(queryResult, 0);
     std::string result = std::string(reinterpret_cast<const char *>(value));
