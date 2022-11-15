@@ -263,6 +263,12 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::string("Invalid sessionid. Logout and login again.\n");
       }
+      std::string findGame = "SELECT * from game_list WHERE username = '" +
+        host + "' AND game_type = '" + gametype + "';";
+
+      if (getDatabase().totalRows(findGame) == 0) {
+        return std::string("GameDataNotFound");
+      }
       std::string mostCommonPlayCommand = "SELECT result, COUNT(result) AS "
         "'value_occurrence' FROM game_list WHERE username = '" + host +
         "' AND game_type = '" + gametype + "' GROUP BY result ORDER BY "
@@ -277,10 +283,9 @@ int main(int argc, char** argv) {
       }
       std::string findGame = "SELECT * from game_list WHERE username = '" +
         host + "' AND game_type = '" + gametype + "';";
-        
+
       if (getDatabase().totalRows(findGame) == 0) {
-        return std::string("Data for that game does not exist. "
-          "Please upload first.");
+        return std::string("GameDataNotFound");
       }
       std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
         " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
