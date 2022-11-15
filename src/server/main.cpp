@@ -276,7 +276,7 @@ int main(int argc, char** argv) {
         return std::string("Invalid sessionid. Logout and login again.\n");
       }
       std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
-        " FROM (SELECT result, COUNT(result) AS 'theCount' game_list WHERE "
+        " FROM (SELECT result, COUNT(result) AS 'theCount' FROM game_list WHERE "
         "earning > 0 AND username = '" + host + "' AND game_type = '" +
         gametype + "' GROUP BY result)";
       return getDatabase().getTextValue(mostWinningPlayCommand);
