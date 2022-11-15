@@ -279,7 +279,7 @@ int main(int argc, char** argv) {
         " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
         "earning > 0 AND username = '" + host + "' AND game_type = '" +
         gametype + "' GROUP BY result);";
-      std::cout << mostWinningPlayCommand << "\n";
+      //std::cout << mostWinningPlayCommand << "\n";
       return getDatabase().getTextValue(mostWinningPlayCommand);
   });
 
