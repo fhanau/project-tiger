@@ -44,8 +44,8 @@ void processCleanInput(std::vector<std::string>* cleanInput,
     std::string *loggedInUsername, Requester* req, std::string *session);
 
 // Handle uploading game data to server
-void handleUploadGameData(const std::vector<std::string> *input,
-    const std::string *loggedInUsername, Requester* req, const std::string *session);
+void handleUploadGameData(std::vector<std::string> *input,
+    std::string *loggedInUsername, Requester* req, std::string *session);
 
 // Handle requesting private stats from the server
 void handlePrivateStats(std::vector<std::string> *input, Requester* req,

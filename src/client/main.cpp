@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     int validUserInput = clientParser.verifyInput(userInput);
     if (validUserInput) {
       cleanInput = clientParser.getCleanInput();
-      processCleanInput(cleanInput, loggedInUsername, req, session);
+      processCleanInput(&cleanInput, &loggedInUsername, &req, &session);
     } else {
       std::cout << "Invalid command. Type 'help' and hit enter to see a list "
         "of valid commands.\n";
