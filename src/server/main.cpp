@@ -275,6 +275,13 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::string("Invalid sessionid. Logout and login again.\n");
       }
+      std::string findGame = "SELECT * from game_list WHERE username = '" +
+        host + "' AND game_type = '" + gametype + "';";
+        
+      if (getDatabase().totalRows(findGame) == 0) {
+        return std::string("Data for that game does not exist. "
+          "Please upload first.");
+      }
       std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
         " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
         "earning > 0 AND username = '" + host + "' AND game_type = '" +
