@@ -270,5 +270,17 @@ int main(int argc, char** argv) {
       return getDatabase().getTextValue(mostCommonPlayCommand);
   });
 
+  CROW_ROUTE(app, "/private/most-winning-play/<string>/<string>/<string>")
+    ([] (std::string session, std::string host, std::string gametype) {
+      if (getSession().compare(session)) {
+        return std::string("Invalid sessionid. Logout and login again.\n");
+      }
+      std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
+        " FROM (SELECT result, COUNT(result) AS 'theCount' game_list WHERE "
+        "earning > 0 AND username = '" + host + "' AND game_type = '" +
+        gametype + "' GROUP BY result)";
+      return getDatabase().getTextValue(mostWinningPlayCommand);
+  });
+
   app.port(18080).multithreaded().run();
 }

@@ -238,6 +238,20 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
             std::cout << "Could not retrieve private data.\n";
           }
         }
+      } else if (!type.compare("most-winning-play")) {
+        if (input.size() != 3) {
+          std::cout << "Invalid parameters for most-winning-play.\n";
+          std::cout << "See 'help-private' for a list of commands.\n";
+        } else {
+          std::string gametype = input[2];
+          std::string resp = req.getMostWinningPlay(session, host,
+            gametype);
+          if (resp.size() > 0) {
+            std::cout << type << ": " << resp << "\n";
+          } else {
+            std::cout << "Could not retrieve private data.\n";
+          }
+        }
       } else {
         std::cout << "Invalid type of private request.\n";
         std::cout << "See 'help-private' for a list of commands.\n";
@@ -257,6 +271,7 @@ void displayPrivateHelp() {
   std::cout << "private total-losses-game <string: game name>\n";
   std::cout << "private total-losses-player <string: playerid>\n";
   std::cout << "private most-common-play <string: game name>\n";
+  std::cout << "private most-winning-play <string: game name>\n";
 }
 
 void displayHelp() {

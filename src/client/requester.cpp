@@ -305,3 +305,20 @@ std::string Requester::getMostCommonPlay(const std::string &session,
     }
     return body[body.size() - 1];
 }
+
+std::string Requester::getMostWinningPlay(const std::string &session,
+  const std::string &host, const std::string &gametype) {
+    std::stringstream response;
+    std::string tmp;
+    std::vector<std::string> body;
+    std::string path = "private/most-winning-play/" + session + "/" + host +
+      "/" + gametype;
+    std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::Url(url));
+    request.setOpt(new curlpp::options::WriteStream(&response));
+    request.perform();
+    while (response >> tmp) {
+      body.push_back(tmp);
+    }
+    return body[body.size() - 1];
+}
