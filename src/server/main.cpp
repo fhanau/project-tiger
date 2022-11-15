@@ -265,7 +265,7 @@ int main(int argc, char** argv) {
       }
       std::string mostWinningPlayCommand = "SELECT a.result, COUNT(a.result) AS "
         "'value_occurrence' FROM (SELECT result, earning FROM game_list WHERE username = '" + host +
-        "' AND game_type = '" + gametype + "' AND earning > 0) WHERE earning > 0 AS a GROUP BY a.result ORDER BY "
+        "' AND game_type = '" + gametype + "' AND earning > 0) AS a WHERE earning > 0 GROUP BY a.result ORDER BY "
         "'value_occurence' DESC LIMIT 1;";
       return getDatabase().getTextValue(mostWinningPlayCommand);
   });
