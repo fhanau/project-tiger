@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
-#include "../libraries/sqlite/sqlite3.h"
+#include <sqlite3.h>
 #include "sql.h"
 
 // static int callback(void* NotUsed, int argc, char** argv, char** azColName);
@@ -263,7 +263,7 @@ int Database::totalRows(std::string command) {
 }
 
 int Database::getIntValue(std::string command) {
-    char *messageError = "Error in getIntValue";
+    char *messageError = reinterpret_cast<char *>(malloc(100));
     int value = 0;
     int exit = sqlite3_open(directory, &DB);
     exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
@@ -276,7 +276,7 @@ int Database::getIntValue(std::string command) {
 }
 
 std::string Database::getTextValue(std::string command) {
-    char *messageError = "Error in getTextValue";
+    char *messageError = reinterpret_cast<char *>(malloc(100));
     int exit = sqlite3_open(directory, &DB);
     sqlite3_stmt* queryResult = makeStatement(command);
     exit = sqlite3_step(queryResult);

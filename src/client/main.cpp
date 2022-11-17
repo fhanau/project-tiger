@@ -22,6 +22,10 @@ int main(int argc, char** argv) {
   while (true) {
     std::cout << ">" << " ";
     getline(std::cin, userInput);
+    //Shut down client when end of file is reached, useful for automated testing
+    if (std::cin.eof()) {
+      break;
+    }
     int validUserInput = clientParser.verifyInput(userInput);
     if (validUserInput) {
       cleanInput = clientParser.getCleanInput();
