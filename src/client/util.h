@@ -6,9 +6,6 @@
 #include <string>
 #include <stdexcept>
 
-#include "parser.h"
-#include "requester.h"
-
 // Validates input for creating host before sending request
 void handleCreateHost(std::vector<std::string> *input,
     std::string *loggedInUsername, Requester *req, std::string *session);

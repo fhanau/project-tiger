@@ -3,7 +3,7 @@
 #include <string>
 #include <set>
 
-#include "../libraries/Crow/include/crow.h"
+#include <crow.h>
 #include "util.h"
 
 int main(int argc, char** argv) {
