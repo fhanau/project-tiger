@@ -14,7 +14,7 @@ TEST(deckTest1, testConstructor) {
     // check no duplicate card exists
     std::set<std::pair<int, int>> card_set;
     for (auto& card : cards) {
-        auto p = std::make_pair<int, int>(card->getSuit(), card->getFace());
+        std::pair<int, int> p = {(int)card->getSuit(), (int)card->getFace()};
         EXPECT_EQ(card_set.find(p), card_set.end());
         card_set.insert(p);
     }

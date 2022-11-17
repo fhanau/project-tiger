@@ -160,7 +160,7 @@ TEST(Database_Drop, Check_Drop_method) {
 
     sqlite3_stmt* testt = del_table.makeStatement(longString);
 
-    int exit = sqlite3_step(testt);
+    sqlite3_step(testt);
 
     int totalTables = sqlite3_column_int(testt, 0);
 

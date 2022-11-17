@@ -79,6 +79,8 @@ Database::Database(const char* db_dir) {
         "game_name CHAR(50) NOT NULL PRIMARY KEY );";
 
     this->createTable(command6);
+
+    the_Statement = NULL;
 }
 
 Database::~Database() {}
