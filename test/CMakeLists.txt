@@ -35,13 +35,11 @@ set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR/cmake})
 message(STATUS "Coverage analysis with gcov enabled")    
 include(CodeCoverage.cmake)
 append_coverage_compiler_flags()
-# TODO: change the local path
-set(GCOVR_PATH "/opt/anaconda3/bin/gcovr")
-
-# SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
 
 setup_target_for_coverage_gcovr_html(
     NAME coverage
     EXECUTABLE ./tiger-test
     DEPENDENCIES tiger-test
+    BASE_DIRECTORY "${TIGER_SOURCE_DIR}"
+    EXCLUDE "${TIGER_SOURCE_DIR}/libraries"
 )
