@@ -5,23 +5,23 @@
 #include "requester.h"
 #include "util.h"
 
-void handleCreateHost(std::vector<std::string> *input,
-    std::string *loggedInUsername, Requester *req, std::string *session) {
-  if ((*input).size() != 3) {
+void handleCreateHost(std::vector<std::string> &input,
+    std::string &loggedInUsername, Requester &req, std::string &session) {
+  if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
     std::cout << "See 'help' for a list of commands.\n";
-  } else if ((*loggedInUsername).size() > 0) {
+  } else if (loggedInUsername.size() > 0) {
     std::cout << "Already logged in, please log out first.\n";
   } else {
-    std::string username = (*input)[1];
-    std::string password = (*input)[2];
+    std::string username = input[1];
+    std::string password = input[2];
     if (username.size() > 50 || password.size() > 50) {
       std::cout << "Username and password must be under 50 characters each.\n";
     } else {
-      std::vector<std::string> resp = (*req).createHost(&username, &password);
+      std::vector<std::string> resp = req.createHost(username, password);
       if (resp[0].compare("ERROR")) {
-        *loggedInUsername = username;
-        *session = resp[1];
+        loggedInUsername = username;
+        session = resp[1];
         std::cout << "Successfully logged into " << loggedInUsername << ".\n";
       } else {
         std::cout << "Unsuccessful account creation.\n";
@@ -31,20 +31,20 @@ void handleCreateHost(std::vector<std::string> *input,
   }
 }
 
-void handleLoginHost(std::vector<std::string> *input,
-    std::string *loggedInUsername, Requester* req, std::string *session) {
-  if ((*input).size() != 3) {
+void handleLoginHost(std::vector<std::string> &input,
+    std::string &loggedInUsername, Requester& req, std::string &session) {
+  if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
     std::cout << "See 'help' for a list of commands.\n";
-  } else if ((*loggedInUsername).size() > 0) {
+  } else if (loggedInUsername.size() > 0) {
     std::cout << "Already logged in. Please log out first.\n";
   } else {
-    std::string username = (*input)[1];
-    std::string password = (*input)[2];
-    std::vector<std::string> resp = (*req).loginHost(&username, &password);
+    std::string username = input[1];
+    std::string password = input[2];
+    std::vector<std::string> resp = req.loginHost(username, password);
     if (resp[0].compare("ERROR")) {
-      *loggedInUsername = username;
-      *session = resp[1];
+      loggedInUsername = username;
+      session = resp[1];
       std::cout << "Successfully logged into " << loggedInUsername << ".\n";
     } else {
       std::cout << "Unsuccessful login.\n";
@@ -53,12 +53,12 @@ void handleLoginHost(std::vector<std::string> *input,
   }
 }
 
-std::string formatResult(std::vector<std::string> *input) {
+std::string formatResult(std::vector<std::string> &input) {
   int pointer = 4;
   std::string result = "";
-  while (pointer < (*input).size()) {
-    result += (*input)[pointer];
-    if (pointer != (*input).size() - 1) {
+  while (pointer < input.size()) {
+    result += input[pointer];
+    if (pointer != input.size() - 1) {
       result += " ";
     }
     pointer++;
@@ -66,24 +66,24 @@ std::string formatResult(std::vector<std::string> *input) {
   return result;
 }
 
-void handleUploadGameData(std::vector<std::string> *input,
-    std::string *loggedInUsername, Requester* req, std::string *session) {
-  if ((*input).size() < 5) {
+void handleUploadGameData(std::vector<std::string> &input,
+    std::string &loggedInUsername, Requester& req, std::string &session) {
+  if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
-  } else if ((*loggedInUsername).size() == 0) {
+  } else if (loggedInUsername.size() == 0) {
     std::cout << "Must be logged in to upload game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
   } else {
-    std::string type = (*input)[1];
-    std::string user = (*input)[2];
+    std::string type = input[1];
+    std::string user = input[2];
     if (type.size() > 50 || user.size() > 50) {
       std::cout << "Game name and player name must be under 50 characters.\n";
     }
-    std::string earning = (*input)[3];
+    std::string earning = input[3];
     std::string result = formatResult(input);
-    std::vector<std::string> resp = (*req).uploadGameData(session, &type,
-      loggedInUsername, &user, &result, &earning);
+    std::vector<std::string> resp = req.uploadGameData(session, type,
+      loggedInUsername, user, result, earning);
     if (resp[0].compare("ERROR")) {
       std::cout << "Successfully uploaded game data.\n";
     } else {
@@ -93,13 +93,13 @@ void handleUploadGameData(std::vector<std::string> *input,
   }
 }
 
-void handlePublicStats(std::vector<std::string> *input, Requester* req) {
-  if ((*input).size() != 2) {
+void handlePublicStats(std::vector<std::string> &input, Requester& req) {
+  if (input.size() != 2) {
     std::cout << "Invalid input for requesting public data.\n";
     std::cout << "See 'help' for a list of commands.\n";
   } else {
-    std::string type = (*input)[1];
-    std::string resp = (*req).getPublicStats(&type);
+    std::string type = input[1];
+    std::string resp = req.getPublicStats(type);
     if (resp.size() > 0) {
       std::cout << type << ": " << resp << "\n";
     } else {
@@ -108,31 +108,31 @@ void handlePublicStats(std::vector<std::string> *input, Requester* req) {
   }
 }
 
-void handlePrivateStats(std::vector<std::string> *input, Requester* req,
-  std::string *host, std::string *session) {
-    if ((*input).size() < 2) {
+void handlePrivateStats(std::vector<std::string> &input, Requester& req,
+  std::string &host, std::string &session) {
+    if (input.size() < 2) {
       std::cout << "Invalid input for requesting private data.\n";
       std::cout << "See 'help' for a list of commands.\n";
-    } else if ((*host).size() == 0 || (*session).size() == 0) {
+    } else if (host.size() == 0 || session.size() == 0) {
       std::cout << "Cannot request private data without being logged in.\n";
       std::cout << "See 'help' for a list of commands.\n";
     } else {
-      std::string type = (*input)[1];
+      std::string type = input[1];
       if (!type.compare("total-earnings-all")) {
-        std::string resp = (*req).getTotalEarningsAll(session, host);
+        std::string resp = req.getTotalEarningsAll(session, host);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
           std::cout << "Could not retrieve private data.\n";
         }
       } else if (!type.compare("total-earnings-game")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for total-earnings-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = (*input)[2];
-          std::string resp = (*req).getTotalEarningsGame(session, host,
-            &gametype);
+          std::string gametype = input[2];
+          std::string resp = req.getTotalEarningsGame(session, host,
+            gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -140,13 +140,13 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("total-earnings-player")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for total-earnings-player.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string playerid = (*input)[2];
-          std::string resp = (*req).getTotalEarningsPlayer(session, host,
-            &playerid);
+          std::string playerid = input[2];
+          std::string resp = req.getTotalEarningsPlayer(session, host,
+            playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -154,20 +154,20 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("total-wins-all")) {
-        std::string resp = (*req).getTotalWinsAll(session, host);
+        std::string resp = req.getTotalWinsAll(session, host);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
           std::cout << "Could not retrieve private data.\n";
         }
       } else if (!type.compare("total-wins-game")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for total-wins-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = (*input)[2];
-          std::string resp = (*req).getTotalWinsGame(session, host,
-            &gametype);
+          std::string gametype = input[2];
+          std::string resp = req.getTotalWinsGame(session, host,
+            gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -175,13 +175,13 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("total-wins-player")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for total-wins-player.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string playerid = (*input)[2];
-          std::string resp = (*req).getTotalWinsPlayer(session, host,
-            &playerid);
+          std::string playerid = input[2];
+          std::string resp = req.getTotalWinsPlayer(session, host,
+            playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -189,20 +189,20 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("total-losses-all")) {
-        std::string resp = (*req).getTotalLossesAll(session, host);
+        std::string resp = req.getTotalLossesAll(session, host);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
           std::cout << "Could not retrieve private data.\n";
         }
       } else if (!type.compare("total-losses-game")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for total-losses-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = (*input)[2];
-          std::string resp = (*req).getTotalLossesGame(session, host,
-            &gametype);
+          std::string gametype = input[2];
+          std::string resp = req.getTotalLossesGame(session, host,
+            gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -210,13 +210,13 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("total-losses-player")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for total-earnings-player.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string playerid = (*input)[2];
-          std::string resp = (*req).getTotalLossesPlayer(session, host,
-            &playerid);
+          std::string playerid = input[2];
+          std::string resp = req.getTotalLossesPlayer(session, host,
+            playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -224,13 +224,13 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("most-common-play")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for most-common-play.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = (*input)[2];
-          std::string resp = (*req).getMostCommonPlay(session, host,
-            &gametype);
+          std::string gametype = input[2];
+          std::string resp = req.getMostCommonPlay(session, host,
+            gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -238,13 +238,13 @@ void handlePrivateStats(std::vector<std::string> *input, Requester* req,
           }
         }
       } else if (!type.compare("most-winning-play")) {
-        if ((*input).size() != 3) {
+        if (input.size() != 3) {
           std::cout << "Invalid parameters for most-winning-play.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = (*input)[2];
-          std::string resp = (*req).getMostWinningPlay(session, host,
-            &gametype);
+          std::string gametype = input[2];
+          std::string resp = req.getMostWinningPlay(session, host,
+            gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
           } else {
@@ -286,10 +286,10 @@ void displayHelp() {
   std::cout << "exit\n";
 }
 
-void handleLogoutHost(std::string *loggedInUsername, std::string *session) {
+void handleLogoutHost(std::string &loggedInUsername, std::string &session) {
   std::cout << "Successfully logged out of " << loggedInUsername << ".\n";
-  *loggedInUsername = "";
-  *session = "";
+  loggedInUsername = "";
+  session = "";
 }
 
 void handleExit() {
@@ -297,9 +297,9 @@ void handleExit() {
   exit(0);
 }
 
-void processCleanInput(std::vector<std::string>* cleanInput,
-    std::string *loggedInUsername, Requester* req, std::string *session) {
-  std::string command =  (*cleanInput)[0];
+void processCleanInput(std::vector<std::string>& cleanInput,
+    std::string &loggedInUsername, Requester& req, std::string &session) {
+  std::string command = cleanInput[0];
   if (!command.compare("create")) {
     handleCreateHost(cleanInput, loggedInUsername, req, session);
   } else if (!command.compare("login")) {
