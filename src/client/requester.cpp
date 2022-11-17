@@ -1,7 +1,7 @@
 #include "requester.h"
 
-std::vector<std::string> Requester::createHost(const const std::string& username,
-    const const std::string& password) {
+std::vector<std::string> Requester::createHost(const std::string& username,
+    const std::string& password) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> payload;
@@ -35,8 +35,8 @@ std::vector<std::string> Requester::createHost(const const std::string& username
   return payload;
 }
 
-std::vector<std::string> Requester::loginHost(const const std::string& username,
-    const const std::string& password) {
+std::vector<std::string> Requester::loginHost(const std::string& username,
+    const std::string& password) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> payload;
