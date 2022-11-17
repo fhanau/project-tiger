@@ -216,7 +216,6 @@ int Database::deleteData(std::string command) {
 
 int Database::dropTable2(std::string command) {
     char* messageError;
-
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
@@ -225,9 +224,8 @@ int Database::dropTable2(std::string command) {
         std::cerr << "Error in dropTable function." << std::endl;
         sqlite3_free(messageError);
     } else {
-        std::cout << "Table removed Successfully!" << std::endl;
+        std::cout << "Table Dropped Successfully!" << std::endl;
     }
-
     return 0;
 }
 
@@ -320,4 +318,75 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     std::cout << "finish\n" << std::endl;
 
     return 0;
+}
+
+// Method to drop table, given SQL command
+int Database::executeCommand(std::string command, std::string errMsg, 
+ std::string successfulMessage, int theType) {
+    char* messageError;
+    int exit = sqlite3_open(directory, &DB);
+    /* An open database, SQL to be evaluated, 
+	Callback function, 1st argument to callback, Error msg written here */
+
+    if(theType == 1) {
+        exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);;
+    } else if(theType == 0) {
+        exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    } else {
+        std::cout << "Error in SQL execute!";
+        std::cout << "Only type 1 and 0 should exist!" << std::endl;
+    }
+
+    // exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    if (exit != SQLITE_OK) {
+        std::cerr << errMsg << std::endl;
+        // std::cerr << messageError << "\n";
+        sqlite3_free(messageError);
+    } else {
+        std::cout << successfulMessage << std::endl;
+    }
+    return 0;
+}
+
+// Method for inserting data into specific tables
+int Database::insertData(std::string command) {
+    int run = executeCommand(command, "Error in insertData function.",
+    "Records inserted Successfully!", 1);
+    return run;
+}
+// Method to update table data, given SQL command.
+int Database::updateData(std::string command) {
+    int run = executeCommand(command, "Error in updateData function.",
+    "Records updated Successfully!", 1);
+    return run;
+}
+
+/////////////////////
+
+// Method to select and look at data, given SQL command
+int Database::selectData(std::string command) {
+    int run = executeCommand(command, "Error in selectData function.",
+    "Records selected Successfully!", 0);
+    return run;
+}
+
+// Method to drop table, given SQL command
+int Database::dropTable(std::string command) {
+    int run = executeCommand(command, "Error in dropTable function.",
+    "Table Dropped Successfully!", 0);
+    return run;
+}
+
+// Method to delete data, given SQL command.
+int Database::deleteData(std::string command) {
+    int run = executeCommand(command, "Error in deleteData function.",
+    "Records deleted Successfully!", 0);
+    return run;
+}
+
+// Method to drop table, given SQL command, Alex Brebenel version
+int Database::dropTable2(std::string command) {
+    int run = executeCommand(command, "Error in deleteData2 function.",
+    "Records deleted Successfully!", 0);
+    return run;
 }
