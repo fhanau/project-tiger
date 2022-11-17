@@ -14,7 +14,7 @@ TEST(deckTest1, testConstructor) {
     // check no duplicate card exists
     std::set<std::pair<int, int>> card_set;
     for (auto& card : cards) {
-        auto p = std::make_pair<int, int>(card->getSuit(), card->getFace());
+        std::pair<int, int> p = {(int)card->getSuit(), (int)card->getFace()};
         EXPECT_EQ(card_set.find(p), card_set.end());
         card_set.insert(p);
     }
@@ -49,8 +49,8 @@ TEST(deckTest3, testDealGivenCards) {
     });
     EXPECT_EQ(deck.getNumRemainingCards(), 48);
     ASSERT_EQ(cards.size(), 3);
-    for (auto card : cards) {
-        EXPECT_EQ(card->getFace(), Card::ace);
+    for (auto newCard : cards) {
+        EXPECT_EQ(newCard->getFace(), Card::ace);
     }
 }
 

@@ -76,6 +76,10 @@ class Requester {
   std::string getMostWinningPlay(const std::string &session,
     const std::string &host, const std::string &gametype);
 
+  // Sends GET request to server for total losses for a player
+  std::string getTotalPlayersForGame(const std::string &session,
+    const std::string &host, const std::string &gametype);
+
  private:
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
