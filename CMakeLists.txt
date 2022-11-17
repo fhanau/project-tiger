@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
 project (TIGER VERSION 0.1)
 set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-pessimizing-move -Wno-missing-field-initializers")
@@ -32,6 +33,7 @@ add_custom_target(run-tiger-test
 
 add_custom_target(code-tests)
 add_dependencies(code-tests code-spell code-lint code-analyze)
+
 #target for codespell, exit 0 is to work around nonzero return code
 set(TIGER_CODE_FILES server/ client/ ../test/*.cpp game/ sqliteDB/)
 set(TIGER_TEXT_FILES CMakeLists.txt ../README.md ../test/CMakeLists.txt ../.github/ ../test/client-commands.sh)
@@ -56,3 +58,47 @@ add_custom_target(code-spell-ci
 add_custom_target(code-analyze-ci
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
   COMMAND test `cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --template='{line}' -q ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 20)
+
+
+  # # Set the compiler options
+  # set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
+  # set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
+  
+  # # Create OBJECT_DIR variable
+  # set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/RunAdder.dir)
+  # message("-- Object files will be output to: ${OBJECT_DIR}")
+  
+  
+  # # Create the gcov target. Run coverage tests with 'make gcov'
+  # add_custom_target(gcov
+  #     COMMAND mkdir -p coverage
+  #     COMMAND ${CMAKE_MAKE_PROGRAM} test
+  #     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  #     )
+  # add_custom_command(TARGET gcov
+  #     COMMAND echo "=================== GCOV ===================="
+  #     COMMAND gcov -b ${CMAKE_SOURCE_DIR}/*.cpp -o ${OBJECT_DIR}
+  #     | grep -A 5 TODO(...) > CoverageSummary.tmp
+  #     COMMAND cat CoverageSummary.tmp
+  #     COMMAND echo "-- Coverage files have been output to ${CMAKE_BINARY_DIR}/coverage"
+  #     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/coverage
+  #     )
+  # add_dependencies(gcov tiger-test)
+  # # Make sure to clean up the coverage folder
+  # set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES coverage)
+  
+  # # Create the gcov-clean target. This cleans the build as well as generated 
+  # # .gcda and .gcno files.
+  # add_custom_target(scrub
+  # COMMAND ${CMAKE_MAKE_PROGRAM} clean
+  # COMMAND rm -f ${OBJECT_DIR}/*.gcno
+  # COMMAND rm -f ${OBJECT_DIR}/*.gcda
+  # WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  # )
+  
+  # # Testing
+  # enable_testing()
+  
+  # add_test(output_test ${CMAKE_CURRENT_BINARY_DIR}/RunAdder)
+  # set_tests_properties(output_test PROPERTIES PASS_REGULAR_EXPRESSION "0;5;10")
+  
