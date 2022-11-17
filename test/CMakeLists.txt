@@ -31,20 +31,17 @@ add_custom_target(client-based-tests
 
 # setup gcovr
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR/cmake})
-option(ENABLE_COVERAGE "Enable coverage" ON)
 
-if(CMAKE_COMPILER_IS_GNUCXX AND ENABLE_COVERAGE)
-    message(STATUS "Coverage analysis with gcov enabled")    
-    include(CodeCoverage)
-    append_coverage_compiler_flags()
-    # TODO: change the local path
-    set(GCOVR_PATH "/opt/anaconda3/bin/gcovr")
+message(STATUS "Coverage analysis with gcov enabled")    
+include(CodeCoverage.cmake)
+append_coverage_compiler_flags()
+# TODO: change the local path
+set(GCOVR_PATH "/opt/anaconda3/bin/gcovr")
 
-    SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+# SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
 
-    setup_target_for_coverage_lcov(
-        NAME coverage
-        EXECUTABLE ./tiger-test
-        DEPENDENCIES tiger-test
-    )
-endif()
+setup_target_for_coverage_gcovr_html(
+    NAME coverage
+    EXECUTABLE ./tiger-test
+    DEPENDENCIES tiger-test
+)
