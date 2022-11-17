@@ -263,7 +263,8 @@ int main(int argc, char** argv) {
       std::string totalPlayersForGameCommand = "SELECT COUNT(DISTINCT player_i"
         "d) FROM game_list WHERE game_type = '" + gametype +
         "' AND username = '" + host + "';";
-      return std::to_string(getDatabase().getIntValue(totalPlayersForGameCommand));
+      return std::to_string(getDatabase().getIntValue(
+        totalPlayersForGameCommand));
   });
 
   CROW_ROUTE(app, "/private/total-losses-player/<string>/<string>/<string>")

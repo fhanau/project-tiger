@@ -67,7 +67,7 @@ std::string formatResult(std::vector<std::string> &input) {
 }
 
 void handleUploadGameData(std::vector<std::string> &input,
-    std::string &loggedInUsername, Requester& req, std::string &session) {
+    std::string &loggedInUsername, Requester& req, const std::string &session) {
   if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";

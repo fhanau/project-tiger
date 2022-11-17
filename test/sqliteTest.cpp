@@ -88,11 +88,10 @@ TEST(Database_Update, Check_Update_method) {
     del_table.updateData(command1);
     sqlite3_stmt* seven = del_table.makeStatement("SELECT * FROM games");
 
-    int check = 2;
-
     while (sqlite3_step(seven) != SQLITE_DONE) {
         const char *value = (const char *)sqlite3_column_text(seven, 0);
         const char *answer = "RPS2";
+        int check = 2;
         if (strcmp(value, answer) == 0) {
             check = 1;
         } else {

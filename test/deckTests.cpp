@@ -49,8 +49,8 @@ TEST(deckTest3, testDealGivenCards) {
     });
     EXPECT_EQ(deck.getNumRemainingCards(), 48);
     ASSERT_EQ(cards.size(), 3);
-    for (auto card : cards) {
-        EXPECT_EQ(card->getFace(), Card::ace);
+    for (auto newCard : cards) {
+        EXPECT_EQ(newCard->getFace(), Card::ace);
     }
 }
 

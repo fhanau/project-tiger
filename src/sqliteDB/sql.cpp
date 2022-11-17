@@ -111,10 +111,10 @@ int Database::createTable(std::string command) {
 int Database::insertData(std::string command) {
     char* messageError = "Error in insertData";
 
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
-    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
+    int exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in insertData function." << std::endl;
         std::cerr << messageError << "\n";
