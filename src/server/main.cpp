@@ -304,5 +304,17 @@ int main(int argc, char** argv) {
       return getDatabase().getTextValue(mostWinningPlayCommand);
   });
 
+  //Set up SSL, working around Crow issues
+  crow::ssl_context_t ssl_ctx(asio::ssl::context::sslv23);
+  ssl_ctx.set_verify_mode(asio::ssl::verify_none);
+  ssl_ctx.use_certificate_file("cert.pem", crow::ssl_context_t::pem);
+  ssl_ctx.use_private_key_file("key.pem", crow::ssl_context_t::pem);
+  ssl_ctx.set_options(
+      asio::ssl::context::default_workarounds
+      | asio::ssl::context::no_sslv2
+      | asio::ssl::context::no_sslv3
+      );
+  app.ssl(std::move(ssl_ctx));
+
   app.port(18080).multithreaded().run();
 }

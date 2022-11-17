@@ -132,6 +132,11 @@ std::string Requester::getPublicStats(const std::string& type) {
   std::string url = baseUrl + path;
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
+  //TODO: Put this in every function, also refactor interface to
+  //significantly reduce code clones.
+  //Disable SSL certificate check to allow server to use unsigned certificate.
+  request.setOpt(curlpp::options::SslVerifyPeer(false));
+  request.setOpt(curlpp::options::SslVerifyHost(false));
   request.perform();
   while (response >> tmp) {
     body.push_back(tmp);

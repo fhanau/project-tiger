@@ -79,7 +79,7 @@ class Requester {
  private:
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
-  std::string baseUrl = "http://127.0.0.1:18080/";
+  std::string baseUrl = "https://127.0.0.1:18080/";
 };
 
 #endif
