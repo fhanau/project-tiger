@@ -20,22 +20,6 @@ static int intCallback(void *intPointer, int argc, char**argv,
         return 0;
 }
 
-static int textCallback(void *stringPointer, int argc, char**argv,
-  char**azColName) {
-    for (int i = 0; i < argc; i++) {
-        // column name and value
-        std::cout << azColName[i] << ": " << argv[i] << std::endl;
-    }
-    char *textPointer = (char *)stringPointer;
-    int textLength = sizeof(argv[0]);
-    if (textLength > 100) {
-        std::cout << "Size of pointer before realloc: " << textLength << "\n";
-        textPointer = (char *)realloc(textPointer, textLength);
-    }
-    strncpy(textPointer, argv[0], textLength);
-    return 0;
-}
-
 Database::Database(const char* db_dir) {
     directory = db_dir;
 
@@ -145,10 +129,10 @@ int Database::insertData(std::string command) {
 int Database::selectData(std::string command) {
     char* messageError = "Error in selectData";
 
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here*/
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    int exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
 
     if (exit != SQLITE_OK) {
         std::cerr << "Error in selectData function." << std::endl;
@@ -164,10 +148,10 @@ int Database::selectData(std::string command) {
 int Database::updateData(std::string command) {
     char* messageError = "Error in updateData";
 
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
-    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
+    int exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in updateData function." << std::endl;
         std::cerr << messageError << "\n";
@@ -182,10 +166,10 @@ int Database::updateData(std::string command) {
 // Method to drop table, given SQL command
 int Database::dropTable(std::string command) {
     char* messageError = "Error in dropTable";
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    int exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in dropTable function." << std::endl;
         sqlite3_free(messageError);
@@ -199,10 +183,10 @@ int Database::dropTable(std::string command) {
 int Database::deleteData(std::string command) {
     char* messageError = "Error in deleteData";
 
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    int exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in deleteData function." << std::endl;
         sqlite3_free(messageError);
@@ -216,10 +200,10 @@ int Database::deleteData(std::string command) {
 int Database::dropTable2(std::string command) {
     char* messageError = "Error in dropTable2";
 
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
+    int exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error in dropTable function." << std::endl;
         sqlite3_free(messageError);
@@ -233,8 +217,8 @@ int Database::dropTable2(std::string command) {
 // Method that return sqlite statement, given SQL command.
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
+    sqlite3_open(directory, &DB);
+    sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     sqlite3_reset(the_Statement);
     return the_Statement;
 }
@@ -252,8 +236,8 @@ int Database::getMax(std::string table_name, std::string col_name) {
 int Database::totalRows(std::string command) {
     char* messageError = "Error in totalRows";
     int count = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
+    sqlite3_open(directory, &DB);
+    int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
       std::cerr << "Error when getting total rows\n";
@@ -265,8 +249,8 @@ int Database::totalRows(std::string command) {
 int Database::getIntValue(std::string command) {
     char *messageError = reinterpret_cast<char *>(malloc(100));
     int value = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
+    sqlite3_open(directory, &DB);
+    int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error when getting int value\n";
@@ -277,9 +261,9 @@ int Database::getIntValue(std::string command) {
 
 std::string Database::getTextValue(std::string command) {
     char *messageError = reinterpret_cast<char *>(malloc(100));
-    int exit = sqlite3_open(directory, &DB);
+    sqlite3_open(directory, &DB);
     sqlite3_stmt* queryResult = makeStatement(command);
-    exit = sqlite3_step(queryResult);
+    int exit = sqlite3_step(queryResult);
     if (exit != SQLITE_ROW) {
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";

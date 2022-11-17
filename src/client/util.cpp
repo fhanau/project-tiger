@@ -251,6 +251,20 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
             std::cout << "Could not retrieve private data.\n";
           }
         }
+      } else if (!type.compare("total-players-for-game")) {
+        if (input.size() != 3) {
+          std::cout << "Invalid parameters for total-players-for-game.\n";
+          std::cout << "See 'help-private' for a list of commands.\n";
+        } else {
+          std::string gametype = input[2];
+          std::string resp = req.getTotalPlayersForGame(session, host,
+            gametype);
+          if (resp.size() > 0) {
+            std::cout << type << ": " << resp << "\n";
+          } else {
+            std::cout << "Could not retrieve private data.\n";
+          }
+        }
       } else {
         std::cout << "Invalid type of private request.\n";
         std::cout << "See 'help-private' for a list of commands.\n";
@@ -258,6 +272,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
     }
 }
 
+// Examples of private commands. They match url path
 void displayPrivateHelp() {
   std::cout << "Commands available for private data requests:\n";
   std::cout << "private total-earnings-all\n";

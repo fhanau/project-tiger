@@ -241,6 +241,7 @@ int main(int argc, char** argv) {
       return std::to_string(getDatabase().getIntValue(allLossesCommand));
   });
 
+  // input[0]/input[1]/sessionId (constant)/ host (constant) / input[2].....
   CROW_ROUTE(app, "/private/total-losses-game/<string>/<string>/<string>")
     ([] (const std::string &session, const std::string &host,
     const std::string &gametype) {
@@ -251,6 +252,18 @@ int main(int argc, char** argv) {
         "WHERE username = '" + host + "' AND game_type = '" + gametype +
         "' AND earning <= 0;";
       return std::to_string(getDatabase().getIntValue(allGameLossesCommand));
+  });
+
+  CROW_ROUTE(app, "/private/total-players-for-game/<string>/<string>/<string>")
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string totalPlayersForGameCommand = "SELECT COUNT(DISTINCT player_i"
+        "d) FROM game_list WHERE game_type = '" + gametype +
+        "' AND username = '" + host + "';";
+      return std::to_string(getDatabase().getIntValue(totalPlayersForGameCommand));
   });
 
   CROW_ROUTE(app, "/private/total-losses-player/<string>/<string>/<string>")
@@ -312,8 +325,7 @@ int main(int argc, char** argv) {
   ssl_ctx.set_options(
       asio::ssl::context::default_workarounds
       | asio::ssl::context::no_sslv2
-      | asio::ssl::context::no_sslv3
-      );
+      | asio::ssl::context::no_sslv3);
   app.ssl(std::move(ssl_ctx));
 
   app.port(18080).multithreaded().run();
