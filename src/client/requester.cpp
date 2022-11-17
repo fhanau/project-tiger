@@ -1,7 +1,7 @@
 #include "requester.h"
 
-std::vector<std::string> Requester::createHost(std::string &username,
-    std::string &password) {
+std::vector<std::string> Requester::createHost(const const std::string& username,
+    const const std::string& password) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> payload;
@@ -35,8 +35,8 @@ std::vector<std::string> Requester::createHost(std::string &username,
   return payload;
 }
 
-std::vector<std::string> Requester::loginHost(std::string &username,
-    std::string &password) {
+std::vector<std::string> Requester::loginHost(const const std::string& username,
+    const const std::string& password) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> payload;
@@ -70,8 +70,8 @@ std::vector<std::string> Requester::loginHost(std::string &username,
   return payload;
 }
 
-std::string Requester::addGameType(std::string &gametype,
-    std::string &session) {
+std::string Requester::addGameType(const std::string& gametype,
+    const std::string& session) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> body;
@@ -86,9 +86,9 @@ std::string Requester::addGameType(std::string &gametype,
   return body[body.size() - 1];
 }
 
-std::vector<std::string> Requester::uploadGameData(std::string &session,
-  std::string &type, std::string &host, std::string &user,
-  std::string &result, std::string &earning) {
+std::vector<std::string> Requester::uploadGameData(const std::string& session,
+  const std::string& type, const std::string& host, const std::string& user,
+  const std::string& result, const std::string& earning) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> payload;
@@ -124,7 +124,7 @@ std::vector<std::string> Requester::uploadGameData(std::string &session,
     return payload;
   }
 
-std::string Requester::getPublicStats(std::string &type) {
+std::string Requester::getPublicStats(const std::string& type) {
   std::stringstream response;
   std::string tmp;
   std::vector<std::string> body;
@@ -139,8 +139,8 @@ std::string Requester::getPublicStats(std::string &type) {
   return body[body.size() - 1];
 }
 
-std::string Requester::getTotalEarningsAll(std::string &session,
-  std::string &host) {
+std::string Requester::getTotalEarningsAll(const std::string& session,
+  const std::string& host) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -155,8 +155,8 @@ std::string Requester::getTotalEarningsAll(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalEarningsGame(std::string &session,
-  std::string &host, std::string &gametype) {
+std::string Requester::getTotalEarningsGame(const std::string& session,
+  const std::string& host, const std::string& gametype) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -172,8 +172,8 @@ std::string Requester::getTotalEarningsGame(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalEarningsPlayer(std::string &session,
-  std::string &host, std::string &player) {
+std::string Requester::getTotalEarningsPlayer(const std::string& session,
+  const std::string& host, const std::string& player) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -189,8 +189,8 @@ std::string Requester::getTotalEarningsPlayer(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalWinsAll(std::string &session,
-  std::string &host) {
+std::string Requester::getTotalWinsAll(const std::string& session,
+  const std::string& host) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -205,8 +205,8 @@ std::string Requester::getTotalWinsAll(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalWinsGame(std::string &session,
-  std::string &host, std::string &gametype) {
+std::string Requester::getTotalWinsGame(const std::string& session,
+  const std::string& host, const std::string& gametype) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -222,8 +222,8 @@ std::string Requester::getTotalWinsGame(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalWinsPlayer(std::string &session,
-  std::string &host, std::string &player) {
+std::string Requester::getTotalWinsPlayer(const std::string& session,
+  const std::string& host, const std::string& player) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -239,8 +239,8 @@ std::string Requester::getTotalWinsPlayer(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalLossesAll(std::string &session,
-  std::string &host) {
+std::string Requester::getTotalLossesAll(const std::string& session,
+  const std::string& host) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -255,8 +255,8 @@ std::string Requester::getTotalLossesAll(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalLossesGame(std::string &session,
-  std::string &host, std::string &gametype) {
+std::string Requester::getTotalLossesGame(const std::string& session,
+  const std::string& host, const std::string& gametype) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -272,8 +272,8 @@ std::string Requester::getTotalLossesGame(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getTotalLossesPlayer(std::string &session,
-  std::string &host, std::string &player) {
+std::string Requester::getTotalLossesPlayer(const std::string& session,
+  const std::string& host, const std::string& player) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -289,8 +289,8 @@ std::string Requester::getTotalLossesPlayer(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getMostCommonPlay(std::string &session,
-  std::string &host, std::string &gametype) {
+std::string Requester::getMostCommonPlay(const std::string& session,
+  const std::string& host, const std::string& gametype) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
@@ -306,8 +306,8 @@ std::string Requester::getMostCommonPlay(std::string &session,
     return body[body.size() - 1];
 }
 
-std::string Requester::getMostWinningPlay(std::string &session,
-  std::string &host, std::string &gametype) {
+std::string Requester::getMostWinningPlay(const std::string& session,
+  const std::string& host, const std::string& gametype) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
