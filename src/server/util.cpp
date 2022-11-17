@@ -13,7 +13,7 @@ Database getDatabase() {
 
 std::string getSession() {
   static std::string session = "";
-  if (session.size() > 0) {
+  if (session.compare("")) {
     return session;
   }
   int randomLocationInMemory = 1000;

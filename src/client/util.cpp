@@ -6,7 +6,7 @@
 #include "util.h"
 
 void handleCreateHost(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
+    std::string &loggedInUsername, Requester &req, std::string &session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -32,7 +32,7 @@ void handleCreateHost(std::vector<std::string> &input,
 }
 
 void handleLoginHost(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
+    std::string &loggedInUsername, Requester& req, std::string &session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -67,7 +67,7 @@ std::string formatResult(std::vector<std::string> &input) {
 }
 
 void handleUploadGameData(std::vector<std::string> &input,
-    std::string& loggedInUsername, Requester& req, std::string& session) {
+    std::string &loggedInUsername, Requester& req, std::string &session) {
   if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -223,6 +223,20 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
             std::cout << "Could not retrieve private data.\n";
           }
         }
+      } else if (!type.compare("most-common-play")) {
+        if (input.size() != 3) {
+          std::cout << "Invalid parameters for most-common-play.\n";
+          std::cout << "See 'help-private' for a list of commands.\n";
+        } else {
+          std::string gametype = input[2];
+          std::string resp = req.getMostCommonPlay(session, host,
+            gametype);
+          if (resp.size() > 0) {
+            std::cout << type << ": " << resp << "\n";
+          } else {
+            std::cout << "Could not retrieve private data.\n";
+          }
+        }
       } else if (!type.compare("most-winning-play")) {
         if (input.size() != 3) {
           std::cout << "Invalid parameters for most-winning-play.\n";
@@ -255,7 +269,8 @@ void displayPrivateHelp() {
   std::cout << "private total-losses-all\n";
   std::cout << "private total-losses-game <string: game name>\n";
   std::cout << "private total-losses-player <string: playerid>\n";
-  std::cout << "private most-winning-play <string: game name>\n"; //not working
+  std::cout << "private most-common-play <string: game name>\n";
+  std::cout << "private most-winning-play <string: game name>\n";
 }
 
 void displayHelp() {
@@ -271,7 +286,7 @@ void displayHelp() {
   std::cout << "exit\n";
 }
 
-void handleLogoutHost(std::string& loggedInUsername, std::string& session) {
+void handleLogoutHost(std::string &loggedInUsername, std::string &session) {
   std::cout << "Successfully logged out of " << loggedInUsername << ".\n";
   loggedInUsername = "";
   session = "";
@@ -283,7 +298,7 @@ void handleExit() {
 }
 
 void processCleanInput(std::vector<std::string>& cleanInput,
-    std::string& loggedInUsername, Requester& req, std::string &session) {
+    std::string &loggedInUsername, Requester& req, std::string &session) {
   std::string command = cleanInput[0];
   if (!command.compare("create")) {
     handleCreateHost(cleanInput, loggedInUsername, req, session);
