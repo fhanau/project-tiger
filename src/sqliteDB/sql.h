@@ -52,7 +52,7 @@ class Database {
   int dropTable2(std::string command);
   // Executes an SQL command.
   int Database::executeCommand(std::string command, std::string errMsg, 
-   std::string successfulMessage, int theType)
+   std::string successfulMessage, int theType);
 };
 
 #endif
