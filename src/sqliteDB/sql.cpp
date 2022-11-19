@@ -4,6 +4,20 @@
 #include <sqlite3.h>
 #include "sql.h"
 
+
+// Method used for printing data. Used for the selectData() method.
+static int callback(void* NotUsed, int argc,
+  char** argv, char** azColName) {
+    for (int i = 0; i < argc; i++) {
+        // column name and value
+        std::cout << azColName[i] << ": " << argv[i] << std::endl;
+    }
+
+    std::cout << "finish\n" << std::endl;
+
+    return 0;
+}
+
 // static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
     int *c = reinterpret_cast<int *>(count);
@@ -13,7 +27,7 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 
 
 static int intCallback(void *intPointer, int argc, char**argv,
-    const char** azColName) {
+    char **azColName) {
         int *mostWon = reinterpret_cast<int *>(intPointer);
         std::cout << azColName[0] << ": " << argv[0] << "\n";
         *mostWon = std::stoi(argv[0]);
@@ -115,7 +129,7 @@ int Database::insertData(std::string command) {
     char* messageError;
 
     int exit = sqlite3_open(directory, &DB);
-    /* An open database, SQL to be evaluated, 
+    / * An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here * /
     exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
@@ -133,7 +147,7 @@ int Database::selectData(std::string command) {
     char* messageError;
 
     int exit = sqlite3_open(directory, &DB);
-    /* An open database, SQL to be evaluated, 
+    / * An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here* /
     exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
 
@@ -152,7 +166,7 @@ int Database::updateData(std::string command) {
     char* messageError;
 
     int exit = sqlite3_open(directory, &DB);
-    /* An open database, SQL to be evaluated, 
+    / * An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here * /
     exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     if (exit != SQLITE_OK) {
@@ -170,7 +184,7 @@ int Database::updateData(std::string command) {
 int Database::dropTable(std::string command) {
     char* messageError;
     int exit = sqlite3_open(directory, &DB);
-    /* An open database, SQL to be evaluated, 
+    / * An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here * /
     exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
@@ -187,7 +201,7 @@ int Database::deleteData(std::string command) {
     char* messageError;
 
     int exit = sqlite3_open(directory, &DB);
-    /* An open database, SQL to be evaluated, 
+    / * An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here * /
     exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
@@ -203,7 +217,7 @@ int Database::deleteData(std::string command) {
 int Database::dropTable2(std::string command) {
     char* messageError;
     int exit = sqlite3_open(directory, &DB);
-    /* An open database, SQL to be evaluated, 
+    / * An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here * /
     exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
@@ -295,9 +309,8 @@ int Database::doesExist(sqlite3_stmt* statement) {
     }
 }
 
-// Method used for printing data. Used for the selectData() method.
-static int callback(void* NotUsed, int argc, const char** argv,
-  const char** azColName) {
+/* Method used for printing data. Used for the selectData() method.
+static int callback2(void* NotUsed, int argc, const char** argv, const char** azColName) {
     for (int i = 0; i < argc; i++) {
         // column name and value
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
@@ -306,7 +319,7 @@ static int callback(void* NotUsed, int argc, const char** argv,
     std::cout << "finish\n" << std::endl;
 
     return 0;
-}
+}*/
 
 // Method to drop table, given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
