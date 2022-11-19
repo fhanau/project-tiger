@@ -4,7 +4,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include <sqlite3.h>
+
+//Simpler than including the entire sqlite3 header, which is only needed
+//by sql.cpp and stat.cpp.
+struct sqlite3_stmt;
+struct sqlite3;
 
 static int callback(void *count, int argc, char **argv, char **azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName);

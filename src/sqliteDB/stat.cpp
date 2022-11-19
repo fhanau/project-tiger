@@ -1,6 +1,6 @@
-#include "stat.h"
-
 #include <iostream>
+#include <sqlite3.h>
+#include "stat.h"
 
 // helper function that executes commands
 int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
