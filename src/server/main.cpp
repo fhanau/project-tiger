@@ -273,9 +273,15 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
-      std::string numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+      if (gametype == "all") {
+        std::string numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        " FROM game_list WHERE username = '" + host + "';";
+      } else {
+        std::string numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
         " FROM game_list WHERE game_type = '" + gametype +
         "' AND username = '" + host + "';";
+      }
+      
       return std::to_string(getDatabase().getIntValue(
         numberOfGamesCommand));
   });
