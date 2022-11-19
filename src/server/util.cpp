@@ -17,7 +17,7 @@ std::string getSession() {
   if (session.compare("")) {
     return session;
   }
-  unsigned char token_buf [TOKEN_BYTES];
+  unsigned char token_buf[TOKEN_BYTES];
   int error = RAND_bytes(token_buf, TOKEN_BYTES);
   //RAND_bytes may fail if the OS runs out of random data – this is
   //unlikely enough to disregard for this project.
