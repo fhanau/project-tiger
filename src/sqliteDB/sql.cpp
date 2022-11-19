@@ -123,113 +123,6 @@ int Database::createTable(std::string command) {
     return 0;
 }
 
-/*
-// Method for inserting data into specific tables
-int Database::insertData(std::string command) {
-    char* messageError;
-
-    int exit = sqlite3_open(directory, &DB);
-    / * An open database, SQL to be evaluated, 
-	Callback function, 1st argument to callback, Error msg written here * /
-    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in insertData function." << std::endl;
-        std::cerr << messageError << "\n";
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "Records inserted Successfully!" << std::endl;
-    }
-
-    return 0;
-}
-
-int Database::selectData(std::string command) {
-    char* messageError;
-
-    int exit = sqlite3_open(directory, &DB);
-    / * An open database, SQL to be evaluated, 
-	Callback function, 1st argument to callback, Error msg written here* /
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
-
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in selectData function." << std::endl;
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "Records selected Successfully!" << std::endl;
-    }
-
-    return 0;
-}
-
-// Method to update table data, given SQL command.
-int Database::updateData(std::string command) {
-    char* messageError;
-
-    int exit = sqlite3_open(directory, &DB);
-    / * An open database, SQL to be evaluated, 
-	Callback function, 1st argument to callback, Error msg written here * /
-    exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in updateData function." << std::endl;
-        std::cerr << messageError << "\n";
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "Records updated Successfully!" << std::endl;
-    }
-
-    return 0;
-}
-
-// Method to drop table, given SQL command
-int Database::dropTable(std::string command) {
-    char* messageError;
-    int exit = sqlite3_open(directory, &DB);
-    / * An open database, SQL to be evaluated, 
-	Callback function, 1st argument to callback, Error msg written here * /
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in dropTable function." << std::endl;
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "Table Dropped Successfully!" << std::endl;
-    }
-    return 0;
-}
-
-// Method to delete data, given SQL command.
-int Database::deleteData(std::string command) {
-    char* messageError;
-
-    int exit = sqlite3_open(directory, &DB);
-    / * An open database, SQL to be evaluated, 
-	Callback function, 1st argument to callback, Error msg written here * /
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in deleteData function." << std::endl;
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "Records deleted Successfully!" << std::endl;
-    }
-
-    return 0;
-}
-
-int Database::dropTable2(std::string command) {
-    char* messageError;
-    int exit = sqlite3_open(directory, &DB);
-    / * An open database, SQL to be evaluated, 
-	Callback function, 1st argument to callback, Error msg written here * /
-    exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
-    if (exit != SQLITE_OK) {
-        std::cerr << "Error in dropTable function." << std::endl;
-        sqlite3_free(messageError);
-    } else {
-        std::cout << "Table Dropped Successfully!" << std::endl;
-    }
-    return 0;
-}
-*/
-
 // Method that return sqlite statement, given SQL command.
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
@@ -309,18 +202,6 @@ int Database::doesExist(sqlite3_stmt* statement) {
     }
 }
 
-/* Method used for printing data. Used for the selectData() method.
-static int callback2(void* NotUsed, int argc, const char** argv, const char** azColName) {
-    for (int i = 0; i < argc; i++) {
-        // column name and value
-        std::cout << azColName[i] << ": " << argv[i] << std::endl;
-    }
-
-    std::cout << "finish\n" << std::endl;
-
-    return 0;
-}*/
-
 // Method to drop table, given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
@@ -361,8 +242,6 @@ int Database::updateData(std::string command) {
     "Records updated Successfully!", 1);
     return run;
 }
-
-/////////////////////
 
 // Method to select and look at data, given SQL command
 int Database::selectData(std::string command) {
