@@ -273,17 +273,29 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
+      std::string numberOfGamesCommand = "";
       if (gametype == "all") {
-        std::string numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
         " FROM game_list WHERE username = '" + host + "';";
       } else {
-        std::string numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
         " FROM game_list WHERE game_type = '" + gametype +
         "' AND username = '" + host + "';";
       }
       
       return std::to_string(getDatabase().getIntValue(
         numberOfGamesCommand));
+  });
+
+  CROW_ROUTE(app, "/private/number-of-players/<string>/<string>")
+    ([] (const std::string &session, const std::string &host) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string numberOfPlayersCommand = "SELECT COUNT(*) FROM players"
+        " WHERE username = '" + host + "';";
+      return std::to_string(getDatabase().getIntValue(
+        numberOfPlayersCommand));
   });
 
   // ALEX BREBENEL COMMENT - Might need to edit this one

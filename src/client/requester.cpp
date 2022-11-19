@@ -1,3 +1,4 @@
+#include <iostream>
 #include "requester.h"
 
 std::vector<std::string> Requester::createHost(const std::string& username,
@@ -328,6 +329,23 @@ std::string Requester::getNumberOfGames(const std::string& session,
     return body[body.size() - 1];
 }
 
+std::string Requester::getNumberOfPlayers(const std::string& session,
+  const std::string& host) {
+    std::stringstream response;
+    std::string tmp;
+    std::vector<std::string> body;
+    std::string path = "private/number-of-players/" + session + "/" +
+      host;
+    std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::Url(url));
+    request.setOpt(new curlpp::options::WriteStream(&response));
+    request.perform();
+    while (response >> tmp) {
+      body.push_back(tmp);
+    }
+    return body[body.size() - 1];
+}
+
 // ALEX BREBENEL COMMENT - Might need to change
 std::string Requester::getGreatestPlayerByWins(const std::string& session,
   const std::string& host) {
@@ -370,6 +388,32 @@ std::string Requester::getMostWinningPlay(const std::string& session,
     std::vector<std::string> body;
     std::string path = "private/most-winning-play/" + session + "/" + host +
       "/" + gametype;
+    std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::Url(url));
+    request.setOpt(new curlpp::options::WriteStream(&response));
+    request.perform();
+    while (response >> tmp) {
+      body.push_back(tmp);
+    }
+    return body[body.size() - 1];
+}
+
+// Alex Brebenel streamline request function
+std::string Requester::theRequester(const std::string& session,
+  const std::string& host, const std::string& route, int theType, 
+  const std::string& input) {
+    std::stringstream response;
+    std::string tmp;
+    std::vector<std::string> body;
+    std::string path;
+    if (theType == 0) {
+      path = route + session + "/" + host;
+    } else if (theType == 1) {
+      path = route + session + "/" + host +
+      "/" + input;
+    } else {
+      std::cout << "Error! Input is more than 0 or 1!" << std::endl;
+    }
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));

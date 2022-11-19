@@ -86,8 +86,17 @@ class Requester {
     const std::string &host);
 
   // Sends GET request tp server for number of games
-  std::string Requester::getNumberOfGames(const std::string& session,
+  std::string getNumberOfGames(const std::string& session,
     const std::string& host, const std::string& gametype);
+
+  // Sends GET request tp server for number of players
+  std::string getNumberOfPlayers(const std::string& session,
+  const std::string& host);
+
+  // Alex Brebenel streamline request function
+  std::string theRequester(const std::string& session,
+    const std::string& host, const std::string& route, int theType, 
+    const std::string& input);
 
  private:
   curlpp::Cleanup cleaner;

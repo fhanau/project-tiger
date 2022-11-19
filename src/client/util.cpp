@@ -292,6 +292,19 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
             std::cout << "Could not retrieve private data.\n";
           }
         }
+      } else if (!type.compare("number-of-players")) {
+        if (input.size() != 3) {
+          std::cout << "Invalid parameters for number-of-players.\n";
+          std::cout << "See 'help-private' for a list of commands.\n";
+        } else {
+          std::string gametype = input[2];
+          std::string resp = req.getNumberOfPlayers(session, host);
+          if (resp.size() > 0) {
+            std::cout << type << ": " << resp << "\n";
+          } else {
+            std::cout << "Could not retrieve private data.\n";
+          }
+        }
       } else {
         std::cout << "Invalid type of private request.\n";
         std::cout << "See 'help-private' for a list of commands.\n";
