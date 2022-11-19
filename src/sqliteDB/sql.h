@@ -50,7 +50,9 @@ class Database {
   int doesExist(sqlite3_stmt* statement);
   // Delete a table from the database. Alex Brebenel version.
   int dropTable2(std::string command);
+  // Executes an SQL command.
+  int Database::executeCommand(std::string command, std::string errMsg, 
+   std::string successfulMessage, int theType);
 };
 
 #endif
-
