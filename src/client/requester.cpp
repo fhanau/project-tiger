@@ -311,6 +311,41 @@ std::string Requester::getTotalPlayersForGame(const std::string& session,
     return body[body.size() - 1];
 }
 
+std::string Requester::getNumberOfGames(const std::string& session,
+  const std::string& host, const std::string& gametype) {
+    std::stringstream response;
+    std::string tmp;
+    std::vector<std::string> body;
+    std::string path = "private/number-of-games/" + session + "/" +
+      host + "/" + gametype;
+    std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::Url(url));
+    request.setOpt(new curlpp::options::WriteStream(&response));
+    request.perform();
+    while (response >> tmp) {
+      body.push_back(tmp);
+    }
+    return body[body.size() - 1];
+}
+
+// ALEX BREBENEL COMMENT - Might need to change
+std::string Requester::getGreatestPlayerByWins(const std::string& session,
+  const std::string& host) {
+    std::stringstream response;
+    std::string tmp;
+    std::vector<std::string> body;
+    std::string path = "private/greatest-player-by-wins/" + session + "/" +
+      host;
+    std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::Url(url));
+    request.setOpt(new curlpp::options::WriteStream(&response));
+    request.perform();
+    while (response >> tmp) {
+      body.push_back(tmp);
+    }
+    return body[body.size() - 1];
+}
+
 std::string Requester::getMostCommonPlay(const std::string& session,
   const std::string& host, const std::string& gametype) {
     std::stringstream response;

@@ -80,6 +80,15 @@ class Requester {
   std::string getTotalPlayersForGame(const std::string &session,
     const std::string &host, const std::string &gametype);
 
+  // ALEX BREBENEL COMMENT Might need to fix
+  // Sends GET request to server for best player by number of wins
+  std::string getGreatestPlayerByWins(const std::string &session,
+    const std::string &host);
+
+  // Sends GET request tp server for number of games
+  std::string Requester::getNumberOfGames(const std::string& session,
+    const std::string& host, const std::string& gametype);
+
  private:
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
