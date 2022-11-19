@@ -2,7 +2,8 @@
 #include <memory>
 #include <string>
 #include <set>
-
+#include <openssl/rand.h>
+#include <crow.h>
 #include "util.h"
 #include "../sqliteDB/sql.h"
 
@@ -16,10 +17,12 @@ std::string getSession() {
   if (session.compare("")) {
     return session;
   }
-  int randomLocationInMemory = 1000;
-  char randomLocationAsLiteral[9];
-  snprintf(randomLocationAsLiteral, sizeof(randomLocationAsLiteral),
-  "%p", &randomLocationInMemory);
-  session = std::string(randomLocationAsLiteral);
+  unsigned char token_buf [TOKEN_BYTES];
+  int error = RAND_bytes(token_buf, TOKEN_BYTES);
+  //RAND_bytes may fail if the OS runs out of random data – this is
+  //unlikely enough to disregard for this project.
+  (void)error;
+  session = crow::utility::base64encode(token_buf, TOKEN_BYTES);
+  //TODO: Add to token database
   return session;
 }
