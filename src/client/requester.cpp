@@ -401,7 +401,7 @@ std::string Requester::getMostWinningPlay(const std::string& session,
 
 // Alex Brebenel streamline request function
 std::string Requester::theRequester(const std::string& session,
-  const std::string& host, const std::string& route, int theType, 
+  const std::string& host, const std::string& route, int theType,
   const std::string& input) {
     std::stringstream response;
     std::string tmp;
@@ -427,91 +427,91 @@ std::string Requester::theRequester(const std::string& session,
 
 std::string Requester::getTotalEarningsAll(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/total-earnings-all/", 
+    return theRequester(session, host, "private/total-earnings-all/",
       0, "dummy");
 }
 
 std::string Requester::getTotalEarningsGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-earnings-game/", 
+    return theRequester(session, host, "private/total-earnings-game/",
       1, gametype);
 }
 
 std::string Requester::getTotalEarningsPlayer(const std::string& session,
   const std::string& host, const std::string& player) {
-    return theRequester(session, host, "private/total-earnings-player/", 
+    return theRequester(session, host, "private/total-earnings-player/",
       1, player);
 }
 
 std::string Requester::getTotalWinsAll(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/total-wins-all/", 
+    return theRequester(session, host, "private/total-wins-all/",
       0, "dummy");
 }
 
 std::string Requester::getTotalWinsGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-wins-game/", 
+    return theRequester(session, host, "private/total-wins-game/",
       1, gametype);
 }
 
 std::string Requester::getTotalWinsPlayer(const std::string& session,
   const std::string& host, const std::string& player) {
-    return theRequester(session, host, "private/total-wins-player/", 
+    return theRequester(session, host, "private/total-wins-player/",
       1, player);
 }
 
 std::string Requester::getTotalLossesAll(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/total-losses-all/", 
+    return theRequester(session, host, "private/total-losses-all/",
       0, "dummy");
 }
 
 std::string Requester::getTotalLossesGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-losses-game/", 
+    return theRequester(session, host, "private/total-losses-game/",
       1, gametype);
 }
 
 std::string Requester::getTotalLossesPlayer(const std::string& session,
   const std::string& host, const std::string& player) {
-    return theRequester(session, host, "private/total-losses-player/", 
+    return theRequester(session, host, "private/total-losses-player/",
       1, player);
 }
 
 std::string Requester::getTotalPlayersForGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-players-for-game/", 
+    return theRequester(session, host, "private/total-players-for-game/",
       1, gametype);
 }
 
 std::string Requester::getNumberOfGames(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/number-of-games/", 
+    return theRequester(session, host, "private/number-of-games/",
       1, gametype);
 }
 
 std::string Requester::getNumberOfPlayers(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/number-of-players/", 
+    return theRequester(session, host, "private/number-of-players/",
       0, "dummy");
 }
 
 // ALEX BREBENEL COMMENT - Might need to change
 std::string Requester::getGreatestPlayerByWins(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/greatest-player-by-wins/", 
+    return theRequester(session, host, "private/greatest-player-by-wins/",
       0, "dummy");
 }
 
 std::string Requester::getMostCommonPlay(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/most-common-play/", 
+    return theRequester(session, host, "private/most-common-play/",
       1, gametype);
 }
 
 std::string Requester::getMostWinningPlay(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/most-winning-play/", 
+    return theRequester(session, host, "private/most-winning-play/",
       1, gametype);
 }

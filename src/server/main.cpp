@@ -282,7 +282,6 @@ int main(int argc, char** argv) {
         " FROM game_list WHERE game_type = '" + gametype +
         "' AND username = '" + host + "';";
       }
-      
       return std::to_string(getDatabase().getIntValue(
         numberOfGamesCommand));
   });
@@ -304,9 +303,10 @@ int main(int argc, char** argv) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
-      std::string greatestPlayerByWinsCommand = "SELECT player_id, SUM(total_wins)"
-        " AS tw FROM player_stats WHERE username = '" + host + "' AND"
-        " tw = (SELECT MAX(total_wins) FROM player_stats WHERE username = '" + host + "'"
+      std::string greatestPlayerByWinsCommand = "SELECT player_id, "
+        "SUM(total_wins) AS tw FROM player_stats WHERE "
+        "username = '" + host + "' AND tw = (SELECT MAX(total_wins) "
+        "FROM player_stats WHERE username = '" + host + "'"
         " GROUP BY player_id) GROUP BY player_id;";
 
       return getDatabase().getTextValue(greatestPlayerByWinsCommand);

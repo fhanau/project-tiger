@@ -13,27 +13,11 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 
 
 static int intCallback(void *intPointer, int argc, char**argv,
-    char**azColName) {
+    const char** azColName) {
         int *mostWon = reinterpret_cast<int *>(intPointer);
         std::cout << azColName[0] << ": " << argv[0] << "\n";
         *mostWon = std::stoi(argv[0]);
         return 0;
-}
-
-static int textCallback(void *stringPointer, int argc, char**argv,
-  char**azColName) {
-    for (int i = 0; i < argc; i++) {
-        // column name and value
-        std::cout << azColName[i] << ": " << argv[i] << std::endl;
-    }
-    char *textPointer = (char *)stringPointer;
-    int textLength = sizeof(argv[0]);
-    if (textLength > 100) {
-        std::cout << "Size of pointer before realloc: " << textLength << "\n";
-        textPointer = (char *)realloc(textPointer, textLength);
-    }
-    strncpy(textPointer, argv[0], textLength);
-    return 0;
 }
 
 Database::Database(const char* db_dir) {
@@ -106,11 +90,10 @@ int Database::createTable(std::string command) {
     char* messageError;
 
     try {
-        int exit = 0;
-        exit = sqlite3_open(directory, &DB);
+        sqlite3_open(directory, &DB);
         /* An open database, SQL to be evaluated, 
 		Callback function, 1st argument to callback, Error msg written here */
-        exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
+        int exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
         if (exit != SQLITE_OK) {
             std::cerr << "Error in createTable function." << std::endl;
             sqlite3_free(messageError);
@@ -236,8 +219,8 @@ int Database::dropTable2(std::string command) {
 // Method that return sqlite statement, given SQL command.
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
+    sqlite3_open(directory, &DB);
+    sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     sqlite3_reset(the_Statement);
     return the_Statement;
 }
@@ -255,8 +238,8 @@ int Database::getMax(std::string table_name, std::string col_name) {
 int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
+    sqlite3_open(directory, &DB);
+    int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
       std::cerr << "Error when getting total rows\n";
@@ -268,8 +251,8 @@ int Database::totalRows(std::string command) {
 int Database::getIntValue(std::string command) {
     char *messageError;
     int value = 0;
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
+    sqlite3_open(directory, &DB);
+    int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error when getting int value\n";
@@ -281,8 +264,8 @@ int Database::getIntValue(std::string command) {
 std::string Database::getTextValue(std::string command) {
     char *messageError;
     char *value = (char *)malloc(100);
-    int exit = sqlite3_open(directory, &DB);
-    exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
+    sqlite3_open(directory, &DB);
+    int exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
         &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << "Error when getting text value\n";
@@ -313,7 +296,8 @@ int Database::doesExist(sqlite3_stmt* statement) {
 }
 
 // Method used for printing data. Used for the selectData() method.
-static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
+static int callback(void* NotUsed, int argc, const char** argv,
+  const char** azColName) {
     for (int i = 0; i < argc; i++) {
         // column name and value
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
@@ -325,16 +309,16 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 }
 
 // Method to drop table, given SQL command
-int Database::executeCommand(std::string command, std::string errMsg, 
+int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
     char* messageError;
     int exit = sqlite3_open(directory, &DB);
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
 
-    if(theType == 1) {
+    if (theType == 1) {
         exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);;
-    } else if(theType == 0) {
+    } else if (theType == 0) {
         exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     } else {
         std::cout << "Error in SQL execute!";

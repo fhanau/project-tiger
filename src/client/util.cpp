@@ -5,7 +5,7 @@
 #include "requester.h"
 #include "util.h"
 
-void handleCreateHost(std::vector<std::string> &input,
+void handleCreateHost(const std::vector<std::string> &input,
     std::string &loggedInUsername, Requester &req, std::string &session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for creating account.\n";
@@ -31,7 +31,7 @@ void handleCreateHost(std::vector<std::string> &input,
   }
 }
 
-void handleLoginHost(std::vector<std::string> &input,
+void handleLoginHost(const std::vector<std::string> &input,
     std::string &loggedInUsername, Requester& req, std::string &session) {
   if (input.size() != 3) {
     std::cout << "Invalid input for logging into account.\n";
@@ -53,7 +53,7 @@ void handleLoginHost(std::vector<std::string> &input,
   }
 }
 
-std::string formatResult(std::vector<std::string> &input) {
+std::string formatResult(const std::vector<std::string> &input) {
   int pointer = 4;
   std::string result = "";
   while (pointer < input.size()) {
@@ -67,7 +67,8 @@ std::string formatResult(std::vector<std::string> &input) {
 }
 
 void handleUploadGameData(std::vector<std::string> &input,
-    std::string &loggedInUsername, Requester& req, const std::string &session) {
+    const std::string &loggedInUsername, Requester& req, 
+    const std::string &session) {
   if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -93,7 +94,7 @@ void handleUploadGameData(std::vector<std::string> &input,
   }
 }
 
-void handlePublicStats(std::vector<std::string> &input, Requester& req) {
+void handlePublicStats(const std::vector<std::string> &input, Requester& req) {
   if (input.size() != 2) {
     std::cout << "Invalid input for requesting public data.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -108,8 +109,8 @@ void handlePublicStats(std::vector<std::string> &input, Requester& req) {
   }
 }
 
-void handlePrivateStats(std::vector<std::string> &input, Requester& req,
-  std::string &host, std::string &session) {
+void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
+  const std::string &host, const std::string &session) {
     if (input.size() < 2) {
       std::cout << "Invalid input for requesting private data.\n";
       std::cout << "See 'help' for a list of commands.\n";
@@ -270,7 +271,7 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "Invalid parameters for greatest-player-by-wins.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = input[2];
+          //std::string gametype = input[2];
           std::string resp = req.getGreatestPlayerByWins(session, host);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -297,7 +298,6 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           std::cout << "Invalid parameters for number-of-players.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
-          std::string gametype = input[2];
           std::string resp = req.getNumberOfPlayers(session, host);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";

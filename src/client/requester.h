@@ -95,7 +95,7 @@ class Requester {
 
   // Alex Brebenel streamline request function
   std::string theRequester(const std::string& session,
-    const std::string& host, const std::string& route, int theType, 
+    const std::string& host, const std::string& route, int theType,
     const std::string& input);
 
  private:
