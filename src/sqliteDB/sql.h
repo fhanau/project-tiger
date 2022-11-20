@@ -6,11 +6,15 @@
 #include <string>
 #include <sqlite3.h>
 
-static int callback(void *count, int argc, char **argv, char **azColName);
-static int countCallback(void *count, int argc, char **argv, char **azColName);
-static int intCallback(void *intPointer, int argc, char**argv, char**azColName);
-static int textCallback(void *stringPointer, int argc, char**argv,
-  char**azColName);
+
+static int callback3(void* NotUsed, int argc,
+  char** argv, char** azColName);
+static int countCallback(void *count, int argc, char **argv,
+  char **azColName);
+static int intCallback(void *intPointer, int argc, char **argv,
+  char **azColName);
+//static int textCallback(void *stringPointer, int argc, char**argv,
+  //char**azColName);
 int doesExist(sqlite3_stmt* statement);
 
 class Database {
@@ -50,7 +54,9 @@ class Database {
   int doesExist(sqlite3_stmt* statement);
   // Delete a table from the database. Alex Brebenel version.
   int dropTable2(std::string command);
+  // Executes an SQL command.
+  int executeCommand(std::string command, std::string errMsg,
+   std::string successfulMessage, int theType);
 };
 
 #endif
-

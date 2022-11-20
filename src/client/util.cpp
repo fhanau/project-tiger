@@ -67,7 +67,8 @@ std::string formatResult(std::vector<std::string> &input) {
 }
 
 void handleUploadGameData(std::vector<std::string> &input,
-    std::string &loggedInUsername, Requester& req, const std::string &session) {
+    std::string &loggedInUsername, Requester& req,
+    const std::string &session) {
   if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
@@ -264,6 +265,34 @@ void handlePrivateStats(std::vector<std::string> &input, Requester& req,
           } else {
             std::cout << "Could not retrieve private data.\n";
           }
+        }
+      } else if (!type.compare("greatest-player-by-wins")) {
+        std::string resp = req.getGreatestPlayerByWins(session, host);
+        if (resp.size() > 0) {
+          std::cout << type << ": " << resp << "\n";
+        } else {
+          std::cout << "Could not retrieve private data.\n";
+        }
+      } else if (!type.compare("number-of-games")) {
+        if (input.size() != 3) {
+          std::cout << "Invalid parameters for number-of-games.\n";
+          std::cout << "See 'help-private' for a list of commands.\n";
+        } else {
+          std::string gametype = input[2];
+          std::string resp = req.getNumberOfGames(session, host,
+            gametype);
+          if (resp.size() > 0) {
+            std::cout << type << ": " << resp << "\n";
+          } else {
+            std::cout << "Could not retrieve private data.\n";
+          }
+        }
+      } else if (!type.compare("number-of-players")) {
+        std::string resp = req.getNumberOfPlayers(session, host);
+        if (resp.size() > 0) {
+          std::cout << type << ": " << resp << "\n";
+        } else {
+          std::cout << "Could not retrieve private data.\n";
         }
       } else {
         std::cout << "Invalid type of private request.\n";

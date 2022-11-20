@@ -267,6 +267,51 @@ int main(int argc, char** argv) {
         totalPlayersForGameCommand));
   });
 
+  CROW_ROUTE(app, "/private/number-of-games/<string>/<string>/<string>")
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string numberOfGamesCommand = "";
+      if (gametype == "all") {
+        numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        " FROM game_list WHERE username = '" + host + "';";
+      } else {
+        numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        " FROM game_list WHERE game_type = '" + gametype +
+        "' AND username = '" + host + "';";
+      }
+      return std::to_string(getDatabase().getIntValue(
+        numberOfGamesCommand));
+  });
+
+  CROW_ROUTE(app, "/private/number-of-players/<string>/<string>")
+    ([] (const std::string &session, const std::string &host) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string numberOfPlayersCommand = "SELECT COUNT(*) FROM players"
+        " WHERE username = '" + host + "';";
+      return std::to_string(getDatabase().getIntValue(
+        numberOfPlayersCommand));
+  });
+
+  // ALEX BREBENEL COMMENT - Might need to edit this one
+  CROW_ROUTE(app, "/private/greatest-player-by-wins/<string>/<string>")
+    ([] (const std::string &session, const std::string &host) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string greatestPlayerByWinsCommand = "SELECT player_id, "
+        "SUM(total_wins) AS tw FROM player_stats WHERE "
+        "username = '" + host + "' AND tw = (SELECT MAX(total_wins) "
+        "FROM player_stats WHERE username = '" + host + "'"
+        " GROUP BY player_id) GROUP BY player_id;";
+
+      return getDatabase().getTextValue(greatestPlayerByWinsCommand);
+  });
+
   CROW_ROUTE(app, "/private/total-losses-player/<string>/<string>/<string>")
     ([] (const std::string &session, const std::string &host,
     const std::string &player) {
