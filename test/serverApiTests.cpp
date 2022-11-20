@@ -1,13 +1,16 @@
+#include <regex>
 #include "gtest/gtest.h"
 #include "../src/server/util.h"
 
 TEST(ServerUtilTest, ReturnsUniqueSession) {
   std::string sessionId = getSession();
-  EXPECT_GE(sessionId.size(), 1);
+  EXPECT_EQ(sessionId.size(), TOKEN_BASE64_LEN);
 
-  std::string firstTwoCharsOfSessionId = sessionId.substr(0, 2);
-  std::string memoryLocationPointerPrefix = "0x";
-  ASSERT_EQ(firstTwoCharsOfSessionId, memoryLocationPointerPrefix);
+  //Check if session ID contains characters not allowed in base64
+  //Inspired by https://stackoverflow.com/a/7616973
+  bool contains_non_base64
+    = !std::regex_match(sessionId, std::regex("^[A-Za-z0-9\\+\\/\\=]+$"));
+  ASSERT_FALSE(contains_non_base64);
 }
 
 TEST(ServerUtilTest, ReturnsSameUniqueSession) {

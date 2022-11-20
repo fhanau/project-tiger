@@ -1,6 +1,6 @@
+#include <sqlite3.h>
 #include "gtest/gtest.h"
 #include "../src/sqliteDB/sql.h"
-
 
 TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     Database del_table = Database("delete.db");
