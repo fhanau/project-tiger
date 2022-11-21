@@ -25,8 +25,9 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
       " achievement_id, description, unlocked) VALUES('thePlayer', "
       "'GuyMan', 7, 'Win a Game', 1);";
 
-    std::string command4 = "INSERT INTO hosts(username, password) "
-      "VALUES('GuyMan', 'passwordSalted');";
+    //Using the hash value for 'passwordSalted'
+    std::string command4 = "INSERT INTO hosts(username, pw_hash) "
+      "VALUES('GuyMan', '80IfR+oJKJcRa1cVy1rcdfJdojw151dL3syxJJOlsjs=');";
 
     std::string command5 = "INSERT INTO players(player_id, username) "
       "VALUES('thePlayer', 'GuyMan');";
