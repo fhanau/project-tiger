@@ -2,6 +2,8 @@
 #include "gtest/gtest.h"
 #include "../src/sqliteDB/sql.h"
 
+#define EXPECT_ZERO(stmt) EXPECT_EQ(stmt, 0)
+
 TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     Database del_table = Database("delete.db");
     int players_stats_count;
@@ -35,12 +37,12 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     std::string command6 = "INSERT INTO games(game_name) "
       "VALUES('RPS');";
 
-    del_table.insertData(command1);
-    del_table.insertData(command2);
-    del_table.insertData(command3);
-    del_table.insertData(command4);
-    del_table.insertData(command5);
-    del_table.insertData(command6);
+    EXPECT_ZERO(del_table.insertData(command1));
+    EXPECT_ZERO(del_table.insertData(command2));
+    EXPECT_ZERO(del_table.insertData(command3));
+    EXPECT_ZERO(del_table.insertData(command4));
+    EXPECT_ZERO(del_table.insertData(command5));
+    EXPECT_ZERO(del_table.insertData(command6));
 
 
     sqlite3_stmt* one = del_table.makeStatement("SELECT * FROM player_stats");
@@ -86,7 +88,7 @@ TEST(Database_Update, Check_Update_method) {
 
     std::string command1 = "UPDATE games SET game_name = 'RPS2'"
         "WHERE game_name = 'RPS';";
-    del_table.updateData(command1);
+    EXPECT_ZERO(del_table.updateData(command1));
     sqlite3_stmt* seven = del_table.makeStatement("SELECT * FROM games");
 
     while (sqlite3_step(seven) != SQLITE_DONE) {
@@ -114,12 +116,12 @@ TEST(Database_Delete, Check_Delete_method) {
     int hosts_count;
     int games_count;
 
-    del_table.deleteData("DELETE FROM player_stats;");
-    del_table.deleteData("DELETE FROM game_list;");
-    del_table.deleteData("DELETE FROM achievements;");
-    del_table.deleteData("DELETE FROM hosts;");
-    del_table.deleteData("DELETE FROM players;");
-    del_table.deleteData("DELETE FROM games;");
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM player_stats;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM game_list;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM achievements;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM hosts;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM players;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM games;"));
 
 
     std::string longString = "SELECT * FROM achievements";
@@ -160,7 +162,7 @@ TEST(Database_Delete, Check_Delete_method) {
 TEST(Database_Drop, Check_Drop_method) {
     Database del_table = Database("delete.db");
 
-    del_table.dropTable2("DROP TABLE IF EXISTS player_stats;");
+    EXPECT_ZERO(del_table.dropTable2("DROP TABLE IF EXISTS player_stats;"));
 
     std::string string1 = "SELECT COUNT(*) as theCount FROM sqlite_master ";
     std::string string2 = "WHERE type = 'table' AND name='player_stats';";

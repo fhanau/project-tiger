@@ -222,9 +222,9 @@ int Database::executeCommand(std::string command, std::string errMsg,
 
     // exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << errMsg << std::endl;
-        // std::cerr << messageError << "\n";
+        std::cerr << errMsg << ": " << messageError << std::endl;
         sqlite3_free(messageError);
+        return 1;
     } else {
         std::cout << successfulMessage << std::endl;
     }
