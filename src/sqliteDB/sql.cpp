@@ -36,6 +36,9 @@ static int intCallback(void *intPointer, int argc, char**argv,
 
 Database::Database(const char* db_dir) {
     directory = db_dir;
+    //Ideally, we would not have the database always-open, but this approach
+    //is safer and more reliable for our use case.
+    sqlite3_open(directory, &DB);
 
     // Create the 6 tables named:
     // player_stats, game_list, achievements,
@@ -97,14 +100,15 @@ Database::Database(const char* db_dir) {
     the_Statement = NULL;
 }
 
-Database::~Database() {}
+Database::~Database() {
+  sqlite3_close(DB);
+}
 
 // Method for creating tables in the database.
 int Database::createTable(std::string command) {
     char* messageError;
 
     try {
-        sqlite3_open(directory, &DB);
         /* An open database, SQL to be evaluated, 
 		Callback function, 1st argument to callback, Error msg written here */
         int exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
@@ -114,7 +118,6 @@ int Database::createTable(std::string command) {
         } else {
             std::cout << "Table created Successfully" << std::endl;
         }
-        sqlite3_close(DB);
     }
     catch (const std::exception& e) {
         std::cerr << e.what();
@@ -126,7 +129,6 @@ int Database::createTable(std::string command) {
 // Method that return sqlite statement, given SQL command.
 // sqlite statements are used for return table values.
 sqlite3_stmt* Database::makeStatement(std::string command) {
-    sqlite3_open(directory, &DB);
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     sqlite3_reset(the_Statement);
     return the_Statement;
@@ -146,7 +148,6 @@ int Database::getMax(std::string table_name, std::string col_name) {
 int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
-    sqlite3_open(directory, &DB);
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
@@ -159,7 +160,6 @@ int Database::totalRows(std::string command) {
 int Database::getIntValue(std::string command) {
     char *messageError;
     int value = 0;
-    sqlite3_open(directory, &DB);
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
@@ -172,7 +172,6 @@ int Database::getIntValue(std::string command) {
 std::string Database::getTextValue(std::string command) {
     char *messageError;
     char *value = (char *)malloc(100);
-    sqlite3_open(directory, &DB);
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
         &messageError);
     if (exit != SQLITE_OK) {
@@ -207,7 +206,7 @@ int Database::doesExist(sqlite3_stmt* statement) {
 int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
     char* messageError;
-    int exit = sqlite3_open(directory, &DB);
+    int exit;
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
 
@@ -216,11 +215,12 @@ int Database::executeCommand(std::string command, std::string errMsg,
     } else if (theType == 0) {
         exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     } else {
-        std::cout << "Error in SQL execute!";
-        std::cout << "Only type 1 and 0 should exist!" << std::endl;
+        std::cerr << "Error in SQL execute: Only type 1 and 0 should exist!"
+          << std::endl;
+        std::cerr << errMsg << std::endl;
+        return 1;
     }
 
-    // exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     if (exit != SQLITE_OK) {
         std::cerr << errMsg << ": " << messageError << std::endl;
         sqlite3_free(messageError);
