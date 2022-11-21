@@ -85,7 +85,7 @@ Database::Database(const char* db_dir) {
 
     std::string command5 = "CREATE TABLE IF NOT EXISTS hosts("
         "username CHAR(50) PRIMARY KEY NOT NULL, "
-        "password CHAR(50) NOT NULL );";
+        "pw_hash CHAR(50) NOT NULL );";
 
     this->createTable(command5);
 

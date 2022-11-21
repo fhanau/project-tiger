@@ -22,8 +22,9 @@ int main(int argc, char** argv) {
     if (getDatabase().totalRows(findHost) > 0) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
-      std::string command = "INSERT INTO hosts(username, password) VALUES("
-        "'" + username + "', '" + password + "');";
+      std::string pw_hash = get_hash(password);
+      std::string command = "INSERT INTO hosts(username, pw_hash) VALUES("
+        "'" + username + "', '" + pw_hash + "');";
       getDatabase().insertData(command);
       std::string validResponse = "SUCCESS " + getSession();
       return crow::response(validResponse);
@@ -32,9 +33,11 @@ int main(int argc, char** argv) {
 
   CROW_ROUTE(app, "/login/<string>/<string>")([] (const std::string &username,
   const std::string &password) {
-    // Receives request from client to login with username and password
+    // Receives request from client to login with username and password.
+    std::string pw_hash = get_hash(password);
+    // See if a user with the given name and hashed password exists.
     std::string findHost = "SELECT * from hosts WHERE username = '" + username
-      + "' AND password = '" + password + "';";
+      + "' AND pw_hash = '" + pw_hash + "';";
     if (getDatabase().totalRows(findHost) == 0) {
       return crow::response("ERROR IncorrectLoginInfo");
     } else {

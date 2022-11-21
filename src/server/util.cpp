@@ -3,6 +3,7 @@
 #include <string>
 #include <set>
 #include <openssl/rand.h>
+#include <openssl/sha.h>
 #include <crow.h>
 #include "util.h"
 #include "../sqliteDB/sql.h"
@@ -26,3 +27,12 @@ std::string getSession() {
   //TODO: Add to token database
   return session;
 }
+
+std::string get_hash(const std::string& password) {
+  unsigned char sha_digest[SHA256_DIGEST_LENGTH];
+  SHA256((const unsigned char *)password.c_str(), password.size(), sha_digest);
+  std::string hash = crow::utility::base64encode(sha_digest,
+      SHA256_DIGEST_LENGTH);
+  return hash;
+}
+
