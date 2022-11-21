@@ -30,10 +30,10 @@ add_custom_target(client-based-tests
   COMMAND cat ${TIGER_TEST_DIR}/client-commands.sh | ${CMAKE_BINARY_DIR}/client)
 
 # setup gcovr
-set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR/cmake})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
+include(CodeCoverage)
 
 message(STATUS "Coverage analysis with gcov enabled")    
-include(CodeCoverage.cmake)
 append_coverage_compiler_flags()
 
 setup_target_for_coverage_gcovr_html(
@@ -42,4 +42,5 @@ setup_target_for_coverage_gcovr_html(
     DEPENDENCIES tiger-test
     BASE_DIRECTORY "${TIGER_SOURCE_DIR}"
     EXCLUDE "${TIGER_SOURCE_DIR}/libraries"
+    EXCLUDE "${TIGER_SOURCE_DIR}/client"
 )
