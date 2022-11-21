@@ -12,8 +12,8 @@
 // Handles making all GET requests to server using input from client
 class Requester {
  public:
-
   Requester() {
+    //Disable SSL certificate check to allow server to use unsigned certificate.
     request.setOpt(curlpp::options::SslVerifyPeer(false));
     request.setOpt(curlpp::options::SslVerifyHost(false));
   }
@@ -25,10 +25,6 @@ class Requester {
   // Sends GET request to server to login host and returns server response
   std::vector<std::string> loginHost(const std::string &username,
    const std::string &password);
-
-  // Sends GET request to server to add type of game
-  std::string addGameType(const std::string &gametype,
-    const std::string &session);
 
   // Sends GET request to server to upload data and returns server response
   std::vector<std::string> uploadGameData(const std::string &session,
@@ -105,7 +101,7 @@ class Requester {
  private:
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
-  std::string baseUrl = "https://127.0.0.1:18080/";
+  const std::string baseUrl = "https://127.0.0.1:18080/";
 };
 
 #endif
