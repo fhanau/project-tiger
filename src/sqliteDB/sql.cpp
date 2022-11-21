@@ -139,6 +139,7 @@ int Database::getMax(std::string table_name, std::string col_name) {
     sqlite3_step(stmt);
 
     int the_max = sqlite3_column_int(stmt, 0);
+    sqlite3_finalize(stmt);
     return the_max;
 }
 

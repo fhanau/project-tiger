@@ -147,6 +147,13 @@ TEST(Database_Delete, Check_Delete_method) {
     EXPECT_EQ(achieve_count, 0);
     EXPECT_EQ(hosts_count, 0);
     EXPECT_EQ(games_count, 0);
+
+    /*TODO: Technically should call sqlite3_finalize() for each sqlite3_stmt
+     * above, but since we will no longer use the given database this is not
+     * necessary here. If the database is used again or there are any delete
+     * operations added following the statements, they do need to be finalized
+     * to prevent errors since tables cannot be deleted as long as there are
+     * statements referencing them. */
 }
 
 TEST(Database_Drop, Check_Drop_method) {
