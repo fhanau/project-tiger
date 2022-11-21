@@ -71,22 +71,6 @@ std::vector<std::string> Requester::loginHost(const std::string& username,
   return payload;
 }
 
-std::string Requester::addGameType(const std::string& gametype,
-    const std::string& session) {
-  std::stringstream response;
-  std::string tmp;
-  std::vector<std::string> body;
-  std::string path = "gametype/" + gametype + "/" + session;
-  std::string url = baseUrl + path;
-  request.setOpt(new curlpp::options::Url(url));
-  request.setOpt(new curlpp::options::WriteStream(&response));
-  request.perform();
-  while (response >> tmp) {
-    body.push_back(tmp);
-  }
-  return body[body.size() - 1];
-}
-
 std::vector<std::string> Requester::uploadGameData(const std::string& session,
   const std::string& type, const std::string& host, const std::string& user,
   const std::string& result, const std::string& earning) {
@@ -126,41 +110,15 @@ std::vector<std::string> Requester::uploadGameData(const std::string& session,
   }
 
 std::string Requester::getPublicStats(const std::string& type) {
-  std::stringstream response;
-  std::string tmp;
-  std::vector<std::string> body;
   std::string path = "public/" + type;
-  std::string url = baseUrl + path;
-  request.setOpt(new curlpp::options::Url(url));
-  request.setOpt(new curlpp::options::WriteStream(&response));
-  //TODO: Put this in every function, also refactor interface to
-  //significantly reduce code clones.
-  //Disable SSL certificate check to allow server to use unsigned certificate.
-  request.setOpt(curlpp::options::SslVerifyPeer(false));
-  request.setOpt(curlpp::options::SslVerifyHost(false));
-  request.perform();
-  while (response >> tmp) {
-    body.push_back(tmp);
-  }
-  return body[body.size() - 1];
+  return theRequester(path);
 }
 
 // Alex Brebenel streamline request function
-std::string Requester::theRequester(const std::string& session,
-  const std::string& host, const std::string& route, int theType,
-  const std::string& input) {
+std::string Requester::theRequester(const std::string &path) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> body;
-    std::string path;
-    if (theType == 0) {
-      path = route + session + "/" + host;
-    } else if (theType == 1) {
-      path = route + session + "/" + host +
-      "/" + input;
-    } else {
-      std::cout << "Error! Input is more than 0 or 1!" << std::endl;
-    }
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
@@ -173,91 +131,102 @@ std::string Requester::theRequester(const std::string& session,
 
 std::string Requester::getTotalEarningsAll(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/total-earnings-all/",
-      0, "dummy");
+    std::string path = "private/total-earnings-all/" + session + "/" + host;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalEarningsGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-earnings-game/",
-      1, gametype);
+    std::string path = "private/total-earnings-game/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalEarningsPlayer(const std::string& session,
   const std::string& host, const std::string& player) {
-    return theRequester(session, host, "private/total-earnings-player/",
-      1, player);
+    std::string path = "private/total-earnings-player/" + session + "/" + host
+      + "/" + player;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalWinsAll(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/total-wins-all/",
-      0, "dummy");
+    std::string path = "private/total-wins-all/" + session + "/" + host;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalWinsGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-wins-game/",
-      1, gametype);
+    std::string path = "private/total-wins-game/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalWinsPlayer(const std::string& session,
   const std::string& host, const std::string& player) {
-    return theRequester(session, host, "private/total-wins-player/",
-      1, player);
+    std::string path = "private/total-wins-player/" + session + "/" + host
+      + "/" + player;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalLossesAll(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/total-losses-all/",
-      0, "dummy");
+    std::string path = "private/total-losses-all/" + session + "/" + host;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalLossesGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-losses-game/",
-      1, gametype);
+    std::string path = "private/total-losses-game/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalLossesPlayer(const std::string& session,
   const std::string& host, const std::string& player) {
-    return theRequester(session, host, "private/total-losses-player/",
-      1, player);
+    std::string path = "private/total-losses-player/" + session + "/" + host
+      + "/" + player;
+    return theRequester(path);
 }
 
 std::string Requester::getTotalPlayersForGame(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/total-players-for-game/",
-      1, gametype);
+    std::string path = "private/total-players-for-game/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }
 
 std::string Requester::getNumberOfGames(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/number-of-games/",
-      1, gametype);
+    std::string path = "private/number-of-games/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }
 
 std::string Requester::getNumberOfPlayers(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/number-of-players/",
-      0, "dummy");
+    std::string path = "private/number-of-players/" + session + "/" + host;
+    return theRequester(path);
 }
 
 // ALEX BREBENEL COMMENT - Might need to change
 std::string Requester::getGreatestPlayerByWins(const std::string& session,
   const std::string& host) {
-    return theRequester(session, host, "private/greatest-player-by-wins/",
-      0, "dummy");
+    std::string path = "private/greatest-player-by-wins/" + session + "/" +
+      host;
+    return theRequester(path);
 }
 
 std::string Requester::getMostCommonPlay(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/most-common-play/",
-      1, gametype);
+    std::string path = "private/most-common-play/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }
 
 std::string Requester::getMostWinningPlay(const std::string& session,
   const std::string& host, const std::string& gametype) {
-    return theRequester(session, host, "private/most-winning-play/",
-      1, gametype);
+    std::string path = "private/most-winning-play/" + session + "/" + host
+      + "/" + gametype;
+    return theRequester(path);
 }

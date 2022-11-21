@@ -12,6 +12,12 @@
 // Handles making all GET requests to server using input from client
 class Requester {
  public:
+
+  Requester() {
+    request.setOpt(curlpp::options::SslVerifyPeer(false));
+    request.setOpt(curlpp::options::SslVerifyHost(false));
+  }
+
   // Sends GET request to server to create host and returns server response
   std::vector<std::string> createHost(const std::string &username,
    const std::string &password);
@@ -94,9 +100,7 @@ class Requester {
   const std::string& host);
 
   // Alex Brebenel streamline request function
-  std::string theRequester(const std::string& session,
-    const std::string& host, const std::string& route, int theType,
-    const std::string& input);
+  std::string theRequester(const std::string& path);
 
  private:
   curlpp::Cleanup cleaner;
