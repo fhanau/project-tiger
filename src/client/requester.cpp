@@ -10,6 +10,8 @@ std::vector<std::string> Requester::createHost(const std::string& username,
   std::string url = baseUrl + path;
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
+  request.setOpt(curlpp::options::SslVerifyPeer(false));
+  request.setOpt(curlpp::options::SslVerifyHost(false));
   request.perform();
   int isFirstBodyString = 0;
   while (response >> tmp) {
@@ -45,6 +47,8 @@ std::vector<std::string> Requester::loginHost(const std::string& username,
   std::string url = baseUrl + path;
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
+  request.setOpt(curlpp::options::SslVerifyPeer(false));
+  request.setOpt(curlpp::options::SslVerifyHost(false));
   request.perform();
   int isFirstBodyString = 0;
   while (response >> tmp) {
@@ -80,6 +84,8 @@ std::string Requester::addGameType(const std::string& gametype,
   std::string url = baseUrl + path;
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
+  request.setOpt(curlpp::options::SslVerifyPeer(false));
+  request.setOpt(curlpp::options::SslVerifyHost(false));
   request.perform();
   while (response >> tmp) {
     body.push_back(tmp);
@@ -99,6 +105,8 @@ std::vector<std::string> Requester::uploadGameData(const std::string& session,
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
+    request.setOpt(curlpp::options::SslVerifyPeer(false));
+    request.setOpt(curlpp::options::SslVerifyHost(false));
     request.perform();
     int isFirstBodyString = 0;
     while (response >> tmp) {
@@ -164,6 +172,8 @@ std::string Requester::theRequester(const std::string& session,
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
+    request.setOpt(curlpp::options::SslVerifyPeer(false));
+    request.setOpt(curlpp::options::SslVerifyHost(false));
     request.perform();
     while (response >> tmp) {
       body.push_back(tmp);
