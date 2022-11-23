@@ -30,8 +30,9 @@ class Database {
 
  public:
   // Create a database stored in file db_dir
+  explicit Database();
   explicit Database(const char* db_dir);
-  virtual ~Database();
+  ~Database();
   // Create an SQL table using schema described in command
   int createTable(std::string command);
   // Insert data values into SQL table
