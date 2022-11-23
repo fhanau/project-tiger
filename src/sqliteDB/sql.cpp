@@ -36,8 +36,8 @@ static int intCallback(void *intPointer, int argc, char**argv,
 
 Database::Database(const char* db_dir) {
     directory = db_dir;
-    //Ideally, we would not have the database always-open, but this approach
-    //is safer and more reliable for our use case.
+    // Ideally, we would not have the database always-open, but this approach
+    // is safer and more reliable for our use case.
     sqlite3_open(directory, &DB);
 
     // Create the 6 tables named:
@@ -58,12 +58,12 @@ Database::Database(const char* db_dir) {
     this->createTable(command1);
 
     std::string command2 = "CREATE TABLE IF NOT EXISTS game_list("
-        "game_id                INT  NOT NULL, "
-        "game_type              TEXT NOT NULL, "
-        "username               CHAR(50)  NOT NULL, "
-        "player_id      CHAR(50)  NOT NULL, "
-        "result                 TEXT NOT NULL, "
-        "earning              INT  NOT NULL, "
+        "game_id     INT       NOT NULL, "
+        "game_type   TEXT      NOT NULL, "
+        "username    CHAR(50)  NOT NULL, "
+        "player_id   CHAR(50)  NOT NULL, "
+        "result      TEXT      NOT NULL, "
+        "earning     INT       NOT NULL, "
         "CONSTRAINT game_host PRIMARY KEY (game_id, username) );";
 
     this->createTable(command2);
@@ -71,9 +71,9 @@ Database::Database(const char* db_dir) {
     std::string command3 = "CREATE TABLE IF NOT EXISTS achievements("
         "player_id          CHAR(50)  NOT NULL, "
         "username           CHAR(50)  NOT NULL, "
-        "achievement_id     INT  NOT NULL, "
-        "description        TEXT NOT NULL, "
-        "unlocked           INT  NOT NULL DEFAULT 0, "
+        "achievement_id     INT       NOT NULL, "
+        "description        TEXT      NOT NULL, "
+        "unlocked           INT       NOT NULL DEFAULT 0, "
         "CONSTRAINT player_host_achievement PRIMARY KEY "
         "(player_id, username, achievement_id) );";
 
