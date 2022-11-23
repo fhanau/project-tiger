@@ -19,6 +19,7 @@ set(TEST_DB_DEPS
     ${TIGER_SOURCE_DIR}/libraries/sqlite/sqlite3.c
     ${TIGER_SOURCE_DIR}/libraries/sqlite/sqlite3.h
 )
+# create the test executable
 add_executable(tiger-test ${TESTS} ${TEST_DEPS} ${TEST_GAME_DEPS} ${TEST_DB_DEPS})
 target_link_libraries(tiger-test PRIVATE Crow::Crow GTest::gtest_main GTest::gmock ${CMAKE_DL_LIBS})
 
@@ -27,3 +28,19 @@ add_custom_target(client-based-tests
   DEPENDS client
   #This command will freeze if the server is not running.
   COMMAND cat ${TIGER_TEST_DIR}/client-commands.sh | ${CMAKE_BINARY_DIR}/client)
+
+# setup gcovr
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
+include(CodeCoverage)
+
+message(STATUS "Coverage analysis with gcov enabled")    
+append_coverage_compiler_flags()
+
+setup_target_for_coverage_gcovr_html(
+    NAME coverage
+    EXECUTABLE ./tiger-test
+    DEPENDENCIES tiger-test
+    BASE_DIRECTORY "${TIGER_SOURCE_DIR}"
+    EXCLUDE "${TIGER_SOURCE_DIR}/libraries"
+    EXCLUDE "${TIGER_SOURCE_DIR}/client"
+)

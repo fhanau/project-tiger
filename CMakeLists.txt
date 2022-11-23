@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
 project (TIGER VERSION 0.1)
 set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-pessimizing-move -Wno-missing-field-initializers")
@@ -33,6 +34,7 @@ add_custom_target(run-tiger-test
 
 add_custom_target(code-tests)
 add_dependencies(code-tests code-spell code-lint code-analyze)
+
 #target for codespell, exit 0 is to work around nonzero return code
 set(TIGER_CODE_FILES server/ client/ ../test/*.cpp game/ sqliteDB/)
 set(TIGER_TEXT_FILES CMakeLists.txt ../README.md ../test/CMakeLists.txt ../.github/ ../test/client-commands.sh)
