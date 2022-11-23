@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include "gmock/gmock.h"
+#include <crow.h>
 #include "../src/sqliteDB/sql.h"
 
 crow::SimpleApp app;
