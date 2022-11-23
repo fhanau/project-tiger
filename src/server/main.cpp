@@ -15,26 +15,29 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
-  ([](std::string username, std::string password) {
+  ([](const std::string &username, const std::string &password) {
     // Receives request from client to make account with username and password
     std::string findHost = "SELECT * from hosts WHERE username = '" +
       username + "';";
     if (getDatabase().totalRows(findHost) > 0) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
-      std::string command = "INSERT INTO hosts(username, password) VALUES("
-        "'" + username + "', '" + password + "');";
+      std::string pw_hash = get_hash(password);
+      std::string command = "INSERT INTO hosts(username, pw_hash) VALUES("
+        "'" + username + "', '" + pw_hash + "');";
       getDatabase().insertData(command);
       std::string validResponse = "SUCCESS " + getSession();
       return crow::response(validResponse);
     }
   });
 
-  CROW_ROUTE(app, "/login/<string>/<string>")([] (std::string username,
-  std::string password) {
-    // Receives request from client to login with username and password
+  CROW_ROUTE(app, "/login/<string>/<string>")([] (const std::string &username,
+  const std::string &password) {
+    // Receives request from client to login with username and password.
+    std::string pw_hash = get_hash(password);
+    // See if a user with the given name and hashed password exists.
     std::string findHost = "SELECT * from hosts WHERE username = '" + username
-      + "' AND password = '" + password + "';";
+      + "' AND pw_hash = '" + pw_hash + "';";
     if (getDatabase().totalRows(findHost) == 0) {
       return crow::response("ERROR IncorrectLoginInfo");
     } else {
@@ -44,9 +47,10 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/"
-    "<string>/<string>")([] (std::string sessionId, std::string gametype,
-    std::string host, std::string player, std::string result,
-    std::string earning) {
+    "<string>/<string>")([] (const std::string &sessionId,
+    const std::string &gametype, const std::string &host,
+    const std::string &player, const std::string &result,
+    const std::string &earning) {
     // Receives request from client to upload game data to database
     // Must be logged in to upload game data
     if (sessionId.compare(getSession()) != 0) {
@@ -143,7 +147,7 @@ int main(int argc, char** argv) {
     return "SUCCESS";
   });
 
-  CROW_ROUTE(app, "/public/<string>")([] (std::string type) {
+  CROW_ROUTE(app, "/public/<string>")([] (const std::string &type) {
     if (!type.compare("total-games")) {
       std::string command = "SELECT game_id FROM game_list;";
       return std::to_string(getDatabase().totalRows(command));
@@ -162,7 +166,7 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-earnings-all/<string>/<string>")
-    ([] (std::string session, std::string host) {
+    ([] (const std::string &session, const std::string &host) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -172,7 +176,8 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-earnings-game/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string gametype) {
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -183,7 +188,8 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-earnings-player/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string player) {
+    ([] (const std::string &session, const std::string &host,
+    const std::string &player) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -194,7 +200,7 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-wins-all/<string>/<string>")
-    ([] (std::string session, std::string host) {
+    ([] (const std::string &session, const std::string &host) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -205,7 +211,8 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-wins-game/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string gametype) {
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -216,7 +223,8 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-wins-player/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string player) {
+    ([] (const std::string &session, const std::string &host,
+    const std::string &player) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -227,7 +235,7 @@ int main(int argc, char** argv) {
   });
 
   CROW_ROUTE(app, "/private/total-losses-all/<string>/<string>")
-    ([] (std::string session, std::string host) {
+    ([] (const std::string &session, const std::string &host) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -236,8 +244,10 @@ int main(int argc, char** argv) {
       return std::to_string(getDatabase().getIntValue(allLossesCommand));
   });
 
+  // input[0]/input[1]/sessionId (constant)/ host (constant) / input[2].....
   CROW_ROUTE(app, "/private/total-losses-game/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string gametype) {
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -247,8 +257,67 @@ int main(int argc, char** argv) {
       return std::to_string(getDatabase().getIntValue(allGameLossesCommand));
   });
 
+  CROW_ROUTE(app, "/private/total-players-for-game/<string>/<string>/<string>")
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string totalPlayersForGameCommand = "SELECT COUNT(DISTINCT player_i"
+        "d) FROM game_list WHERE game_type = '" + gametype +
+        "' AND username = '" + host + "';";
+      return std::to_string(getDatabase().getIntValue(
+        totalPlayersForGameCommand));
+  });
+
+  CROW_ROUTE(app, "/private/number-of-games/<string>/<string>/<string>")
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string numberOfGamesCommand = "";
+      if (gametype == "all") {
+        numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        " FROM game_list WHERE username = '" + host + "';";
+      } else {
+        numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
+        " FROM game_list WHERE game_type = '" + gametype +
+        "' AND username = '" + host + "';";
+      }
+      return std::to_string(getDatabase().getIntValue(
+        numberOfGamesCommand));
+  });
+
+  CROW_ROUTE(app, "/private/number-of-players/<string>/<string>")
+    ([] (const std::string &session, const std::string &host) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string numberOfPlayersCommand = "SELECT COUNT(*) FROM players"
+        " WHERE username = '" + host + "';";
+      return std::to_string(getDatabase().getIntValue(
+        numberOfPlayersCommand));
+  });
+
+  // ALEX BREBENEL COMMENT - Might need to edit this one
+  CROW_ROUTE(app, "/private/greatest-player-by-wins/<string>/<string>")
+    ([] (const std::string &session, const std::string &host) {
+      if (getSession().compare(session)) {
+        return std::to_string(-1);
+      }
+      std::string greatestPlayerByWinsCommand = "SELECT player_id, "
+        "SUM(total_wins) AS tw FROM player_stats WHERE "
+        "username = '" + host + "' AND tw = (SELECT MAX(total_wins) "
+        "FROM player_stats WHERE username = '" + host + "'"
+        " GROUP BY player_id) GROUP BY player_id;";
+
+      return getDatabase().getTextValue(greatestPlayerByWinsCommand);
+  });
+
   CROW_ROUTE(app, "/private/total-losses-player/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string player) {
+    ([] (const std::string &session, const std::string &host,
+    const std::string &player) {
       if (getSession().compare(session)) {
         return std::to_string(-1);
       }
@@ -258,17 +327,55 @@ int main(int argc, char** argv) {
       return std::to_string(getDatabase().getIntValue(allPlayerLossesCommand));
   });
 
-  CROW_ROUTE(app, "/private/most-winning-play/<string>/<string>/<string>")
-    ([] (std::string session, std::string host, std::string gametype) {
+  CROW_ROUTE(app, "/private/most-common-play/<string>/<string>/<string>")
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
       if (getSession().compare(session)) {
         return std::string("Invalid sessionid. Logout and login again.\n");
       }
-      std::string mostWinningPlayCommand = "SELECT result, COUNT(result) AS "
+      std::string findGame = "SELECT * from game_list WHERE username = '" +
+        host + "' AND game_type = '" + gametype + "';";
+
+      if (getDatabase().totalRows(findGame) == 0) {
+        return std::string("GameDataNotFound");
+      }
+      std::string mostCommonPlayCommand = "SELECT result, COUNT(result) AS "
         "'value_occurrence' FROM game_list WHERE username = '" + host +
         "' AND game_type = '" + gametype + "' GROUP BY result ORDER BY "
         "'value_occurence' DESC LIMIT 1;";
+      return getDatabase().getTextValue(mostCommonPlayCommand);
+  });
+
+  CROW_ROUTE(app, "/private/most-winning-play/<string>/<string>/<string>")
+    ([] (const std::string &session, const std::string &host,
+    const std::string &gametype) {
+      if (getSession().compare(session)) {
+        return std::string("Invalid sessionid. Logout and login again.\n");
+      }
+      std::string findGame = "SELECT * from game_list WHERE username = '" +
+        host + "' AND game_type = '" + gametype + "';";
+
+      if (getDatabase().totalRows(findGame) == 0) {
+        return std::string("GameDataNotFound");
+      }
+      std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
+        " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
+        "earning > 0 AND username = '" + host + "' AND game_type = '" +
+        gametype + "' GROUP BY result);";
+      //std::cout << mostWinningPlayCommand << "\n";
       return getDatabase().getTextValue(mostWinningPlayCommand);
   });
+
+  //Set up SSL, working around Crow issues
+  crow::ssl_context_t ssl_ctx(asio::ssl::context::sslv23);
+  ssl_ctx.set_verify_mode(asio::ssl::verify_none);
+  ssl_ctx.use_certificate_file("cert.pem", crow::ssl_context_t::pem);
+  ssl_ctx.use_private_key_file("key.pem", crow::ssl_context_t::pem);
+  ssl_ctx.set_options(
+      asio::ssl::context::default_workarounds
+      | asio::ssl::context::no_sslv2
+      | asio::ssl::context::no_sslv3);
+  app.ssl(std::move(ssl_ctx));
 
   app.port(18080).multithreaded().run();
 }

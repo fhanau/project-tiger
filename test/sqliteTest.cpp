@@ -1,6 +1,8 @@
+#include <sqlite3.h>
 #include "gtest/gtest.h"
 #include "../src/sqliteDB/sql.h"
 
+#define EXPECT_ZERO(stmt) EXPECT_EQ(stmt, 0)
 
 TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     Database del_table = Database("delete.db");
@@ -25,8 +27,9 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
       " achievement_id, description, unlocked) VALUES('thePlayer', "
       "'GuyMan', 7, 'Win a Game', 1);";
 
-    std::string command4 = "INSERT INTO hosts(username, password) "
-      "VALUES('GuyMan', 'passwordSalted');";
+    //Using the hash value for 'passwordSalted'
+    std::string command4 = "INSERT INTO hosts(username, pw_hash) "
+      "VALUES('GuyMan', '80IfR+oJKJcRa1cVy1rcdfJdojw151dL3syxJJOlsjs=');";
 
     std::string command5 = "INSERT INTO players(player_id, username) "
       "VALUES('thePlayer', 'GuyMan');";
@@ -34,12 +37,12 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     std::string command6 = "INSERT INTO games(game_name) "
       "VALUES('RPS');";
 
-    del_table.insertData(command1);
-    del_table.insertData(command2);
-    del_table.insertData(command3);
-    del_table.insertData(command4);
-    del_table.insertData(command5);
-    del_table.insertData(command6);
+    EXPECT_ZERO(del_table.insertData(command1));
+    EXPECT_ZERO(del_table.insertData(command2));
+    EXPECT_ZERO(del_table.insertData(command3));
+    EXPECT_ZERO(del_table.insertData(command4));
+    EXPECT_ZERO(del_table.insertData(command5));
+    EXPECT_ZERO(del_table.insertData(command6));
 
 
     sqlite3_stmt* one = del_table.makeStatement("SELECT * FROM player_stats");
@@ -85,14 +88,13 @@ TEST(Database_Update, Check_Update_method) {
 
     std::string command1 = "UPDATE games SET game_name = 'RPS2'"
         "WHERE game_name = 'RPS';";
-    del_table.updateData(command1);
+    EXPECT_ZERO(del_table.updateData(command1));
     sqlite3_stmt* seven = del_table.makeStatement("SELECT * FROM games");
-
-    int check = 2;
 
     while (sqlite3_step(seven) != SQLITE_DONE) {
         const char *value = (const char *)sqlite3_column_text(seven, 0);
         const char *answer = "RPS2";
+        int check = 2;
         if (strcmp(value, answer) == 0) {
             check = 1;
         } else {
@@ -114,12 +116,12 @@ TEST(Database_Delete, Check_Delete_method) {
     int hosts_count;
     int games_count;
 
-    del_table.deleteData("DELETE FROM player_stats;");
-    del_table.deleteData("DELETE FROM game_list;");
-    del_table.deleteData("DELETE FROM achievements;");
-    del_table.deleteData("DELETE FROM hosts;");
-    del_table.deleteData("DELETE FROM players;");
-    del_table.deleteData("DELETE FROM games;");
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM player_stats;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM game_list;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM achievements;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM hosts;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM players;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM games;"));
 
 
     std::string longString = "SELECT * FROM achievements";
@@ -148,12 +150,19 @@ TEST(Database_Delete, Check_Delete_method) {
     EXPECT_EQ(achieve_count, 0);
     EXPECT_EQ(hosts_count, 0);
     EXPECT_EQ(games_count, 0);
+
+    /*TODO: Technically should call sqlite3_finalize() for each sqlite3_stmt
+     * above, but since we will no longer use the given database this is not
+     * necessary here. If the database is used again or there are any delete
+     * operations added following the statements, they do need to be finalized
+     * to prevent errors since tables cannot be deleted as long as there are
+     * statements referencing them. */
 }
 
 TEST(Database_Drop, Check_Drop_method) {
     Database del_table = Database("delete.db");
 
-    del_table.dropTable2("DROP TABLE IF EXISTS player_stats;");
+    EXPECT_ZERO(del_table.dropTable2("DROP TABLE IF EXISTS player_stats;"));
 
     std::string string1 = "SELECT COUNT(*) as theCount FROM sqlite_master ";
     std::string string2 = "WHERE type = 'table' AND name='player_stats';";
@@ -161,7 +170,7 @@ TEST(Database_Drop, Check_Drop_method) {
 
     sqlite3_stmt* testt = del_table.makeStatement(longString);
 
-    int exit = sqlite3_step(testt);
+    sqlite3_step(testt);
 
     int totalTables = sqlite3_column_int(testt, 0);
 

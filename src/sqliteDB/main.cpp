@@ -25,8 +25,6 @@ int main() {
         "= 2100;";
     x = dummy.makeStatement(getStatsCommand);
     int col = sqlite3_column_count(x);
-    int test;
-    int count = 0;
 
     std::cout << "START\n" << std::endl;
     std::cout << SQLITE_ROW << std::endl;
@@ -34,6 +32,7 @@ int main() {
     if (doesExist(x) == 0) {
         std::cout << "CODE 2: FAILURE" << std::endl;
     } else {
+        int test;
         std::cout << "SUCCESS" << std::endl;
         while ((test = sqlite3_step(x)) != SQLITE_DONE) {
             std::cout << "TEST = " << test << std::endl;
