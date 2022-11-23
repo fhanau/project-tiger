@@ -17,4 +17,5 @@ int MockDatabase::totalMockRows(std::string field, std::string data) {
   } else if (!field.compare("tokens")) {
     return tokens.find(data) != tokens.end();
   }
+  return 0;
 }
