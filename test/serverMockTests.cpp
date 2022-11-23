@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "mockDatabase.h"
 
-MockDatabase getMockDatabase() {
+MockDatabase& getMockDatabase() {
   static MockDatabase sql;
   return sql;
 }

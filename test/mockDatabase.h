@@ -12,7 +12,7 @@
 class MockDatabase : public Database {
  public:
   explicit MockDatabase() {
-
+    std::cout << "Initialized";
   }
   int insertMockData(std::string field, std::string data);
   int selectData(std::string command);
