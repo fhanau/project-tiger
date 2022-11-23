@@ -9,23 +9,24 @@
 #include "gtest/gtest.h"
 #include "mockDatabase.h"
 
-MockDatabase& getMockDatabase() {
-  static MockDatabase sql;
+MockDatabase* getMockDatabase() {
+  static MockDatabase *sql = new MockDatabase();
   return sql;
 }
 
 TEST(ServerMockTest, CreateNewAccount) {
-  CROW_ROUTE(getMockDatabase().getMockApp(), "/create/<string>/<string>")
+  CROW_ROUTE((*getMockDatabase()).getMockApp(), "/create/<string>/<string>")
   .methods(crow::HTTPMethod::GET)
   ([](const std::string &username, const std::string &password) {
-    if (getMockDatabase().totalMockRows("hosts", username) > 0) {
+    MockDatabase sql = *getMockDatabase();
+    if (sql.totalMockRows("hosts", username) > 0) {
       return crow::response("ERROR");
     } else {
       std::string pw_hash = get_hash(password);
       std::string command = "INSERT INTO hosts(username, pw_hash) VALUES("
         "'" + username + "', '" + pw_hash + "');";
-      getMockDatabase().insertMockData("hosts", username);
-      getMockDatabase().insertMockData("tokens", pw_hash);
+      sql.insertMockData("hosts", username);
+      sql.insertMockData("tokens", pw_hash);
       return crow::response("SUCCESS");
     }
   });
