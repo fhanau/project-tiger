@@ -19,3 +19,7 @@ int MockDatabase::totalMockRows(std::string field, std::string data) {
   }
   return 0;
 }
+
+crow::SimpleApp MockDatabase::getMockApp() {
+  return mockApp;
+}

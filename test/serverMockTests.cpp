@@ -15,7 +15,8 @@ MockDatabase getMockDatabase() {
 }
 
 TEST(ServerMockTest, CreateNewAccount) {
-  CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
+  CROW_ROUTE(getMockDatabase().getMockApp(), "/create/<string>/<string>")
+  .methods(crow::HTTPMethod::GET)
   ([](const std::string &username, const std::string &password) {
     if (getMockDatabase().totalMockRows("hosts", username) > 0) {
       return crow::response("ERROR");
@@ -35,7 +36,7 @@ TEST(ServerMockTest, CreateNewAccount) {
 
   req.url = "/create/username/password";
 
-  app.handle(req, res, found);
+  getMockDatabase().getMockApp().handle(req, res, found);
 
   std::cout << res.body;
 

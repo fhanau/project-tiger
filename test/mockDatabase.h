@@ -8,7 +8,6 @@
 #include <crow.h>
 #include "../src/sqliteDB/sql.h"
 
-crow::SimpleApp app;
 
 class MockDatabase : public Database {
  public:
@@ -23,10 +22,12 @@ class MockDatabase : public Database {
   int getMax(std::string table_name, std::string col_name);
   int getIntValue(std::string command);
   std::string getTextValue(std::string command);
+  crow::SimpleApp getMockApp();
  
  private:
   std::set<std::string> hosts;
   std::set<std::string> tokens;
+  crow::SimpleApp mockApp;
 };
 
 #endif
