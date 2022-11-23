@@ -9,7 +9,7 @@
 #include "../src/sqliteDB/sql.h"
 
 
-class MockDatabase : public Database {
+class MockDatabase {
  public:
   explicit MockDatabase() {
     std::cout << "Initialized";
