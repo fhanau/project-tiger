@@ -5,7 +5,7 @@
 #include <set>
 #include <crow.h>
 
-#include "src/server/util.h"
+#include "../src/server/util.h"
 #include "gtest/gtest.h"
 #include "mockDatabase.h"
 
@@ -41,7 +41,7 @@ TEST(ServerMockTest, CreateNewAccount) {
 
   ASSERT_EQ(res.body, "SUCCESS");
 }
-
+/*
 TEST(ServerMockTest, LoginExistingAccount) {
   
 }
@@ -49,3 +49,4 @@ TEST(ServerMockTest, LoginExistingAccount) {
 TEST(ServerMockTest, UploadGameData) {
   
 }
+*/

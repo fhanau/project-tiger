@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
-#include <sqlite3.h>
+//#include <sqlite3.h>
+#include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
 
