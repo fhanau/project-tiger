@@ -17,12 +17,12 @@ TEST(ServerMockTest, CreateNewAccount) {
   ([](const std::string &username, const std::string &password) {
     MockDatabase sql;
     if (sql.totalMockRows("hosts", username) > 0) {
-      return crow::response("ERROR");
+      return "ERROR";
     } else {
       std::string pw_hash = get_hash(password);
       sql.insertMockData("hosts", username);
       sql.insertMockData("tokens", pw_hash);
-      return crow::response("SUCCESS");
+      return "SUCCESS";
     }
   });
 

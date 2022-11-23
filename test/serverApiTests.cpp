@@ -18,3 +18,21 @@ TEST(ServerUtilTest, ReturnsSameUniqueSession) {
   std::string sessionIdSecondCall = getSession();
   ASSERT_EQ(sessionIdFirstCall, sessionIdSecondCall);
 }
+
+TEST(ServerUtilTest, ReturnsCorrectHashForPassword) {
+  std::string hashedPassword1 = get_hash("password");
+  std::string hashedPassword2 = get_hash("password");
+  ASSERT_EQ(hashedPassword1, hashedPassword2);
+}
+
+TEST(ServerUtilTest, ReturnsUniqueHashForDifferentPasswords) {
+  std::string hashedPassword1 = get_hash("password1");
+  std::string hashedPassword2 = get_hash("password2");
+  ASSERT_NE(hashedPassword1, hashedPassword2);
+}
+
+TEST(ServerUtilTest, ReturnsSameDatabase) {
+  Database databaseFirstCall = getDatabase();
+  Database databaseSecondCall = getDatabase();
+  ASSERT_EQ(&databaseFirstCall, &databaseSecondCall);
+}
