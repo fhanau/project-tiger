@@ -9,16 +9,12 @@
 #include "gtest/gtest.h"
 #include "mockDatabase.h"
 
-MockDatabase* getMockDatabase() {
-  static MockDatabase *sql = new MockDatabase();
-  return sql;
-}
-
 TEST(ServerMockTest, CreateNewAccount) {
-  CROW_ROUTE((*getMockDatabase()).getMockApp(), "/create/<string>/<string>")
+   crow::SimpleApp mockApp;
+  CROW_ROUTE(mockApp, "/create/<string>/<string>")
   .methods(crow::HTTPMethod::GET)
   ([](const std::string &username, const std::string &password) {
-    MockDatabase sql = *getMockDatabase();
+    MockDatabase sql;
     if (sql.totalMockRows("hosts", username) > 0) {
       return crow::response("ERROR");
     } else {
@@ -37,7 +33,7 @@ TEST(ServerMockTest, CreateNewAccount) {
 
   req.url = "/create/username/password";
 
-  getMockDatabase().getMockApp().handle(req, res, found);
+  mockApp.handle(req, res, found);
 
   std::cout << res.body;
 

@@ -11,9 +11,6 @@
 
 class MockDatabase {
  public:
-  explicit MockDatabase() {
-    std::cout << "Initialized";
-  }
   int insertMockData(std::string field, std::string data);
   int selectData(std::string command);
   int updateData(std::string command);
@@ -27,7 +24,6 @@ class MockDatabase {
  private:
   std::set<std::string> hosts;
   std::set<std::string> tokens;
-  crow::SimpleApp mockApp;
 };
 
 #endif
