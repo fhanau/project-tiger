@@ -33,9 +33,9 @@ TEST(ServerMockTest, CreateNewAccount) {
 
   mockApp.handle_full(req, res);
 
-  std::cout << res.body;
-
-  ASSERT_EQ(res.body, "SUCCESS");
+  std::cout << "RES BODY IS EQUAL TO " << res.body;
+  std::string success = "SUCCESS";
+  ASSERT_EQ(res.body, success);
 }
 /*
 TEST(ServerMockTest, LoginExistingAccount) {
