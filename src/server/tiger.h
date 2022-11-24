@@ -1,3 +1,5 @@
+#ifndef TIGER_H_
+#define TIGER_H_
 #include <string>
 #include "../sqliteDB/sql.h"
 
@@ -9,3 +11,4 @@ namespace Tiger {
   // database backend. Create the database file if needed.
   void runTigerServer(const std::string& db_path);
 }
+#endif // TIGER_H_

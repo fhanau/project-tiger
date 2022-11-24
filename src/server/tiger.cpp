@@ -2,7 +2,7 @@
 #include <string>
 #include <utility>
 #include <crow.h>
-#include "util.h"
+#include "auth.h"
 #include "tiger.h"
 
 using Tiger::getDatabase;
@@ -29,7 +29,7 @@ void Tiger::runTigerServer(const std::string& db_path) {
     if (getDatabase().totalRows(findHost) > 0) {
       return crow::response("ERROR UsernameAlreadyExists");
     } else {
-      std::string pw_hash = get_hash(password);
+      std::string pw_hash = tigerAuth::get_hash(password);
       std::string command = "INSERT INTO hosts(username, pw_hash) VALUES("
         "'" + username + "', '" + pw_hash + "');";
       getDatabase().insertData(command);
@@ -41,7 +41,7 @@ void Tiger::runTigerServer(const std::string& db_path) {
   CROW_ROUTE(app, "/login/<string>/<string>")([] (const std::string &username,
   const std::string &password) {
     // Receives request from client to login with username and password.
-    std::string pw_hash = get_hash(password);
+    std::string pw_hash = tigerAuth::get_hash(password);
     // See if a user with the given name and hashed password exists.
     std::string findHost = "SELECT * from hosts WHERE username = '" + username
       + "' AND pw_hash = '" + pw_hash + "';";

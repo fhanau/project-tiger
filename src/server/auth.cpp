@@ -2,25 +2,31 @@
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 #include <crow.h>
-#include "util.h"
+#include "auth.h"
 #include "../sqliteDB/sql.h"
 
-std::string getSession() {
-  static std::string session = "";
-  if (session.compare("")) {
-    return session;
+std::string tigerAuth::createUniqueToken() {
+  static std::string token = "";
+  if (token.compare("")) {
+    return token;
   }
   unsigned char token_buf[TOKEN_BYTES];
   int error = RAND_bytes(token_buf, TOKEN_BYTES);
   //RAND_bytes may fail if the OS runs out of random data – this is
   //unlikely enough to disregard for this project.
   (void)error;
-  session = crow::utility::base64encode(token_buf, TOKEN_BYTES);
-  //TODO: Add to token database
-  return session;
+  token = crow::utility::base64encode(token_buf, TOKEN_BYTES);
+  //db.addNewClient(token);
+  return token;
 }
 
-std::string get_hash(const std::string& password) {
+int tigerAuth::getUserID(const std::string& clientToken) {
+  std::string query = "";
+  // TODO: return -1 in case of error, otherwise return authorized user ID
+  return 0;
+}
+
+std::string tigerAuth::get_hash(const std::string& password) {
   unsigned char sha_digest[SHA256_DIGEST_LENGTH];
   SHA256((const unsigned char *)password.c_str(), password.size(), sha_digest);
   std::string hash = crow::utility::base64encode(sha_digest,
