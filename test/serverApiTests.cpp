@@ -8,10 +8,10 @@ TEST(ServerUtilTest, ReturnsUniqueSession) {
   std::string sessionId = getSession();
   EXPECT_EQ(sessionId.size(), TOKEN_BASE64_LEN);
 
-  //Check if session ID contains characters not allowed in base64
-  //Inspired by https://stackoverflow.com/a/7616973
+  // Check if session ID contains characters not allowed in url-safe base64
+  // Inspired by https://stackoverflow.com/a/7616973
   bool contains_non_base64
-    = !std::regex_match(sessionId, std::regex("^[A-Za-z0-9\\+\\/\\=]+$"));
+    = !std::regex_match(sessionId, std::regex("^[A-Za-z0-9\\-_\\=]+$"));
   ASSERT_FALSE(contains_non_base64);
 }
 

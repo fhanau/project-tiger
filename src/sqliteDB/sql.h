@@ -1,7 +1,7 @@
 #ifndef SRC_SQLITEDB_SQL_H
 #define SRC_SQLITEDB_SQL_H
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <string>
 
