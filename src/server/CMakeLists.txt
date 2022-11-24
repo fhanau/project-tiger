@@ -1,5 +1,5 @@
 include_directories(${TIGER_SOURCE_DIR}/libraries/Crow/include)
-add_executable(server main.cpp util.cpp util.h ../sqliteDB/sql.h ../sqliteDB/sql.cpp ../libraries/sqlite/sqlite3.c ../libraries/sqlite/sqlite3.h ${CMAKE_BINARY_DIR}/key.pem ${CMAKE_BINARY_DIR}/cert.pem)
+add_executable(server main.cpp tiger.cpp tiger.h auth.cpp auth.h ../sqliteDB/sql.h ../sqliteDB/sql.cpp ../libraries/sqlite/sqlite3.c ../libraries/sqlite/sqlite3.h ${CMAKE_BINARY_DIR}/key.pem ${CMAKE_BINARY_DIR}/cert.pem)
 target_link_libraries(server PRIVATE Crow::Crow ${CMAKE_DL_LIBS})
 
 #Create key and certificate for HTTPS

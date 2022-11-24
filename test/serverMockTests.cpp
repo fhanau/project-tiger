@@ -5,7 +5,7 @@
 #include <set>
 #include <crow.h>
 
-#include "../src/server/util.h"
+#include "../src/server/auth.h"
 #include "gtest/gtest.h"
 #include "mockDatabase.h"
 
@@ -19,7 +19,7 @@ TEST(ServerMockTest, CreateNewAccount) {
     if (sql.totalMockRows("hosts", username) > 0) {
       return "ERROR";
     } else {
-      std::string pw_hash = get_hash(password);
+      std::string pw_hash = tigerAuth::get_hash(password);
       sql.insertMockData("hosts", username);
       sql.insertMockData("tokens", pw_hash);
       return "";
@@ -37,10 +37,10 @@ TEST(ServerMockTest, CreateNewAccount) {
 }
 /*
 TEST(ServerMockTest, LoginExistingAccount) {
-  
+
 }
 
 TEST(ServerMockTest, UploadGameData) {
-  
+
 }
 */

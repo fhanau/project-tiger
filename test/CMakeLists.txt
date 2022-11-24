@@ -6,7 +6,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 set(TESTS DatabaseTests.cpp serverApiTests.cpp sqliteTest.cpp
     cardTests.cpp deckTests.cpp statTests.cpp serverMockTests.cpp)
-set(TEST_DEPS ${TIGER_SOURCE_DIR}/server/util.h ${TIGER_SOURCE_DIR}/server/util.cpp
+set(TEST_DEPS ${TIGER_SOURCE_DIR}/server/tiger.cpp ${TIGER_SOURCE_DIR}/server/tiger.h ${TIGER_SOURCE_DIR}/server/auth.cpp ${TIGER_SOURCE_DIR}/server/auth.h
     mockDatabase.h mockDatabase.cpp)
 set(TEST_GAME_DEPS ${TIGER_SOURCE_DIR}/game/card.cpp
     ${TIGER_SOURCE_DIR}/game/card.h
@@ -35,7 +35,7 @@ add_custom_target(client-based-tests
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
 include(CodeCoverage)
 
-message(STATUS "Coverage analysis with gcov enabled")    
+message(STATUS "Coverage analysis with gcov enabled")
 append_coverage_compiler_flags()
 
 setup_target_for_coverage_gcovr_html(
