@@ -12,10 +12,8 @@ Database Tiger::getDatabase(const std::string& db_path) {
   return sql;
 }
 
-void Tiger::runTigerServer(const std::string& db_path) {
-  // Runs server for clients to connect to service
-  crow::SimpleApp app;
-
+// Initializes server used for clients to connect to service
+void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE(app, "/")([]() {
     return "Welcome to Project Tiger";
   });
