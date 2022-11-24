@@ -22,7 +22,7 @@ TEST(ServerMockTest, CreateNewAccount) {
       std::string pw_hash = get_hash(password);
       sql.insertMockData("hosts", username);
       sql.insertMockData("tokens", pw_hash);
-      return "SUCCESS";
+      return "";
     }
   });
 
@@ -32,9 +32,7 @@ TEST(ServerMockTest, CreateNewAccount) {
   req.url = "/create/username/password";
 
   mockApp.handle_full(req, res);
-
-  std::cout << "RES BODY IS EQUAL TO " << res.body;
-  std::string success = "SUCCESS";
+  std::string success = "";
   ASSERT_EQ(res.body, success);
 }
 /*
