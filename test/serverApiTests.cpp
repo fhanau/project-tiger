@@ -1,6 +1,7 @@
 #include <regex>
 #include <typeinfo>
 #include "gtest/gtest.h"
+#include "../src/server/tiger.h"
 #include "../src/server/util.h"
 
 TEST(ServerUtilTest, ReturnsUniqueSession) {
@@ -33,9 +34,10 @@ TEST(ServerUtilTest, ReturnsUniqueHashForDifferentPasswords) {
 }
 
 TEST(ServerUtilTest, ReturnsDatabase) {
-  Database database = getDatabase();
+  Database database = Tiger::getDatabase();
   std::string databaseType = typeid(database).name();
   std::string type = "Database";
   int correctType = databaseType.find(type) != std::string::npos;
   ASSERT_EQ(correctType, 1);
 }
+

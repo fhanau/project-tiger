@@ -1,17 +1,9 @@
-#include <iostream>
-#include <memory>
 #include <string>
-#include <set>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 #include <crow.h>
 #include "util.h"
 #include "../sqliteDB/sql.h"
-
-Database getDatabase() {
-  static Database sql("db.db");
-  return sql;
-}
 
 std::string getSession() {
   static std::string session = "";
