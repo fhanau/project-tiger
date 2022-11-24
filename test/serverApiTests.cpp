@@ -1,4 +1,5 @@
 #include <regex>
+#include <typeinfo>
 #include "gtest/gtest.h"
 #include "../src/server/util.h"
 
@@ -17,4 +18,24 @@ TEST(ServerUtilTest, ReturnsSameUniqueSession) {
   std::string sessionIdFirstCall = getSession();
   std::string sessionIdSecondCall = getSession();
   ASSERT_EQ(sessionIdFirstCall, sessionIdSecondCall);
+}
+
+TEST(ServerUtilTest, ReturnsCorrectHashForPassword) {
+  std::string hashedPassword1 = get_hash("password");
+  std::string hashedPassword2 = get_hash("password");
+  ASSERT_EQ(hashedPassword1, hashedPassword2);
+}
+
+TEST(ServerUtilTest, ReturnsUniqueHashForDifferentPasswords) {
+  std::string hashedPassword1 = get_hash("password1");
+  std::string hashedPassword2 = get_hash("password2");
+  ASSERT_NE(hashedPassword1, hashedPassword2);
+}
+
+TEST(ServerUtilTest, ReturnsDatabase) {
+  Database database = getDatabase();
+  std::string databaseType = typeid(database).name();
+  std::string type = "Database";
+  int correctType = databaseType.find(type) != std::string::npos;
+  ASSERT_EQ(correctType, 1);
 }
