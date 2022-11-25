@@ -17,9 +17,9 @@ static int countCallback(void *count, int argc, char **argv,
   char **azColName);
 static int intCallback(void *intPointer, int argc, char **argv,
   char **azColName);
-//static int textCallback(void *stringPointer, int argc, char**argv,
-  //char**azColName);
-int doesExist(sqlite3_stmt* statement);
+// static int textCallback(void *stringPointer, int argc, char**argv,
+  // char**azColName);
+// int doesExist(sqlite3_stmt* statement);
 
 class Database {
  private:
@@ -43,7 +43,7 @@ class Database {
   // Delete entries in SQL table
   int deleteData(std::string command);
   // Drop table, given SQL command
-  int dropTable(std::string command);
+  // int dropTable(std::string command);
   // Get the total number of rows in an SQL table
   int totalRows(std::string command);
   // Create sqlite3 statement used for processing rows
