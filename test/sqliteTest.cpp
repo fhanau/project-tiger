@@ -27,7 +27,7 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
       " achievement_id, description, unlocked) VALUES('thePlayer', "
       "'GuyMan', 7, 'Win a Game', 1);";
 
-    //Using the hash value for 'passwordSalted'
+    // Using the hash value for 'passwordSalted'
     std::string command4 = "INSERT INTO hosts(username, pw_hash) "
       "VALUES('GuyMan', '80IfR+oJKJcRa1cVy1rcdfJdojw151dL3syxJJOlsjs=');";
 
@@ -43,6 +43,11 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     EXPECT_ZERO(del_table.insertData(command4));
     EXPECT_ZERO(del_table.insertData(command5));
     EXPECT_ZERO(del_table.insertData(command6));
+
+    command4 = "INSERT INTO hosts(username, pw_hash) "
+      "VALUES('GuyMan2', 'dummyTest');";
+
+    EXPECT_ZERO(del_table.insertData(command4));
 
 
     sqlite3_stmt* one = del_table.makeStatement("SELECT * FROM player_stats");
@@ -81,6 +86,13 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
     EXPECT_EQ(achieve_count, 5);
     EXPECT_EQ(hosts_count, 2);
     EXPECT_EQ(games_count, 1);
+
+    sqlite3_finalize(one);
+    sqlite3_finalize(two);
+    sqlite3_finalize(three);
+    sqlite3_finalize(four);
+    sqlite3_finalize(five);
+    sqlite3_finalize(six);
 }
 
 TEST(Database_Update, Check_Update_method) {
@@ -105,6 +117,7 @@ TEST(Database_Update, Check_Update_method) {
     }
 
     sqlite3_reset(seven);
+    sqlite3_finalize(seven);
 }
 
 TEST(Database_Delete, Check_Delete_method) {
@@ -119,7 +132,8 @@ TEST(Database_Delete, Check_Delete_method) {
     EXPECT_ZERO(del_table.deleteData("DELETE FROM player_stats;"));
     EXPECT_ZERO(del_table.deleteData("DELETE FROM game_list;"));
     EXPECT_ZERO(del_table.deleteData("DELETE FROM achievements;"));
-    EXPECT_ZERO(del_table.deleteData("DELETE FROM hosts;"));
+    EXPECT_ZERO(del_table.deleteData("DELETE FROM hosts WHERE "
+      "username = 'GuyMan';"));
     EXPECT_ZERO(del_table.deleteData("DELETE FROM players;"));
     EXPECT_ZERO(del_table.deleteData("DELETE FROM games;"));
 
@@ -151,6 +165,13 @@ TEST(Database_Delete, Check_Delete_method) {
     EXPECT_EQ(hosts_count, 0);
     EXPECT_EQ(games_count, 0);
 
+    sqlite3_finalize(one_1);
+    sqlite3_finalize(two_1);
+    sqlite3_finalize(three_1);
+    sqlite3_finalize(four_1);
+    sqlite3_finalize(five_1);
+    sqlite3_finalize(six_1);
+    
     /*TODO: Technically should call sqlite3_finalize() for each sqlite3_stmt
      * above, but since we will no longer use the given database this is not
      * necessary here. If the database is used again or there are any delete
@@ -175,4 +196,28 @@ TEST(Database_Drop, Check_Drop_method) {
     int totalTables = sqlite3_column_int(testt, 0);
 
     EXPECT_EQ(totalTables, 0);
+
+    sqlite3_finalize(testt);
 }
+
+TEST(Database_Select, Check_Select_method) {
+  Database del_table = Database("delete.db");
+  int result = del_table.selectData("SELECT * FROM hosts;");
+  EXPECT_ZERO(result);
+}
+
+TEST(Database_getInt, Check_getInt_method) {
+  Database del_table = Database("delete.db");
+  int result = del_table.getIntValue("SELECT COUNT(*) FROM hosts;");
+  EXPECT_EQ(result, 1);
+}
+
+// SQLite does not have DROP DATABASE option
+// Must do it manually
+/*TEST(Delete_Database, Delete_Database) {
+  std::string command = "DROP DATABASE delete.db;";
+  Database del_table = Database("delete.db");
+  int result = del_table.executeCommand(command, "Did NOT delete",
+    "SUPERSUCCESS", 1);
+  EXPECT_EQ(result, 0);
+}*/
