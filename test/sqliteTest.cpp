@@ -157,31 +157,31 @@ TEST(Database_Delete, Check_Delete_method) {
       "(SELECT * FROM players)");
     sqlite3_stmt* six_1 = del_table.makeStatement("SELECT COUNT(*) FROM "
       "(SELECT * FROM games)");
-    
+
     sqlite3_step(one_1);
     players_stats_count = del_table.doesExist(one_1);
     sqlite3_reset(one_1);
-    
+
     sqlite3_step(two_1);
     game_list_count = del_table.doesExist(two_1);
     sqlite3_reset(two_1);
-    
+
     sqlite3_step(three_1);
     achieve_count = del_table.doesExist(three_1);
     sqlite3_reset(three_1);
-    
+
     sqlite3_step(four_1);
     hosts_count = del_table.doesExist(four_1);
     sqlite3_reset(four_1);
-    
+
     sqlite3_step(five_1);
     players_count = del_table.doesExist(five_1);
     sqlite3_reset(five_1);
-    
+
     sqlite3_step(six_1);
     games_count = del_table.doesExist(six_1);
     sqlite3_reset(six_1);
-    
+
     EXPECT_EQ(players_stats_count, 0);
     EXPECT_EQ(game_list_count, 0);
     EXPECT_EQ(players_count, 0);

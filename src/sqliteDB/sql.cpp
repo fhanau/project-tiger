@@ -30,7 +30,7 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 static int intCallback(void *intPointer, int argc, char**argv,
     char **azColName) {
         if (!argv[0]) {
-          //empty column
+          // empty column
           std::cout << azColName[0] << " is null, no records inserted so far\n";
         } else {
           int *mostWon = reinterpret_cast<int *>(intPointer);
@@ -185,7 +185,6 @@ std::string Database::getTextValue(std::string command) {
 
 // Method that checks if table is empty.
 int Database::doesExist(sqlite3_stmt* statement) {
-    //sqlite3_step(statement);
     int test = sqlite3_column_int(statement, 0);
     if (test > 0) {
         std::cout << "TEST1 PLEASE = " << test << std::endl;
@@ -195,18 +194,7 @@ int Database::doesExist(sqlite3_stmt* statement) {
         std::cout << "TEST2 PLEASE = " << test << std::endl;
         return 0;
     }
-    /*
-    int check = sqlite3_step(statement);
-    std::cout << "CHECKING PLEASE -- " << check << std::endl;
-    sqlite3_reset(statement);
-    
-    if (sqlite3_step(statement) != SQLITE_DONE) {
-        sqlite3_reset(statement);
-        return 1;
-    } else {
-        return 0;
-    }*/
-}/**/
+}
 
 // Method to execute a given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
@@ -237,11 +225,18 @@ int Database::executeCommand(std::string command, std::string errMsg,
           errMsg << ": " << messageError << std::endl;
         sqlite3_free(messageError);
         return -1;
+        if (messageError) {
+            std::cerr << "ERROR_CODE: " << exit << ", " <<
+              errMsg << ": " << messageError << std::endl;
+            sqlite3_free(messageError);
+        } else {
+            std::cerr << errMsg << std::endl;
+        }
+        return -1;
     } else {
         std::cout << successfulMessage << std::endl;
     }
-
-    //std::cout << successfulMessage << std::endl;
+    // std::cout << successfulMessage << std::endl;
     return 0;
 }
 
