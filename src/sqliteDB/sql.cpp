@@ -116,7 +116,7 @@ int Database::createTable(std::string command) {
             std::cerr << "Error in createTable function." << std::endl;
             sqlite3_free(messageError);
         } else {
-            std::cout << "Table created Successfully" << std::endl;
+            // std::cout << "Table created Successfully" << std::endl;
         }
     }
     catch (const std::exception& e) {
@@ -165,6 +165,7 @@ int Database::getIntValue(std::string command) {
     if (exit != SQLITE_OK) {
         std::cerr << "Error when getting int value\n";
         sqlite3_free(messageError);
+        return -1;
     }
     return value;
 }
@@ -212,8 +213,14 @@ int Database::executeCommand(std::string command, std::string errMsg,
         return 1;
     }
 
-    if (exit != SQLITE_OK) {
-        std::cerr << errMsg << ": " << messageError << std::endl;
+    if (exit == 19) {
+        std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" << 
+          std::endl;
+        sqlite3_free(messageError);
+        return 0;
+    } else if (exit != SQLITE_OK) {
+        std::cerr << "ERROR_CODE: " << exit << ", " << 
+          errMsg << ": " << messageError << std::endl;
         sqlite3_free(messageError);
         return 1;
     } else {
