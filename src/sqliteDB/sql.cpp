@@ -98,6 +98,13 @@ Database::Database(const char* db_dir) {
 
     this->createTable(command6);
 
+    // TODO: Create extra table for authentication tokens. Ideally, we would
+    // merge this table with the hosts table, might be a lot of work though.
+    std::string command_tokens = "CREATE TABLE IF NOT EXISTS tokens("
+      "token      CHAR(50) PRIMARY KEY NOT NULL, "
+      "account_id INT NOT NULL)";
+    this->createTable(command_tokens);
+
     the_Statement = NULL;
 }
 
@@ -125,6 +132,24 @@ int Database::createTable(std::string command) {
     }
 
     return 0;
+}
+
+void Database::addNewClient(const std::string& token) {
+  std::string get_num_accounts = "SELECT * from tokens";
+  int num_accounts = totalRows(get_num_accounts);
+  std::string command = "INSERT INTO tokens(token, account_id) VALUES("
+    "'" + token + "', '" + std::to_string(num_accounts) + "');";
+  insertData(command);
+}
+
+int Database::query_token(const std::string& clientToken) {
+  std::string command = "SELECT account_id from tokens WHERE token = '" +
+    clientToken + "';";
+  if (totalRows(command) != 1) {
+    // token not found
+    return -1;
+  }
+  return getIntValue(command);
 }
 
 // Method that return sqlite statement, given SQL command.

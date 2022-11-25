@@ -9,20 +9,28 @@
 #include "parser.h"
 #include "requester.h"
 
-// Validates input for creating host before sending request
-void handleCreateHost(std::vector<std::string> &input,
-    std::string &loggedInUsername, Requester &req, std::string &session);
+#define TIGER_CL_TOKEN_PATH "client-token.dat"
 
-// Validates input for logging in host before sending request
-void handleLoginHost(std::vector<std::string> &input,
-    std::string &loggedInUsername, Requester& req, std::string &session);
+// Loads token from disk. Returns EXIT_FAILURE if token file can't be found or
+// is invalid.
+int load_token(std::string& token);
+
+// Saves token to disk.
+void save_token(const std::string& token);
+
+// Sends a request to the server to get the ID associated with a token – the
+// client does not need the ID, so this is only needed for debug/info purposes.
+std::string get_id(Requester& req, const std::string& token);
+
+// Sends a request to the server to create a new token.
+int create_token(Requester& req, std::string& token);
 
 // Validates input for requesting public statistics
-void handlePublicStats(std::vector<std::string> &input, Requester& req);
+void handlePublicStats(const std::vector<std::string> &input, Requester& req);
 
 // Validates input for requesting private statistics
-void handlePrivateStats(std::vector<std::string> &input, Requester& req,
- std::string &host, std::string &session);
+void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
+ const std::string &host, const std::string &session);
 
 // Displays all available commands for private data requests for clients
 void displayPrivateHelp();
@@ -31,25 +39,19 @@ void displayPrivateHelp();
 void displayHelp();
 
 // Takes client input for result description & concatenates it to one string
-std::string formatResult(std::vector<std::string> &input);
-
-// Clears loggedInUsername and sessionId variables
-void handleLogoutHost(std::string &loggedInUsername, std::string &session);
+std::string formatResult(const std::vector<std::string> &input);
 
 // Terminates client program
 void handleExit();
 
 // Determines command being entered by client and calls appropriate handler
-void processCleanInput(std::vector<std::string>& cleanInput,
-    std::string &loggedInUsername, Requester& req, std::string &session);
+void processCleanInput(const std::vector<std::string>& cleanInput,
+    Requester& req, const std::string &token);
 
 // Handle uploading game data to server
-void handleUploadGameData(std::vector<std::string> &input,
-    std::string &loggedInUsername, Requester& req, const std::string &session);
-
-// Handle requesting private stats from the server
-void handlePrivateStats(std::vector<std::string> &input, const Requester &req,
-  std::string &host, std::string &session);
+void handleUploadGameData(const std::vector<std::string> &input,
+    const std::string &loggedInUsername, Requester& req,
+    const std::string &session);
 
 // Display options for private statistics requests
 void displayPrivateHelp();

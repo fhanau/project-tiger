@@ -4,8 +4,9 @@
 #include "../src/server/tiger.h"
 #include "../src/server/auth.h"
 
-TEST(ServerUtilTest, ReturnsUniqueSession) {
-  std::string sessionId = getSession();
+TEST(ServerUtilTest, ReturnsValidToken) {
+  Database db("dummy.db");
+  std::string sessionId = tigerAuth::createUniqueToken(db);
   EXPECT_EQ(sessionId.size(), TOKEN_BASE64_LEN);
 
   // Check if session ID contains characters not allowed in url-safe base64
@@ -15,10 +16,20 @@ TEST(ServerUtilTest, ReturnsUniqueSession) {
   ASSERT_FALSE(contains_non_base64);
 }
 
-TEST(ServerUtilTest, ReturnsSameUniqueSession) {
-  std::string sessionIdFirstCall = getSession();
-  std::string sessionIdSecondCall = getSession();
-  ASSERT_EQ(sessionIdFirstCall, sessionIdSecondCall);
+TEST(ServerUtilTest, ReturnsUniqueSession) {
+  Database db("dummy.db");
+  std::string sessionIdFirstCall = tigerAuth::createUniqueToken(db);
+  std::string sessionIdSecondCall = tigerAuth::createUniqueToken(db);
+  ASSERT_NE(sessionIdFirstCall, sessionIdSecondCall);
+}
+
+TEST(ServerUtilTest, ReturnsDistinctIDs) {
+  Database db("dummy.db");
+  std::string sessionIdFirstCall = tigerAuth::createUniqueToken(db);
+  std::string sessionIdSecondCall = tigerAuth::createUniqueToken(db);
+  int accountID1 = tigerAuth::getAccountID(db, sessionIdFirstCall);
+  int accountID2 = tigerAuth::getAccountID(db, sessionIdSecondCall);
+  ASSERT_NE(accountID1, accountID2);
 }
 
 TEST(ServerUtilTest, ReturnsCorrectHashForPassword) {

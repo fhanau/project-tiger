@@ -2,12 +2,13 @@
 #include <string>
 #include <utility>
 #include <crow.h>
+#include "../sqliteDB/sql.h"
 #include "auth.h"
 #include "tiger.h"
 
 using Tiger::getDatabase;
 
-Database Tiger::getDatabase(const std::string& db_path) {
+Database& Tiger::getDatabase(const std::string& db_path) {
   static Database sql(db_path.c_str());
   return sql;
 }
@@ -18,49 +19,44 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return "Welcome to Project Tiger";
   });
 
-  CROW_ROUTE(app, "/create/<string>/<string>").methods(crow::HTTPMethod::GET)
-  ([](const std::string &username, const std::string &password) {
-    // Receives request from client to make account with username and password
-    //
-    std::string findHost = "SELECT * from hosts WHERE username = '" +
-      username + "';";
-    if (getDatabase().totalRows(findHost) > 0) {
-      return crow::response("ERROR UsernameAlreadyExists");
-    } else {
-      std::string pw_hash = tigerAuth::get_hash(password);
-      std::string command = "INSERT INTO hosts(username, pw_hash) VALUES("
-        "'" + username + "', '" + pw_hash + "');";
-      getDatabase().insertData(command);
-      std::string validResponse = "SUCCESS " + getSession();
-      return crow::response(validResponse);
-    }
+  CROW_ROUTE(app, "/create_account")([]() {
+    std::string new_token = tigerAuth::createUniqueToken(getDatabase());
+    int new_user_id = tigerAuth::getAccountID(getDatabase(), new_token);
+    std::string pw_hash = tigerAuth::get_hash(new_token);
+    std::string command = "INSERT INTO hosts(username, pw_hash) VALUES("
+      "'" + std::to_string(new_user_id) + "', '" + pw_hash + "');";
+    getDatabase().insertData(command);
+    return crow::response(new_token);
   });
 
-  CROW_ROUTE(app, "/login/<string>/<string>")([] (const std::string &username,
-  const std::string &password) {
-    // Receives request from client to login with username and password.
-    std::string pw_hash = tigerAuth::get_hash(password);
-    // See if a user with the given name and hashed password exists.
-    std::string findHost = "SELECT * from hosts WHERE username = '" + username
-      + "' AND pw_hash = '" + pw_hash + "';";
-    if (getDatabase().totalRows(findHost) == 0) {
-      return crow::response("ERROR IncorrectLoginInfo");
-    } else {
-      std::string validResponse = "SUCCESS " + getSession();
-      return crow::response(validResponse);
+  CROW_ROUTE(app, "/get_account_id/<string>")([] (const std::string &token) {
+    int user_id = tigerAuth::getAccountID(getDatabase(), token);
+    if (user_id < 0) {
+      return crow::response("Request failed: Could not authenticate using "
+          "token");
     }
+    return crow::response(std::to_string(user_id));
   });
+
+// To facilitate having the fewest amount of code changes for now, authenticate,
+// ignore the now obsolete host parameter and replace it with the user id
+#define AUTH int user_id = tigerAuth::getAccountID(getDatabase(), token); \
+  if (user_id < 0) { \
+    return (std::string)"Request failed: Could not authenticate using token"; \
+  } \
+  std::string host = std::to_string(user_id);
+  /*if (host != std::to_string(user_id)) {
+    return "Request failed: Not authorized to access data";
+  }*/
 
   CROW_ROUTE(app, "/upload/<string>/<string>/<string>/<string>/"
-    "<string>/<string>")([] (const std::string &sessionId,
-    const std::string &gametype, const std::string &host,
+    "<string>/<string>")([] (const std::string &token,
+    const std::string &gametype, const std::string &_host,
     const std::string &player, const std::string &result,
     const std::string &earning) {
     // Receives request from client to upload game data to database
     // Must be logged in to upload game data
-    if (sessionId.compare(getSession()) != 0) {
-      return "";
-    }
+    AUTH;
 
     std::string getGamesCommand = "SELECT game_id FROM game_list;";
     int gameId = getDatabase().totalRows(getGamesCommand) + 1;
@@ -149,7 +145,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       }
     }
     getDatabase().insertData(gameCommand);
-    return "SUCCESS";
+    return (std::string)"SUCCESS";
   });
 
   CROW_ROUTE(app, "/public/<string>")([] (const std::string &type) {
@@ -171,21 +167,17 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-earnings-all/<string>/<string>")
-    ([] (const std::string &session, const std::string &host) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+    ([] (const std::string &token, const std::string &_host) {
+     AUTH;
       std::string allEarningsCommand = "SELECT SUM(total_money) FROM "
         "player_stats WHERE username = '" + host + "';";
       return std::to_string(getDatabase().getIntValue(allEarningsCommand));
   });
 
   CROW_ROUTE(app, "/private/total-earnings-game/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string allGameEarningsCommand = "SELECT SUM(earning) FROM game_list"
         " WHERE username = '" + host + "' AND game_type = '" + gametype +
         "' AND earning > 0;";
@@ -193,11 +185,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-earnings-player/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &player) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string totalEarnCommand = "SELECT total_money FROM "
         "player_stats WHERE username = '" + host + "' AND player_id = '" +
         player + "';";
@@ -205,10 +195,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-wins-all/<string>/<string>")
-    ([] (const std::string &session, const std::string &host) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+    ([] (const std::string &token, const std::string &_host) {
+      AUTH;
       std::string allWinsCommand = "SELECT SUM(total_wins) FROM player_stats"
         " WHERE username = '" + host + "';";
       std::cout << allWinsCommand << "\n";
@@ -216,11 +204,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-wins-game/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string allGameWinsCommand = "SELECT COUNT(game_id) FROM "
         "game_list WHERE username = '" + host + "' AND game_type = '" +
         gametype + "' AND earning > 0;";
@@ -228,11 +214,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-wins-player/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &player) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string playerWinsCommand = "SELECT total_wins FROM "
         "player_stats WHERE username = '" + host + "' AND player_id = '" +
         player + "';";
@@ -240,22 +224,18 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-losses-all/<string>/<string>")
-    ([] (const std::string &session, const std::string &host) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+    ([] (const std::string &token, const std::string &_host) {
+      AUTH;
       std::string allLossesCommand = "SELECT SUM(total_losses) FROM "
         "player_stats WHERE username = '" + host + "';";
       return std::to_string(getDatabase().getIntValue(allLossesCommand));
   });
 
-  // input[0]/input[1]/sessionId (constant)/ host (constant) / input[2].....
+  // input[0]/input[1]/token (constant)/ host (constant) / input[2].....
   CROW_ROUTE(app, "/private/total-losses-game/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string allGameLossesCommand = "SELECT SUM(earning) FROM game_list "
         "WHERE username = '" + host + "' AND game_type = '" + gametype +
         "' AND earning <= 0;";
@@ -263,11 +243,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-players-for-game/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string totalPlayersForGameCommand = "SELECT COUNT(DISTINCT player_i"
         "d) FROM game_list WHERE game_type = '" + gametype +
         "' AND username = '" + host + "';";
@@ -276,11 +254,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/number-of-games/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string numberOfGamesCommand = "";
       if (gametype == "all") {
         numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
@@ -295,10 +271,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/number-of-players/<string>/<string>")
-    ([] (const std::string &session, const std::string &host) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+    ([] (const std::string &token, const std::string &_host) {
+      AUTH;
       std::string numberOfPlayersCommand = "SELECT COUNT(*) FROM players"
         " WHERE username = '" + host + "';";
       return std::to_string(getDatabase().getIntValue(
@@ -307,10 +281,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   // ALEX BREBENEL COMMENT - Might need to edit this one
   CROW_ROUTE(app, "/private/greatest-player-by-wins/<string>/<string>")
-    ([] (const std::string &session, const std::string &host) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+    ([] (const std::string &token, const std::string &_host) {
+      AUTH;
       std::string greatestPlayerByWinsCommand = "SELECT player_id, "
         "SUM(total_wins) AS tw FROM player_stats WHERE "
         "username = '" + host + "' AND tw = (SELECT MAX(total_wins) "
@@ -321,11 +293,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/total-losses-player/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &player) {
-      if (getSession().compare(session)) {
-        return std::to_string(-1);
-      }
+      AUTH;
       std::string allPlayerLossesCommand = "SELECT total_losses FROM "
         "player_stats WHERE username = '" + host + "' AND player_id = '" +
         player + "';";
@@ -333,11 +303,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/most-common-play/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::string("Invalid sessionid. Logout and login again.\n");
-      }
+      AUTH;
       std::string findGame = "SELECT * from game_list WHERE username = '" +
         host + "' AND game_type = '" + gametype + "';";
 
@@ -352,11 +320,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE(app, "/private/most-winning-play/<string>/<string>/<string>")
-    ([] (const std::string &session, const std::string &host,
+    ([] (const std::string &token, const std::string &_host,
     const std::string &gametype) {
-      if (getSession().compare(session)) {
-        return std::string("Invalid sessionid. Logout and login again.\n");
-      }
+      AUTH;
       std::string findGame = "SELECT * from game_list WHERE username = '" +
         host + "' AND game_type = '" + gametype + "';";
 

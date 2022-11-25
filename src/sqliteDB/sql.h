@@ -32,6 +32,13 @@ class Database {
   // Create a database stored in file db_dir
   explicit Database(const char* db_dir);
   ~Database();
+
+  // Adds a token for a new client account to the database.
+  void addNewClient(const std::string& token);
+
+  //Retrieves the user ID for a token, return -1 in case of invalid token
+  int query_token(const std::string& clientToken);
+
   // Create an SQL table using schema described in command
   int createTable(std::string command);
   // Insert data values into SQL table

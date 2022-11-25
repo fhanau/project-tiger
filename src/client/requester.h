@@ -18,13 +18,11 @@ class Requester {
     request.setOpt(curlpp::options::SslVerifyHost(false));
   }
 
-  // Sends GET request to server to create host and returns server response
-  std::vector<std::string> createHost(const std::string &username,
-   const std::string &password);
+  // Sends GET request to server to create a new token for this client
+  std::vector<std::string> createToken();
 
-  // Sends GET request to server to login host and returns server response
-  std::vector<std::string> loginHost(const std::string &username,
-   const std::string &password);
+  // Sends GET request to server to retrieve the id of a token
+  std::string getTokenID(const std::string &token);
 
   // Sends GET request to server to upload data and returns server response
   std::vector<std::string> uploadGameData(const std::string &session,
