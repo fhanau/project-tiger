@@ -171,16 +171,17 @@ int Database::getIntValue(std::string command) {
 }
 
 std::string Database::getTextValue(std::string command) {
-    char *messageError;
-    char *value = (char *)malloc(100);
-    int exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
-        &messageError);
-    if (exit != SQLITE_OK) {
+    char *messageError = reinterpret_cast<char *>(malloc(100));
+    int exit = sqlite3_open(directory, &DB);
+    sqlite3_stmt* queryResult = makeStatement(command);
+    exit = sqlite3_step(queryResult);
+    if (exit != SQLITE_ROW) {
+        std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
         sqlite3_free(messageError);
     }
-    std::string result = std::string(value);
-    free(value);
+    const unsigned char* value = sqlite3_column_text(queryResult, 0);
+    std::string result = std::string(reinterpret_cast<const char *>(value));
     return result;
 }
 
