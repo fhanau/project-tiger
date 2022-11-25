@@ -259,15 +259,22 @@ TEST(Database_doesExistTrue, Check_doesExistTrue) {
   EXPECT_EQ(result, 1);
 }
 
-/*
+
 TEST(Database_getText, Check_getText_method) {
   
-  std::cout << "HERE ======================= " << std::endl;
+  // std::cout << "HERE ======================= " << std::endl;
   Database del_table = Database("delete.db");
   std::string result = del_table.getTextValue("SELECT * FROM hosts;");
-  std::cout << "ANSWER == "  << result << std::endl;
+  // std::cout << "ANSWER == "  << result << std::endl;
   EXPECT_EQ(result, "GuyMan2");
-}*/
+}/**/
+
+TEST(Database_ErrorCheck_getText, Check_getText_Errors) {
+  Database del_table = Database("delete.db");
+  std::string result = del_table.getTextValue("dummyCommand");
+  int resultInt = std::stoi(result);
+  EXPECT_EQ(resultInt, -1);
+}
 
 // SQLite does not have DROP DATABASE option
 // Must do it manually

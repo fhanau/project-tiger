@@ -176,6 +176,7 @@ std::string Database::getTextValue(std::string command) {
     if (exit != SQLITE_ROW) {
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
+        return "-1";
     }
     const unsigned char* value = sqlite3_column_text(queryResult, 0);
     std::string result = std::string(reinterpret_cast<const char *>(value));
@@ -211,7 +212,6 @@ int Database::executeCommand(std::string command, std::string errMsg,
         return -1;
     }
 
-<<<<<<< HEAD
     if (exit == 19) {
         std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" << 
           std::endl;
@@ -224,21 +224,9 @@ int Database::executeCommand(std::string command, std::string errMsg,
         return -1;
     } else {
         std::cout << successfulMessage << std::endl;
-=======
-    if (exit != SQLITE_OK) {
-        // Looks like messageError is not guaranteed to be set even if there is
-        // an error.
-        if (messageError) {
-          std::cerr << errMsg << ": " << messageError << std::endl;
-          sqlite3_free(messageError);
-        } else {
-          std::cerr << errMsg << std::endl;
-        }
-        return 1;
->>>>>>> 78727112dcfee96d2ea9055e0fa65207b5c44094
     }
 
-    std::cout << successfulMessage << std::endl;
+    //std::cout << successfulMessage << std::endl;
     return 0;
 }
 
