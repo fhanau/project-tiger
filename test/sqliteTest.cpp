@@ -49,6 +49,11 @@ TEST(Database_Create_and_Insert, Check_Insert_and_Create_methods) {
 
     EXPECT_ZERO(del_table.insertData(command4));
 
+    command4 = "INSERT INTO hosts(username, pw_hash) "
+      "VALUES('GuyMan23', 'dummyTest');";
+
+    EXPECT_ZERO(del_table.insertData(command4));
+
 
     sqlite3_stmt* one = del_table.makeStatement("SELECT * FROM player_stats");
     sqlite3_stmt* two = del_table.makeStatement("SELECT * FROM game_list");
@@ -138,31 +143,50 @@ TEST(Database_Delete, Check_Delete_method) {
     EXPECT_ZERO(del_table.deleteData("DELETE FROM games;"));
 
 
-    std::string longString = "SELECT * FROM achievements";
+    std::string longString = "SELECT COUNT(*) FROM "
+      "(SELECT * FROM achievements)";
 
-    sqlite3_stmt* one_1 = del_table.makeStatement("SELECT * FROM player_stats");
-    sqlite3_stmt* two_1 = del_table.makeStatement("SELECT * FROM game_list");
+    sqlite3_stmt* one_1 = del_table.makeStatement("SELECT COUNT(*) FROM "
+      "(SELECT * FROM player_stats)");
+    sqlite3_stmt* two_1 = del_table.makeStatement("SELECT COUNT(*) FROM "
+      "(SELECT * FROM game_list)");
     sqlite3_stmt* three_1 = del_table.makeStatement(longString);
-    sqlite3_stmt* four_1 = del_table.makeStatement("SELECT * FROM hosts");
-    sqlite3_stmt* five_1 = del_table.makeStatement("SELECT * FROM players");
-    sqlite3_stmt* six_1 = del_table.makeStatement("SELECT * FROM games");
+    sqlite3_stmt* four_1 = del_table.makeStatement("SELECT COUNT(*) FROM "
+      "(SELECT * FROM hosts);");
+    sqlite3_stmt* five_1 = del_table.makeStatement("SELECT COUNT(*) FROM "
+      "(SELECT * FROM players)");
+    sqlite3_stmt* six_1 = del_table.makeStatement("SELECT COUNT(*) FROM "
+      "(SELECT * FROM games)");
+    
     sqlite3_step(one_1);
     players_stats_count = del_table.doesExist(one_1);
+    sqlite3_reset(one_1);
+    
     sqlite3_step(two_1);
     game_list_count = del_table.doesExist(two_1);
+    sqlite3_reset(two_1);
+    
     sqlite3_step(three_1);
     achieve_count = del_table.doesExist(three_1);
+    sqlite3_reset(three_1);
+    
     sqlite3_step(four_1);
     hosts_count = del_table.doesExist(four_1);
+    sqlite3_reset(four_1);
+    
     sqlite3_step(five_1);
     players_count = del_table.doesExist(five_1);
+    sqlite3_reset(five_1);
+    
     sqlite3_step(six_1);
     games_count = del_table.doesExist(six_1);
+    sqlite3_reset(six_1);
+    
     EXPECT_EQ(players_stats_count, 0);
     EXPECT_EQ(game_list_count, 0);
     EXPECT_EQ(players_count, 0);
     EXPECT_EQ(achieve_count, 0);
-    EXPECT_EQ(hosts_count, 0);
+    EXPECT_EQ(hosts_count, 1);
     EXPECT_EQ(games_count, 0);
 
     sqlite3_finalize(one_1);
@@ -209,13 +233,13 @@ TEST(Database_Select, Check_Select_method) {
 TEST(Database_getInt, Check_getInt_method) {
   Database del_table = Database("delete.db");
   int result = del_table.getIntValue("SELECT COUNT(*) FROM hosts;");
-  EXPECT_EQ(result, 1);
+  EXPECT_EQ(result, 2);
 }
 
 TEST(Database_totalRows, Check_totalRows_method) {
   Database del_table = Database("delete.db");
-  int result = del_table.totalRows("SELECT COUNT(*) FROM hosts;");
-  EXPECT_EQ(result, 1);
+  int result = del_table.totalRows("SELECT * FROM hosts");
+  EXPECT_EQ(result, 2);
 }
 
 TEST(Database_ErrorCheck_executeCommand, Check_executeCommand_Errors) {
@@ -249,13 +273,19 @@ TEST(Database_ErrorCheck_createTable, Check_createTable_Errors) {
 
 TEST(Database_doesExistTrue, Check_doesExistTrue) {
   Database del_table = Database("delete.db");
-  sqlite3_stmt* theStmt = del_table.makeStatement("SELECT * FROM hosts;");
+  sqlite3_stmt* theStmt = del_table.makeStatement("SELECT COUNT(*) FROM "
+    "(SELECT * FROM hosts WHERE username = 'GuyMan2')");
+  sqlite3_step(theStmt);
   int result = del_table.doesExist(theStmt);
+  sqlite3_reset(theStmt);
   EXPECT_EQ(result, 1);
 
   // Check if the reset works
-  theStmt = del_table.makeStatement("SELECT * FROM hosts;");
+  theStmt = del_table.makeStatement("SELECT COUNT(*) FROM "
+    "(SELECT * FROM hosts);");
+  sqlite3_step(theStmt);
   result = del_table.doesExist(theStmt);
+  sqlite3_reset(theStmt);
   EXPECT_EQ(result, 1);
 }
 
