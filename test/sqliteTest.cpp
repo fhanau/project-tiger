@@ -212,6 +212,63 @@ TEST(Database_getInt, Check_getInt_method) {
   EXPECT_EQ(result, 1);
 }
 
+TEST(Database_totalRows, Check_totalRows_method) {
+  Database del_table = Database("delete.db");
+  int result = del_table.totalRows("SELECT COUNT(*) FROM hosts;");
+  EXPECT_EQ(result, 1);
+}
+
+TEST(Database_ErrorCheck_executeCommand, Check_executeCommand_Errors) {
+  Database del_table = Database("delete.db");
+  int result = del_table.executeCommand("dummySQL", "dummyErrMsg",
+    "dummySuccess", 2);
+  EXPECT_EQ(result, -1);
+
+  result = del_table.executeCommand("dummySQL", "dummyErrMsg",
+    "dummySuccess", 1);
+  EXPECT_EQ(result, -1);
+}
+
+TEST(Database_ErrorCheck_totalRows, Check_totalRows_Errors) {
+  Database del_table = Database("delete.db");
+  int result = del_table.totalRows("dummyCommand");
+  EXPECT_EQ(result, -1);
+}
+
+TEST(Database_ErrorCheck_getInt, Check_getInt_Errors) {
+  Database del_table = Database("delete.db");
+  int result = del_table.getIntValue("dummyCommand");
+  EXPECT_EQ(result, -1);
+}
+
+TEST(Database_ErrorCheck_createTable, Check_createTable_Errors) {
+  Database del_table = Database("delete.db");
+  int result = del_table.createTable("dummyCommand");
+  EXPECT_EQ(result, -1);
+}
+
+TEST(Database_doesExistTrue, Check_doesExistTrue) {
+  Database del_table = Database("delete.db");
+  sqlite3_stmt* theStmt = del_table.makeStatement("SELECT * FROM hosts;");
+  int result = del_table.doesExist(theStmt);
+  EXPECT_EQ(result, 1);
+
+  // Check if the reset works
+  theStmt = del_table.makeStatement("SELECT * FROM hosts;");
+  result = del_table.doesExist(theStmt);
+  EXPECT_EQ(result, 1);
+}
+
+/*
+TEST(Database_getText, Check_getText_method) {
+  
+  std::cout << "HERE ======================= " << std::endl;
+  Database del_table = Database("delete.db");
+  std::string result = del_table.getTextValue("SELECT * FROM hosts;");
+  std::cout << "ANSWER == "  << result << std::endl;
+  EXPECT_EQ(result, "GuyMan2");
+}*/
+
 // SQLite does not have DROP DATABASE option
 // Must do it manually
 /*TEST(Delete_Database, Delete_Database) {

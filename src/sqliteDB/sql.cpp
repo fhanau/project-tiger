@@ -113,8 +113,10 @@ int Database::createTable(std::string command) {
 		Callback function, 1st argument to callback, Error msg written here */
         int exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
         if (exit != SQLITE_OK) {
-            std::cerr << "Error in createTable function." << std::endl;
+            std::cerr << "ERROR_CODE: " << exit <<
+              ", Error in createTable function." << std::endl;
             sqlite3_free(messageError);
+            return -1;
         } else {
             // std::cout << "Table created Successfully" << std::endl;
         }
@@ -140,8 +142,10 @@ int Database::totalRows(std::string command) {
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
-      std::cerr << "Error when getting total rows\n";
+      std::cerr << "ERROR_CODE: " << exit << 
+        ", Error when getting total rows\n";
       sqlite3_free(messageError);
+      return -1;
     }
     return count;
 }
@@ -152,7 +156,8 @@ int Database::getIntValue(std::string command) {
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error when getting int value\n";
+        std::cerr << "ERROR_CODE: " << exit << 
+          ", Error when getting int value\n";
         sqlite3_free(messageError);
         return -1;
     }
@@ -199,7 +204,7 @@ int Database::executeCommand(std::string command, std::string errMsg,
         std::cerr << "Error in SQL execute: Only type 1 and 0 should exist!"
           << std::endl;
         std::cerr << errMsg << std::endl;
-        return 1;
+        return -1;
     }
 
     if (exit == 19) {
@@ -211,7 +216,7 @@ int Database::executeCommand(std::string command, std::string errMsg,
         std::cerr << "ERROR_CODE: " << exit << ", " << 
           errMsg << ": " << messageError << std::endl;
         sqlite3_free(messageError);
-        return 1;
+        return -1;
     } else {
         std::cout << successfulMessage << std::endl;
     }
