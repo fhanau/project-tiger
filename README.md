@@ -41,6 +41,7 @@ The server can be accessed on port 18080 using the following API. At present, al
 ```
 #install required libraries
 sudo apt install --no-install-recommends -y libasio-dev libcurl4-openssl-dev
+pip install gcovr
 
 #set up build folder
 mkdir build
@@ -85,7 +86,7 @@ The program uses [libcurl](https://curl.se/libcurl/), [curlpp](https://github.co
 [Crow](https://github.com/CrowCpp/Crow) is available in src/libraries/Crow. It is C++ framework for HTTP and Websocket web services with routing for the server. It is covered by a BSD-style license.
 
 #### Openssl
-[Openssl](https://github.com/janbar/openssl-cmake) is required by curl and included in the src/libraries/openssl-cmake folder. It is available under the OpenSSL License.
+[Openssl](https://github.com/janbar/openssl-cmake) is required by curl as well as being used as our authentication library for generating random tokens as well as computing SHA-256 hashes. It should come installed on Linux and is not included in this repository. It is available under the OpenSSL License.
 
 ## Testing/Mocking
 We use [GoogleTest and GMock](https://github.com/google/googletest), available in test/googletest. The libraries use a 3-Clause BSD license. Use `make run-tiger-test` to run the tests.

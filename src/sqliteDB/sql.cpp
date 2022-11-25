@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <sqlite3.h>
+//#include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
 
@@ -13,7 +14,7 @@ static int callback(void* NotUsed, int argc,
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
     }
 
-    std::cout << "finish\n" << std::endl;
+    std::cout << "finish\n";
 
     return 0;
 }
@@ -28,9 +29,14 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 
 static int intCallback(void *intPointer, int argc, char**argv,
     char **azColName) {
-        int *mostWon = reinterpret_cast<int *>(intPointer);
-        std::cout << azColName[0] << ": " << argv[0] << "\n";
-        *mostWon = std::stoi(argv[0]);
+        if (!argv[0]) {
+          //empty column
+          std::cout << azColName[0] << " is null, no records inserted so far\n";
+        } else {
+          int *mostWon = reinterpret_cast<int *>(intPointer);
+          std::cout << azColName[0] << ": " << argv[0] << "\n";
+          *mostWon = std::stoi(argv[0]);
+        }
         return 0;
 }
 
@@ -106,7 +112,7 @@ Database::~Database() {
 
 // Method for creating tables in the database.
 int Database::createTable(std::string command) {
-    char* messageError;
+    char* messageError = 0;
 
     try {
         /* An open database, SQL to be evaluated, 
@@ -137,7 +143,7 @@ sqlite3_stmt* Database::makeStatement(std::string command) {
 }
 
 int Database::totalRows(std::string command) {
-    char* messageError;
+    char* messageError = 0;
     int count = 0;
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
@@ -151,7 +157,7 @@ int Database::totalRows(std::string command) {
 }
 
 int Database::getIntValue(std::string command) {
-    char *messageError;
+    char *messageError = 0;
     int value = 0;
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
@@ -165,16 +171,14 @@ int Database::getIntValue(std::string command) {
 }
 
 std::string Database::getTextValue(std::string command) {
-    char *messageError;
-    char *value = (char *)malloc(100);
-    int exit = sqlite3_exec(DB, command.c_str(), intCallback, value,
-        &messageError);
-    if (exit != SQLITE_OK) {
+    sqlite3_stmt* queryResult = makeStatement(command);
+    int exit = sqlite3_step(queryResult);
+    if (exit != SQLITE_ROW) {
+        std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
-        sqlite3_free(messageError);
     }
-    std::string result = std::string(value);
-    free(value);
+    const unsigned char* value = sqlite3_column_text(queryResult, 0);
+    std::string result = std::string(reinterpret_cast<const char *>(value));
     return result;
 }
 
@@ -191,13 +195,13 @@ int Database::doesExist(sqlite3_stmt* statement) {
 // Method to execute a given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
-    char* messageError;
+    char* messageError = 0;
     int exit;
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
 
     if (theType == 1) {
-        exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);;
+        exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     } else if (theType == 0) {
         exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     } else {
@@ -207,6 +211,7 @@ int Database::executeCommand(std::string command, std::string errMsg,
         return -1;
     }
 
+<<<<<<< HEAD
     if (exit == 19) {
         std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" << 
           std::endl;
@@ -219,7 +224,21 @@ int Database::executeCommand(std::string command, std::string errMsg,
         return -1;
     } else {
         std::cout << successfulMessage << std::endl;
+=======
+    if (exit != SQLITE_OK) {
+        // Looks like messageError is not guaranteed to be set even if there is
+        // an error.
+        if (messageError) {
+          std::cerr << errMsg << ": " << messageError << std::endl;
+          sqlite3_free(messageError);
+        } else {
+          std::cerr << errMsg << std::endl;
+        }
+        return 1;
+>>>>>>> 78727112dcfee96d2ea9055e0fa65207b5c44094
     }
+
+    std::cout << successfulMessage << std::endl;
     return 0;
 }
 
