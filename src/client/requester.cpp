@@ -1,74 +1,16 @@
+#include <sstream>
 #include <iostream>
 #include "requester.h"
 
-std::vector<std::string> Requester::createHost(const std::string& username,
-    const std::string& password) {
-  std::stringstream response;
-  std::string tmp;
+std::vector<std::string> Requester::createToken() {
   std::vector<std::string> payload;
-  std::string path = "create/" + username + "/" + password;
-  std::string url = baseUrl + path;
-  request.setOpt(new curlpp::options::Url(url));
-  request.setOpt(new curlpp::options::WriteStream(&response));
-  request.perform();
-  int isFirstBodyString = 0;
-  while (response >> tmp) {
-    if (!isFirstBodyString) {
-      isFirstBodyString = 1;
-      if (tmp.compare("ERROR") && tmp.compare("SUCCESS")) {
-        payload.push_back("ERROR");
-        payload.push_back("Error connecting to server.");
-        return payload;
-      }
-    }
-
-    if (payload.size() > 0) {
-      payload.push_back(tmp);
-      return payload;
-    }
-
-    if (!tmp.compare("ERROR") || !tmp.compare("SUCCESS")) {
-      payload.push_back(tmp);
-    }
-  }
-  payload.push_back("ERROR");
-  payload.push_back("No data from server.");
+  payload.push_back(theRequester("create_account"));
   return payload;
 }
 
-std::vector<std::string> Requester::loginHost(const std::string& username,
-    const std::string& password) {
-  std::stringstream response;
-  std::string tmp;
-  std::vector<std::string> payload;
-  std::string path = "login/" + username + "/" + password;
-  std::string url = baseUrl + path;
-  request.setOpt(new curlpp::options::Url(url));
-  request.setOpt(new curlpp::options::WriteStream(&response));
-  request.perform();
-  int isFirstBodyString = 0;
-  while (response >> tmp) {
-    if (!isFirstBodyString) {
-      isFirstBodyString = 1;
-      if (tmp.compare("ERROR") && tmp.compare("SUCCESS")) {
-        payload.push_back("ERROR");
-        payload.push_back("Error connecting to server.");
-        return payload;
-      }
-    }
-
-    if (payload.size() > 0) {
-      payload.push_back(tmp);
-      return payload;
-    }
-
-    if (!tmp.compare("ERROR") || !tmp.compare("SUCCESS")) {
-      payload.push_back(tmp);
-    }
-  }
-  payload.push_back("ERROR");
-  payload.push_back("No data from server.");
-  return payload;
+std::string Requester::getTokenID(const std::string& token) {
+    std::string path = "get_account_id/" + token;
+    return theRequester(path);
 }
 
 std::vector<std::string> Requester::uploadGameData(const std::string& session,
