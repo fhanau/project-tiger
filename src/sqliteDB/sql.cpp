@@ -107,7 +107,7 @@ Database::~Database() {
 
 // Method for creating tables in the database.
 int Database::createTable(std::string command) {
-    char* messageError;
+    char* messageError = 0;
 
     try {
         /* An open database, SQL to be evaluated, 
@@ -147,7 +147,7 @@ int Database::getMax(std::string table_name, std::string col_name) {
 }
 
 int Database::totalRows(std::string command) {
-    char* messageError;
+    char* messageError = 0;
     int count = 0;
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
@@ -159,7 +159,7 @@ int Database::totalRows(std::string command) {
 }
 
 int Database::getIntValue(std::string command) {
-    char *messageError;
+    char *messageError = 0;
     int value = 0;
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
@@ -171,14 +171,11 @@ int Database::getIntValue(std::string command) {
 }
 
 std::string Database::getTextValue(std::string command) {
-    char *messageError = reinterpret_cast<char *>(malloc(100));
-    int exit = sqlite3_open(directory, &DB);
     sqlite3_stmt* queryResult = makeStatement(command);
-    exit = sqlite3_step(queryResult);
+    int exit = sqlite3_step(queryResult);
     if (exit != SQLITE_ROW) {
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
-        sqlite3_free(messageError);
     }
     const unsigned char* value = sqlite3_column_text(queryResult, 0);
     std::string result = std::string(reinterpret_cast<const char *>(value));
@@ -207,13 +204,13 @@ int Database::doesExist(sqlite3_stmt* statement) {
 // Method to drop table, given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
-    char* messageError;
+    char* messageError = 0;
     int exit;
     /* An open database, SQL to be evaluated, 
 	Callback function, 1st argument to callback, Error msg written here */
 
     if (theType == 1) {
-        exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);;
+        exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
     } else if (theType == 0) {
         exit = sqlite3_exec(DB, command.c_str(), callback, NULL, &messageError);
     } else {
@@ -224,12 +221,18 @@ int Database::executeCommand(std::string command, std::string errMsg,
     }
 
     if (exit != SQLITE_OK) {
-        std::cerr << errMsg << ": " << messageError << std::endl;
-        sqlite3_free(messageError);
+        // Looks like messageError is not guaranteed to be set even if there is
+        // an error.
+        if (messageError) {
+          std::cerr << errMsg << ": " << messageError << std::endl;
+          sqlite3_free(messageError);
+        } else {
+          std::cerr << errMsg << std::endl;
+        }
         return 1;
-    } else {
-        std::cout << successfulMessage << std::endl;
     }
+
+    std::cout << successfulMessage << std::endl;
     return 0;
 }
 
