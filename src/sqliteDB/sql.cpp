@@ -148,7 +148,7 @@ int Database::totalRows(std::string command) {
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
-      std::cerr << "ERROR_CODE: " << exit << 
+      std::cerr << "ERROR_CODE: " << exit <<
         ", Error when getting total rows\n";
       sqlite3_free(messageError);
       return -1;
@@ -162,7 +162,7 @@ int Database::getIntValue(std::string command) {
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "ERROR_CODE: " << exit << 
+        std::cerr << "ERROR_CODE: " << exit <<
           ", Error when getting int value\n";
         sqlite3_free(messageError);
         return -1;
@@ -213,12 +213,12 @@ int Database::executeCommand(std::string command, std::string errMsg,
     }
 
     if (exit == 19) {
-        std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" << 
+        std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" <<
           std::endl;
         sqlite3_free(messageError);
         return 0;
     } else if (exit != SQLITE_OK) {
-        std::cerr << "ERROR_CODE: " << exit << ", " << 
+        std::cerr << "ERROR_CODE: " << exit << ", " <<
           errMsg << ": " << messageError << std::endl;
         sqlite3_free(messageError);
         return -1;

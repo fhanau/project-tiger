@@ -171,7 +171,7 @@ TEST(Database_Delete, Check_Delete_method) {
     sqlite3_finalize(four_1);
     sqlite3_finalize(five_1);
     sqlite3_finalize(six_1);
-    
+
     /*TODO: Technically should call sqlite3_finalize() for each sqlite3_stmt
      * above, but since we will no longer use the given database this is not
      * necessary here. If the database is used again or there are any delete
@@ -261,7 +261,6 @@ TEST(Database_doesExistTrue, Check_doesExistTrue) {
 
 
 TEST(Database_getText, Check_getText_method) {
-  
   // std::cout << "HERE ======================= " << std::endl;
   Database del_table = Database("delete.db");
   std::string result = del_table.getTextValue("SELECT * FROM hosts;");
