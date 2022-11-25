@@ -184,15 +184,6 @@ std::string Database::getTextValue(std::string command) {
 }
 
 // Method that checks if table is empty.
-int doesExist(sqlite3_stmt* statement) {
-    if (sqlite3_step(statement) != SQLITE_DONE) {
-        sqlite3_reset(statement);
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
 int Database::doesExist(sqlite3_stmt* statement) {
     if (sqlite3_step(statement) != SQLITE_DONE) {
         sqlite3_reset(statement);
@@ -202,7 +193,7 @@ int Database::doesExist(sqlite3_stmt* statement) {
     }
 }
 
-// Method to drop table, given SQL command
+// Method to execute a given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
     char* messageError;
