@@ -49,7 +49,7 @@ class Database {
   // Create sqlite3 statement used for processing rows
   sqlite3_stmt* makeStatement(std::string command);
   // Get the maximum value of a column in an sql table
-  int getMax(std::string table_name, std::string col_name);
+  // int getMax(std::string table_name, std::string col_name);
   // Get the int value of a result column from an SQL query
   int getIntValue(std::string command);
   // Get the text value of a result column from an SQL query

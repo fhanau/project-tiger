@@ -134,17 +134,6 @@ sqlite3_stmt* Database::makeStatement(std::string command) {
     return the_Statement;
 }
 
-// Method that returns the maximum value of a column of a table.
-int Database::getMax(std::string table_name, std::string col_name) {
-    std::string command = "SELECT MAX(" + col_name + ") FROM " + table_name;
-    sqlite3_stmt* stmt = makeStatement(command);
-    sqlite3_step(stmt);
-
-    int the_max = sqlite3_column_int(stmt, 0);
-    sqlite3_finalize(stmt);
-    return the_max;
-}
-
 int Database::totalRows(std::string command) {
     char* messageError;
     int count = 0;
