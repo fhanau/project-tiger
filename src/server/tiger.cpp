@@ -7,7 +7,7 @@
 
 using Tiger::getDatabase;
 
-Database Tiger::getDatabase(const std::string& db_path) {
+Database& Tiger::getDatabase(const std::string& db_path) {
   static Database sql(db_path.c_str());
   return sql;
 }
