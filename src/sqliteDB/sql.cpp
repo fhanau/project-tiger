@@ -14,7 +14,7 @@ static int callback(void* NotUsed, int argc,
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
     }
 
-    std::cout << "finish\n" << std::endl;
+    std::cout << "finish\n";
 
     return 0;
 }
@@ -29,9 +29,14 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 
 static int intCallback(void *intPointer, int argc, char**argv,
     char **azColName) {
-        int *mostWon = reinterpret_cast<int *>(intPointer);
-        std::cout << azColName[0] << ": " << argv[0] << "\n";
-        *mostWon = std::stoi(argv[0]);
+        if (!argv[0]) {
+          //empty column
+          std::cout << azColName[0] << " is null, no records inserted so far\n";
+        } else {
+          int *mostWon = reinterpret_cast<int *>(intPointer);
+          std::cout << azColName[0] << ": " << argv[0] << "\n";
+          *mostWon = std::stoi(argv[0]);
+        }
         return 0;
 }
 
