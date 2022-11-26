@@ -9,6 +9,7 @@
 // Method used for printing data. Used for the selectData() method.
 static int callback(void* NotUsed, int argc,
   char** argv, char** azColName) {
+    (void)NotUsed;
     for (int i = 0; i < argc; i++) {
         // column name and value
         std::cout << azColName[i] << ": " << argv[i] << std::endl;
@@ -21,6 +22,9 @@ static int callback(void* NotUsed, int argc,
 
 // static int callback(void* NotUsed, int argc, char** argv, char** azColName);
 static int countCallback(void *count, int argc, char **argv, char **azColName) {
+    (void)argc;
+    (void)argv;
+    (void)azColName;
     int *c = reinterpret_cast<int *>(count);
     ++*c;
     return 0;
@@ -29,6 +33,7 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 
 static int intCallback(void *intPointer, int argc, char**argv,
     char **azColName) {
+    (void)argc;
         if (!argv[0]) {
           // empty column
           std::cout << azColName[0] << " is null, no records inserted so far\n";
@@ -243,25 +248,25 @@ int Database::executeCommand(std::string command, std::string errMsg,
     if (exit == 19) {
         std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" <<
           std::endl;
-        sqlite3_free(messageError);
+        // messageError is not guaranteed to be set even if there is an error.
+        if (messageError) {
+          sqlite3_free(messageError);
+        }
         return 0;
     } else if (exit != SQLITE_OK) {
-        std::cerr << "ERROR_CODE: " << exit << ", " <<
-          errMsg << ": " << messageError << std::endl;
-        sqlite3_free(messageError);
-        return -1;
+        // messageError is not guaranteed to be set even if there is an error.
         if (messageError) {
             std::cerr << "ERROR_CODE: " << exit << ", " <<
               errMsg << ": " << messageError << std::endl;
             sqlite3_free(messageError);
         } else {
-            std::cerr << errMsg << std::endl;
+            std::cerr << "ERROR_CODE: " << exit << ", " <<
+              errMsg << std::endl;
         }
         return -1;
-    } else {
-        std::cout << successfulMessage << std::endl;
     }
-    // std::cout << successfulMessage << std::endl;
+
+    std::cout << successfulMessage << std::endl;
     return 0;
 }
 
