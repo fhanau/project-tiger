@@ -14,6 +14,16 @@ Database& Tiger::getDatabase(const std::string& db_path) {
   return sql;
 }
 
+// Retrieve the token from the url string. Note that the token is guaranteed to
+// end with a single '=' due to the base64 encoding. This gets cut off by the
+// query string processing, so we need to add it back.
+#define GET_TOKEN \
+  const crow::query_string qs = req.get_body_params(); \
+  if (!qs.get("token")) { \
+    return std::string("ERROR:MissingAuthToken");\
+  } \
+  std::string token = std::string(qs.get("token")) + "=";
+
 // Initializes server used for clients to connect to service
 void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE(app, "/")([]() {
@@ -30,26 +40,46 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return new_token;
   });
 
-  CROW_ROUTE_POST(app, "/get_account_id/", {
-    REQ_TOKEN;
-    int user_id = tigerAuth::getAccountID(getDatabase(), token);
-    if (user_id < 0) {
+  CROW_ROUTE_POST(app, "/get_account_id", {
+    GET_TOKEN;
+    int acct_id = tigerAuth::getAccountID(getDatabase(), token);
+    if (acct_id < 0) {
       return (std::string)"-1";
     }
-    return std::to_string(user_id);
+    return std::to_string(acct_id);
   });
 
-// To facilitate having the fewest amount of code changes for now, authenticate,
-// ignore the now obsolete host parameter and replace it with the user id
-#define AUTHORIZED tigerAuth::getAccountID(getDatabase(), token) >= 0
+//Shared setup and parsing code for most private functions
+#define POST_INIT \
+  GET_TOKEN \
+  int _acct_id = tigerAuth::getAccountID(getDatabase(), token); \
+  if (_acct_id < 0) { \
+    return std::string("ERROR:NotAuthenticated"); \
+  } \
+  std::string acct_id = std::to_string(_acct_id);
+
+//Same as above, also reads gametype parameter
+#define POST_INIT_GAMETYPE \
+  POST_INIT; \
+  if (!qs.get("gametype")) { \
+    return std::string("ERROR:MissingGametype");\
+  } \
+  std::string gametype = std::string(qs.get("gametype"));
+
+#define GET_PLAYER \
+  if (!qs.get("player")) { \
+    return std::string("ERROR:MissingPlayer");\
+  } \
+  std::string player = std::string(qs.get("player"));
 
   CROW_ROUTE_POST(app, "/upload", {
     // Receives request from client to upload game data to database
     // Must be logged in to upload game data
-    crow::query_string qs = req.get_body_params();
-    std::string token = std::string(qs.get("token"));
-    if (!AUTHORIZED) {
-      return std::string("ERROR:NotAuthenticated");
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+
+    if (!qs.get("result") || !qs.get("earning")) {
+      return std::string("ERROR:MissingParameter");
     }
     std::string result = std::string(qs.get("result"));
     std::string earning = std::string(qs.get("earning"));
@@ -191,7 +221,6 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     POST_INIT;
     std::string allWinsCommand = "SELECT SUM(total_wins) FROM player_stats"
       " WHERE username = '" + acct_id + "';";
-    std::cout << allWinsCommand << "\n";
     return std::to_string(getDatabase().getIntValue(allWinsCommand));
   });
 
