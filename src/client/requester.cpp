@@ -87,7 +87,8 @@ std::string Requester::getPublicStats(const std::string& type) {
 }
 
 // Alex Brebenel streamline request function
-std::string Requester::theRequester(const std::string &path, const std::string& body) {
+std::string Requester::theRequester(const std::string &path,
+  const std::string& body) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> payload;
@@ -128,7 +129,7 @@ std::string Requester::getTotalEarningsPlayer(const std::string& token,
 
 std::string Requester::getTotalWinsAll(const std::string& token,
   const std::string& host) {
-    std::string path = "private/total-wins-all/" ;
+    std::string path = "private/total-wins-all/";
     std::string body = "token=" + token + "&hostname=" + host;
     return theRequester(path, body);
 }
