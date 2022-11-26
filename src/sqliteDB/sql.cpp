@@ -30,7 +30,7 @@ static int countCallback(void *count, int argc, char **argv, char **azColName) {
 static int intCallback(void *intPointer, int argc, char**argv,
     char **azColName) {
         if (!argv[0]) {
-          //empty column
+          // empty column
           std::cout << azColName[0] << " is null, no records inserted so far\n";
         } else {
           int *mostWon = reinterpret_cast<int *>(intPointer);
@@ -126,10 +126,12 @@ int Database::createTable(std::string command) {
 		Callback function, 1st argument to callback, Error msg written here */
         int exit = sqlite3_exec(DB, command.c_str(), NULL, 0, &messageError);
         if (exit != SQLITE_OK) {
-            std::cerr << "Error in createTable function." << std::endl;
+            std::cerr << "ERROR_CODE: " << exit <<
+              ", Error in createTable function." << std::endl;
             sqlite3_free(messageError);
+            return -1;
         } else {
-            std::cout << "Table created Successfully" << std::endl;
+            // std::cout << "Table created Successfully" << std::endl;
         }
     }
     catch (const std::exception& e) {
@@ -165,25 +167,16 @@ sqlite3_stmt* Database::makeStatement(std::string command) {
     return the_Statement;
 }
 
-// Method that returns the maximum value of a column of a table.
-int Database::getMax(std::string table_name, std::string col_name) {
-    std::string command = "SELECT MAX(" + col_name + ") FROM " + table_name;
-    sqlite3_stmt* stmt = makeStatement(command);
-    sqlite3_step(stmt);
-
-    int the_max = sqlite3_column_int(stmt, 0);
-    sqlite3_finalize(stmt);
-    return the_max;
-}
-
 int Database::totalRows(std::string command) {
     char* messageError = 0;
     int count = 0;
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
       &messageError);
     if (exit != SQLITE_OK) {
-      std::cerr << "Error when getting total rows\n";
+      std::cerr << "ERROR_CODE: " << exit <<
+        ", Error when getting total rows\n";
       sqlite3_free(messageError);
+      return -1;
     }
     return count;
 }
@@ -194,8 +187,10 @@ int Database::getIntValue(std::string command) {
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
     if (exit != SQLITE_OK) {
-        std::cerr << "Error when getting int value\n";
+        std::cerr << "ERROR_CODE: " << exit <<
+          ", Error when getting int value\n";
         sqlite3_free(messageError);
+        return -1;
     }
     return value;
 }
@@ -206,6 +201,7 @@ std::string Database::getTextValue(std::string command) {
     if (exit != SQLITE_ROW) {
         std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
+        return "-1";
     }
     const unsigned char* value = sqlite3_column_text(queryResult, 0);
     std::string result = std::string(reinterpret_cast<const char *>(value));
@@ -213,25 +209,19 @@ std::string Database::getTextValue(std::string command) {
 }
 
 // Method that checks if table is empty.
-int doesExist(sqlite3_stmt* statement) {
-    if (sqlite3_step(statement) != SQLITE_DONE) {
-        sqlite3_reset(statement);
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
 int Database::doesExist(sqlite3_stmt* statement) {
-    if (sqlite3_step(statement) != SQLITE_DONE) {
+    int test = sqlite3_column_int(statement, 0);
+    if (test > 0) {
+        std::cout << "TEST1 PLEASE = " << test << std::endl;
         sqlite3_reset(statement);
         return 1;
     } else {
+        std::cout << "TEST2 PLEASE = " << test << std::endl;
         return 0;
     }
 }
 
-// Method to drop table, given SQL command
+// Method to execute a given SQL command
 int Database::executeCommand(std::string command, std::string errMsg,
  std::string successfulMessage, int theType) {
     char* messageError = 0;
@@ -247,22 +237,31 @@ int Database::executeCommand(std::string command, std::string errMsg,
         std::cerr << "Error in SQL execute: Only type 1 and 0 should exist!"
           << std::endl;
         std::cerr << errMsg << std::endl;
-        return 1;
+        return -1;
     }
 
-    if (exit != SQLITE_OK) {
-        // Looks like messageError is not guaranteed to be set even if there is
-        // an error.
+    if (exit == 19) {
+        std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" <<
+          std::endl;
+        sqlite3_free(messageError);
+        return 0;
+    } else if (exit != SQLITE_OK) {
+        std::cerr << "ERROR_CODE: " << exit << ", " <<
+          errMsg << ": " << messageError << std::endl;
+        sqlite3_free(messageError);
+        return -1;
         if (messageError) {
-          std::cerr << errMsg << ": " << messageError << std::endl;
-          sqlite3_free(messageError);
+            std::cerr << "ERROR_CODE: " << exit << ", " <<
+              errMsg << ": " << messageError << std::endl;
+            sqlite3_free(messageError);
         } else {
-          std::cerr << errMsg << std::endl;
+            std::cerr << errMsg << std::endl;
         }
-        return 1;
+        return -1;
+    } else {
+        std::cout << successfulMessage << std::endl;
     }
-
-    std::cout << successfulMessage << std::endl;
+    // std::cout << successfulMessage << std::endl;
     return 0;
 }
 
@@ -283,13 +282,6 @@ int Database::updateData(std::string command) {
 int Database::selectData(std::string command) {
     int run = executeCommand(command, "Error in selectData function.",
     "Records selected Successfully!", 0);
-    return run;
-}
-
-// Method to drop table, given SQL command
-int Database::dropTable(std::string command) {
-    int run = executeCommand(command, "Error in dropTable function.",
-    "Table Dropped Successfully!", 0);
     return run;
 }
 
