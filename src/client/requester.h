@@ -13,10 +13,10 @@
 class Requester {
  public:
   Requester() {
-    //Disable SSL certificate check to allow server to use unsigned certificate.
-    request.setOpt(curlpp::options::SslVerifyPeer(false));
-    request.setOpt(curlpp::options::SslVerifyHost(false));
+    reset();
   }
+
+  void reset();
 
   // Sends GET request to server to create a new token for this client
   std::vector<std::string> createToken();
@@ -26,7 +26,7 @@ class Requester {
 
   // Sends GET request to server to upload data and returns server response
   std::vector<std::string> uploadGameData(const std::string &token,
-   const std::string &type, const std::string &host, const std::string &user,
+   const std::string &type, const std::string &user,
    const std::string &result, const std::string &earning);
 
   // Sends GET request to server for publicly available statistics

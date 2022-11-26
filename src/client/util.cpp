@@ -67,7 +67,7 @@ void handleUploadGameData(const std::vector<std::string> &input,
     std::string earning = input[3];
     std::string result = formatResult(input);
     std::vector<std::string> resp = req.uploadGameData(session, type,
-      loggedInUsername, user, result, earning);
+      user, result, earning);
     if (resp[0].compare("ERROR")) {
       std::cout << "Successfully uploaded game data.\n";
     } else {
