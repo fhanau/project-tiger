@@ -4,25 +4,45 @@
 
 std::vector<std::string> Requester::createToken() {
   std::vector<std::string> payload;
-  payload.push_back(theRequester("create_account"));
+  std::stringstream response;
+  std::string tmp;
+  std::string path = "create_account";
+  std::string url = baseUrl + path;
+  request.setOpt(new curlpp::options::Url(url));
+  request.setOpt(new curlpp::options::WriteStream(&response));
+  request.perform();
+  while (response >> tmp) {
+    payload.push_back(tmp);
+  }
   return payload;
 }
 
 std::string Requester::getTokenID(const std::string& token) {
-    std::string path = "get_account_id/" + token;
-    return theRequester(path);
+  std::stringstream response;
+  std::string tmp;
+  std::vector<std::string> payload;
+  std::string path = "get_account_id/" + token;
+  std::string url = baseUrl + path;
+  request.setOpt(new curlpp::options::Url(url));
+  request.setOpt(new curlpp::options::WriteStream(&response));
+  request.perform();
+  while (response >> tmp) {
+    payload.push_back(tmp);
+  }
+  return payload[payload.size() - 1];
 }
 
-std::vector<std::string> Requester::uploadGameData(const std::string& session,
+std::vector<std::string> Requester::uploadGameData(const std::string& token,
   const std::string& type, const std::string& host, const std::string& user,
   const std::string& result, const std::string& earning) {
     std::stringstream response;
     std::string tmp;
     std::vector<std::string> payload;
-    std::string firstPath = "upload/" + session + "/" + type + "/" + host;
-    std::string secondPath = "/" + user + "/" + result + "/" + earning;
-    std::string path = firstPath + secondPath;
-    std::string url = baseUrl + path;
+    std::string body = "token=" + token + "&type=" + type + "&host=" + host
+      + "&player=" + user + "&result=" + result + "&earning=" + earning;
+    std::string url = baseUrl + "upload";
+    request.setOpt(new curlpp::options::PostFields(body));
+    request.setOpt(new curlpp::options::PostFieldSize(body.length()));
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
     request.perform();
@@ -52,123 +72,149 @@ std::vector<std::string> Requester::uploadGameData(const std::string& session,
   }
 
 std::string Requester::getPublicStats(const std::string& type) {
+  std::stringstream response;
+  std::string tmp;
+  std::vector<std::string> payload;
   std::string path = "public/" + type;
-  return theRequester(path);
+  std::string url = baseUrl + path;
+  request.setOpt(new curlpp::options::Url(url));
+  request.setOpt(new curlpp::options::WriteStream(&response));
+  request.perform();
+  while (response >> tmp) {
+    payload.push_back(tmp);
+  }
+  return payload[payload.size() - 1];
 }
 
 // Alex Brebenel streamline request function
-std::string Requester::theRequester(const std::string &path) {
+std::string Requester::theRequester(const std::string &path, const std::string& body) {
     std::stringstream response;
     std::string tmp;
-    std::vector<std::string> body;
+    std::vector<std::string> payload;
     std::string url = baseUrl + path;
+    request.setOpt(new curlpp::options::PostFields(body));
+    request.setOpt(new curlpp::options::PostFieldSize(body.length()));
     request.setOpt(new curlpp::options::Url(url));
     request.setOpt(new curlpp::options::WriteStream(&response));
     request.perform();
     while (response >> tmp) {
-      body.push_back(tmp);
+      payload.push_back(tmp);
     }
-    return body[body.size() - 1];
+    return payload[payload.size() - 1];
 }
 
-std::string Requester::getTotalEarningsAll(const std::string& session,
+std::string Requester::getTotalEarningsAll(const std::string& token,
   const std::string& host) {
-    std::string path = "private/total-earnings-all/" + session + "/" + host;
-    return theRequester(path);
+    std::string path = "private/total-earnings-all/";
+    std::string body = "token=" + token + "&hostname=" + host;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalEarningsGame(const std::string& session,
+std::string Requester::getTotalEarningsGame(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/total-earnings-game/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/total-earnings-game/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalEarningsPlayer(const std::string& session,
+std::string Requester::getTotalEarningsPlayer(const std::string& token,
   const std::string& host, const std::string& player) {
-    std::string path = "private/total-earnings-player/" + session + "/" + host
-      + "/" + player;
-    return theRequester(path);
+    std::string path = "private/total-earnings-player/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&player=" + player;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalWinsAll(const std::string& session,
+std::string Requester::getTotalWinsAll(const std::string& token,
   const std::string& host) {
-    std::string path = "private/total-wins-all/" + session + "/" + host;
-    return theRequester(path);
+    std::string path = "private/total-wins-all/" ;
+    std::string body = "token=" + token + "&hostname=" + host;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalWinsGame(const std::string& session,
+std::string Requester::getTotalWinsGame(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/total-wins-game/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/total-wins-game/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalWinsPlayer(const std::string& session,
+std::string Requester::getTotalWinsPlayer(const std::string& token,
   const std::string& host, const std::string& player) {
-    std::string path = "private/total-wins-player/" + session + "/" + host
-      + "/" + player;
-    return theRequester(path);
+    std::string path = "private/total-wins-player/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&player=" + player;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalLossesAll(const std::string& session,
+std::string Requester::getTotalLossesAll(const std::string& token,
   const std::string& host) {
-    std::string path = "private/total-losses-all/" + session + "/" + host;
-    return theRequester(path);
+    std::string path = "private/total-losses-all/";
+    std::string body = "token=" + token + "&hostname=" + host;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalLossesGame(const std::string& session,
+std::string Requester::getTotalLossesGame(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/total-losses-game/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/total-losses-game/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalLossesPlayer(const std::string& session,
+std::string Requester::getTotalLossesPlayer(const std::string& token,
   const std::string& host, const std::string& player) {
-    std::string path = "private/total-losses-player/" + session + "/" + host
-      + "/" + player;
-    return theRequester(path);
+    std::string path = "private/total-losses-player/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&player=" + player;
+    return theRequester(path, body);
 }
 
-std::string Requester::getTotalPlayersForGame(const std::string& session,
+std::string Requester::getTotalPlayersForGame(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/total-players-for-game/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/total-players-for-game/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }
 
-std::string Requester::getNumberOfGames(const std::string& session,
+std::string Requester::getNumberOfGames(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/number-of-games/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/number-of-games/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }
 
-std::string Requester::getNumberOfPlayers(const std::string& session,
+std::string Requester::getNumberOfPlayers(const std::string& token,
   const std::string& host) {
-    std::string path = "private/number-of-players/" + session + "/" + host;
-    return theRequester(path);
+    std::string path = "private/number-of-players/";
+    std::string body = "token=" + token + "&hostname=" + host;
+    return theRequester(path, body);
 }
 
 // ALEX BREBENEL COMMENT - Might need to change
-std::string Requester::getGreatestPlayerByWins(const std::string& session,
+std::string Requester::getGreatestPlayerByWins(const std::string& token,
   const std::string& host) {
-    std::string path = "private/greatest-player-by-wins/" + session + "/" +
-      host;
-    return theRequester(path);
+    std::string path = "private/greatest-player-by-wins/";
+    std::string body = "token=" + token + "&hostname=" + host;
+    return theRequester(path, body);
 }
 
-std::string Requester::getMostCommonPlay(const std::string& session,
+std::string Requester::getMostCommonPlay(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/most-common-play/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/most-common-play/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }
 
-std::string Requester::getMostWinningPlay(const std::string& session,
+std::string Requester::getMostWinningPlay(const std::string& token,
   const std::string& host, const std::string& gametype) {
-    std::string path = "private/most-winning-play/" + session + "/" + host
-      + "/" + gametype;
-    return theRequester(path);
+    std::string path = "private/most-winning-play/";
+    std::string body = "token=" + token + "&hostname=" + host
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
 }

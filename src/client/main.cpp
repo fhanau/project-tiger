@@ -13,19 +13,22 @@ int main(int argc, char** argv) {
   std::vector<std::string> cleanInput;
   Parser clientParser;
   Requester req;
+  std::string id = "-1";
   std::cout << "Welcome to Project Tiger!\n";
   std::string token;
   if (load_token(token) == EXIT_SUCCESS) {
-    std::string id = get_id(req, token);
+    id = get_id(req, token);
     std::cout << "loaded authentication token from " << TIGER_CL_TOKEN_PATH
       << ", corresponding ID " << id << ", ready to execute commands\n";
   } else if (create_token(req, token) == EXIT_SUCCESS) {
-    std::string id = get_id(req, token);
+    id = get_id(req, token);
     std::cout << "Created new token " << TIGER_CL_TOKEN_PATH << ", assigned ID "
       << id << "\n";
     save_token(token);
     std::cout << "Token saved to disk, ready to execute commands\n";
-  } else {
+  }
+  
+  if (!id.compare("-1")) {
     std::cerr << "Failed to load token from disk or get a new token, is the "
       "server running?\n";
     return EXIT_FAILURE;
