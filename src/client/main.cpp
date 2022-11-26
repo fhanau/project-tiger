@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     save_token(token);
     std::cout << "Token saved to disk, ready to execute commands\n";
   }
-  
+
   if (!id.compare("-1")) {
     std::cerr << "Failed to load token from disk or get a new token, is the "
       "server running?\n";

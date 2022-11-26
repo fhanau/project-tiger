@@ -6,15 +6,18 @@
 #include "auth.h"
 #include "tiger.h"
 
-#define REQ_TOKEN std::string token = std::string(req.get_body_params().get("token"));
-#define CROW_ROUTE_POST(app, url, impl) CROW_ROUTE(app, url).methods(crow::HTTPMethod::POST)([](const crow::request& req) impl);
-  
+#define REQ_TOKEN std::string token = \
+  std::string(req.get_body_params().get("token"));
+#define CROW_ROUTE_POST(app, url, impl) \
+  CROW_ROUTE(app, url).methods(crow::HTTPMethod::POST)\
+  ([](const crow::request& req) impl);
+
 //using Tiger::getDatabase;
 
 Database& Tiger::getDatabase(const std::string& db_path) {
   static Database sql(db_path.c_str());
   return sql;
-};
+}
 
 // Initializes server used for clients to connect to service
 void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
@@ -59,7 +62,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     std::string result = std::string(qs.get("token"));
     std::string earning = std::string(qs.get("earning"));
 
-    
+
 
     std::string getGamesCommand = "SELECT game_id FROM game_list;";
     int gameId = getDatabase().totalRows(getGamesCommand) + 1;
@@ -108,8 +111,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
           "game_type = '" + gametype + "';";
         int mostWon = getDatabase().getIntValue(mostWonCommand);
         std::string totalWinsCommand = "SELECT total_wins FROM player_stats "
-          "WHERE player_id = '" + player + "' AND username = '" + hostname + "' "
-          "AND game_type = '" + gametype + "';";
+          "WHERE player_id = '" + player + "' AND "
+          "username = '" + hostname + "' AND game_type = '" + gametype + "';";
         int totalWins = getDatabase().getIntValue(totalWinsCommand) + 1;
         std::string totalMoneyCommand = "SELECT total_money FROM player_stats "
           "WHERE player_id = '" + player + "' AND username = '" + hostname +
@@ -143,7 +146,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
         std::string updateStatsCommand = "UPDATE player_stats SET total_losses"
           "= " + std::to_string(totalLosses) + ", most_lost = " +
           std::to_string(newMostLoss) + " WHERE player_id = '" + player +
-          "' AND username = '" + hostname + "' AND game_type = '" + gametype + "';";
+          "' AND username = '" + hostname + "' AND "
+          "game_type = '" + gametype + "';";
         getDatabase().updateData(updateStatsCommand);
       }
     }
@@ -340,7 +344,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   // ALEX BREBENEL COMMENT - Might need to edit this one
- CROW_ROUTE_POST(app, "/private/greatest-player-by-wins", {
+  CROW_ROUTE_POST(app, "/private/greatest-player-by-wins", {
     crow::query_string qs = req.get_body_params();
     std::string token = std::string(qs.get("token"));
     std::string hostname = std::string(qs.get("hostname"));
