@@ -9,38 +9,31 @@ void Requester::reset() {
   request.setOpt(curlpp::options::SslVerifyHost(false));
 }
 
-std::vector<std::string> Requester::createToken() {
-  std::vector<std::string> payload;
+void Requester::perform(std::vector<std::string>& payload,
+    const std::string& url) {
   std::stringstream response;
   std::string tmp;
-  std::string path = "create_account";
-  std::string url = baseUrl + path;
-  reset();
   request.setOpt(new curlpp::options::Url(url));
   request.setOpt(new curlpp::options::WriteStream(&response));
   request.perform();
   while (response >> tmp) {
     payload.push_back(tmp);
   }
+}
+
+std::vector<std::string> Requester::createToken() {
+  std::vector<std::string> payload;
+  std::string path = "create_account";
+  std::string url = baseUrl + path;
+  reset();
+  perform(payload, url);
   return payload;
 }
 
 std::string Requester::getTokenID(const std::string& token) {
-  std::stringstream response;
-  std::string tmp;
-  std::vector<std::string> payload;
   std::string path = "get_account_id";
-  std::string url = baseUrl + path;
   std::string body = "token=" + token;
-  request.setOpt(new curlpp::options::PostFields(body));
-  request.setOpt(new curlpp::options::PostFieldSize(body.length()));
-  request.setOpt(new curlpp::options::Url(url));
-  request.setOpt(new curlpp::options::WriteStream(&response));
-  request.perform();
-  while (response >> tmp) {
-    payload.push_back(tmp);
-  }
-  return payload[payload.size() - 1];
+  return theRequester(path, body);
 }
 
 std::vector<std::string> Requester::uploadGameData(const std::string& token,
@@ -84,36 +77,22 @@ std::vector<std::string> Requester::uploadGameData(const std::string& token,
   }
 
 std::string Requester::getPublicStats(const std::string& type) {
-  std::stringstream response;
-  std::string tmp;
   std::vector<std::string> payload;
   std::string path = "public/" + type;
   std::string url = baseUrl + path;
   reset();
-  request.setOpt(new curlpp::options::Url(url));
-  request.setOpt(new curlpp::options::WriteStream(&response));
-  request.perform();
-  while (response >> tmp) {
-    payload.push_back(tmp);
-  }
+  perform(payload, url);
   return payload[payload.size() - 1];
 }
 
 // Alex Brebenel streamline request function
 std::string Requester::theRequester(const std::string &path,
     const std::string& body) {
-    std::stringstream response;
-    std::string tmp;
     std::vector<std::string> payload;
     std::string url = baseUrl + path;
     request.setOpt(new curlpp::options::PostFields(body));
     request.setOpt(new curlpp::options::PostFieldSize(body.length()));
-    request.setOpt(new curlpp::options::Url(url));
-    request.setOpt(new curlpp::options::WriteStream(&response));
-    request.perform();
-    while (response >> tmp) {
-      payload.push_back(tmp);
-    }
+    perform(payload, url);
     return payload[payload.size() - 1];
 }
 

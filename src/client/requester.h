@@ -16,8 +16,6 @@ class Requester {
     reset();
   }
 
-  void reset();
-
   // Sends GET request to server to create a new token for this client
   std::vector<std::string> createToken();
 
@@ -97,6 +95,13 @@ class Requester {
   std::string theRequester(const std::string& path, const std::string& body);
 
  private:
+  //reset the internal curlpp::Easy instance and set up SSL
+  void reset();
+
+  // Perform a GET or POST request using the request object and url and write
+  // the response to payload.
+  void perform(std::vector<std::string>& payload, const std::string& url);
+
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
   const std::string baseUrl = "https://127.0.0.1:18080/";
