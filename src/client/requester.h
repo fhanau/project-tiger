@@ -13,9 +13,7 @@
 class Requester {
  public:
   Requester() {
-    //Disable SSL certificate check to allow server to use unsigned certificate.
-    request.setOpt(curlpp::options::SslVerifyPeer(false));
-    request.setOpt(curlpp::options::SslVerifyHost(false));
+    reset();
   }
 
   // Sends GET request to server to create a new token for this client
@@ -26,7 +24,7 @@ class Requester {
 
   // Sends GET request to server to upload data and returns server response
   std::vector<std::string> uploadGameData(const std::string &token,
-   const std::string &type, const std::string &host, const std::string &user,
+   const std::string &type, const std::string &user,
    const std::string &result, const std::string &earning);
 
   // Sends GET request to server for publicly available statistics
@@ -97,6 +95,13 @@ class Requester {
   std::string theRequester(const std::string& path, const std::string& body);
 
  private:
+  //reset the internal curlpp::Easy instance and set up SSL
+  void reset();
+
+  // Perform a GET or POST request using the request object and url and write
+  // the response to payload.
+  void perform(std::vector<std::string>& payload, const std::string& url);
+
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
   const std::string baseUrl = "https://127.0.0.1:18080/";
