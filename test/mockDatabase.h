@@ -5,7 +5,7 @@
 #include <vector>
 #include <set>
 #include "gmock/gmock.h"
-#include <crow.h>
+// #include <crow/app.h>
 #include "../src/sqliteDB/sql.h"
 
 
@@ -19,8 +19,11 @@ class MockDatabase {
   int getMax(std::string table_name, std::string col_name);
   int getIntValue(std::string command);
   std::string getTextValue(std::string command);
-  crow::SimpleApp getMockApp();
- 
+  // Including Crow drastically increases the compile time – I don't think we need to mock crow itself, we'd just use
+  // Tiger::initTigerServer during systems testing.
+  // Feel free to add it back if needed.
+  // crow::SimpleApp getMockApp();
+
  private:
   std::set<std::string> hosts;
   std::set<std::string> tokens;

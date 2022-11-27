@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 #include <set>
-#include <crow.h>
+#include <crow/app.h>
 
 #include "../src/server/auth.h"
 #include "gtest/gtest.h"
