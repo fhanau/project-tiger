@@ -43,6 +43,19 @@ int getTotalPlayersForGame(Database& db, const std::string& game_type) {
     return runQueryWithIntReturn(db, command);
 }
 
+// Alex Brebenel versions of stat.h functions
+std::string getGreatestPlayerByWins2(Database& db) {
+    std::string command = "SELECT player_id, MAX(total_wins) "
+      "FROM player_stats";
+    return runQueryWithSingleReturn(db, command);
+}
+
+std::string getGreatestPlayerByEarnings2(Database& db) {
+    std::string command = "SELECT player_id, MAX(total_money) "
+      "FROM player_stats";
+    return runQueryWithSingleReturn(db, command);
+}
+
 // TODO: buggy, segmentation fault
 // return player_id
 std::vector<std::string> getGreatestPlayerByWins(Database& db) {

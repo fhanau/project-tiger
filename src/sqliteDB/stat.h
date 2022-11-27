@@ -16,9 +16,11 @@ int getTotalPlayersForGame(Database& db, const std::string& game_type);
 
 // return player_id
 std::vector<std::string> getGreatestPlayerByWins(Database& db);
+std::string getGreatestPlayerByWins2(Database& db);
 
 // return player_id
 std::vector<std::string> getGreatestPlayerByEarnings(Database& db);
+std::string getGreatestPlayerByEarnings2(Database& db);
 
 // TODO: may return JSON for compliated return type
 // std::vector<std::string> getGameResultsGivenUserID(
