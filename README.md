@@ -64,8 +64,11 @@ make tiger-test
 #Run example client, provides interface to run commands and talk with server
 ./client
 
-#Run all unit tests
+#Build and run all {unit, system, integration} tests
 make run-tiger-test
+
+#Run end-to-end tests
+make end-end-tests
 
 #run linter, spell checker and static analysis
 #Make sure the tools described below are available
@@ -104,6 +107,11 @@ Install [cppcheck](https://cppcheck.sourceforge.io/) and run `cppcheck --enable=
 
 #### Codespell (spelling)
 Install [codespell](https://github.com/codespell-project/codespell) using `pip3 install codespell` and run `codespell <path to repo>` to find spelling mistakes (or `make code-spell`).
+
+## End-to-End testing
+For end-to-end testing, we use a script in `test/<>` which can be executed with `make end-end-tests` for convenience. The script starts the server, runs the client with a list of commands found in `test/<>` captures the client output and compares it with the expected output in `test/<>`. A test failure of end-end-tests indicates that the output produced by the client did not match the expected output. Since the client executes commands that cover a wide range of server functionality, this allows us to do comprehensive end-to-end testing.
+
+Since the end-to-end tests depend on client and server, they are included in the CI build job for convenience and quicker CI runs.
 
 ## Continuous Integration
 We use GitHub Actions for CI integration. The configuration file can be found at `.github/workflows/cmake.yml`. CI runs on every pull request and commit to the trunk. On CI, we have separate jobs to check that the build of client and server, running the tests, linting, static analysis, and (tentatively) code coverage reports. The relevant output of each job can generally be found in the penultimate step or the one marked as print. The jobs are also set up to fail if there are any test or build failures or a non-negligible number of lint/static analysis issues, which has been been useful for identifying issues early.
