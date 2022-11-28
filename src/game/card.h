@@ -55,7 +55,7 @@ class Card {
     void display() const;
     // Compare the value of two cards
     bool comparator(const Card& card1, const Card& card2) const;
-    //Operator to test if cards are identical.
+    // Operator to test if cards are identical.
     bool operator==(const Card& rhs) const;
 };
 

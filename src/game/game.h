@@ -25,4 +25,4 @@ class Game {
     // void displayGameResult();
 };
 
-#endif // SRC_GAME_GAME_H_
+#endif  // SRC_GAME_GAME_H_

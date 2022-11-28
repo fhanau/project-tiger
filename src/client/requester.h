@@ -95,7 +95,7 @@ class Requester {
   std::string theRequester(const std::string& path, const std::string& body);
 
  private:
-  //reset the internal curlpp::Easy instance and set up SSL
+  // reset the internal curlpp::Easy instance and set up SSL
   void reset();
 
   // Perform a GET or POST request using the request object and url and write

@@ -5,8 +5,8 @@
 #include <iostream>
 #include <string>
 
-//Simpler than including the entire sqlite3 header, which is only needed
-//by sql.cpp and stat.cpp.
+// Simpler than including the entire sqlite3 header, which is only needed
+// by sql.cpp and stat.cpp.
 struct sqlite3_stmt;
 struct sqlite3;
 
@@ -30,7 +30,7 @@ class Database {
   // Adds a token for a new client account to the database.
   void addNewClient(const std::string& token);
 
-  //Retrieves the user ID for a token, return -1 in case of invalid token
+  // Retrieves the user ID for a token, return -1 in case of invalid token
   int query_token(const std::string& clientToken);
 
   // Create an SQL table using schema described in command

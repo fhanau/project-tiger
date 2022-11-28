@@ -4,7 +4,7 @@
 
 void Requester::reset() {
   request.reset();
-  //Disable SSL certificate check to allow server to use unsigned certificate.
+  // Disable SSL certificate check to allow server to use unsigned certificate.
   request.setOpt(curlpp::options::SslVerifyPeer(false));
   request.setOpt(curlpp::options::SslVerifyHost(false));
 }

@@ -49,7 +49,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return std::to_string(acct_id);
   });
 
-//Shared setup and parsing code for most private functions
+// Shared setup and parsing code for most private functions
 #define POST_INIT \
   GET_TOKEN \
   int _acct_id = tigerAuth::getAccountID(getDatabase(), token); \
@@ -58,7 +58,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   } \
   std::string acct_id = std::to_string(_acct_id);
 
-//Same as above, also reads gametype parameter
+// Same as above, also reads gametype parameter
 #define POST_INIT_GAMETYPE \
   POST_INIT; \
   if (!qs.get("gametype")) { \
@@ -339,7 +339,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return getDatabase().getTextValue(mostWinningPlayCommand);
   });
 
-  //Set up SSL, working around Crow issues
+  // Set up SSL, working around Crow issues
   crow::ssl_context_t ssl_ctx(asio::ssl::context::sslv23);
   ssl_ctx.set_verify_mode(asio::ssl::verify_none);
   ssl_ctx.use_certificate_file("cert.pem", crow::ssl_context_t::pem);
