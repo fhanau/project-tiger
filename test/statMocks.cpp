@@ -9,8 +9,6 @@ class MockData {
  public:
     MOCK_METHOD(std::vector<int>, pulledIntDataVector,
       (Database& db, const std::string& sql_command), ());
-    MOCK_METHOD(std::vector<int>, pulledIntDataVector,
-      (), ());
 };
 
 TEST(MedianMock, gettingMockMedian) {
