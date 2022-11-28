@@ -49,7 +49,7 @@ include(CodeCoverage)
 
 message(STATUS "Coverage analysis with gcov enabled")
 append_coverage_compiler_flags()
-
+set(GCOVR_ADDITIONAL_ARGS --exclude-unreachable-branches --decisions --txt)
 setup_target_for_coverage_gcovr_html(
     NAME coverage
     EXECUTABLE ./tiger-test
