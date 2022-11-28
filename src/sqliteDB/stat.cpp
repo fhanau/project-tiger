@@ -53,7 +53,7 @@ std::vector<int> pulledIntDataVector(Database& db,
 }
 
 int medianValue(std::vector<int> results) {
-    int middle = results.size() / 2 + 1;
+    int middle = results.size() / 2;
     return results.at(middle);
 }
 
