@@ -206,3 +206,50 @@ std::string Requester::getMostWinningPlay(const std::string& token,
       + "&gametype=" + gametype;
     return theRequester(path, body);
 }
+
+// Sends POST request to server for total earnings for a player in a specific
+// game
+std::string Requester::getTotalPlayerEarningsForGame(const std::string& token,
+  const std::string& gametype, const std::string& player) {
+    std::string path = "private/total-player-earning-for-game";
+    std::string body = "token=" + token
+      + "&gametype=" + gametype + "&player=" + player;
+    return theRequester(path, body);
+}
+
+// Sends POST request to server for total debt for a player in a specific game
+std::string Requester::getTotalPlayerDebtForGame(const std::string& token,
+  const std::string& gametype, const std::string& player) {
+    std::string path = "private/total-player-debt-for-game";
+    std::string body = "token=" + token
+      + "&gametype=" + gametype + "&player=" + player;
+    return theRequester(path, body);
+}
+
+// Sends POST request to server for total wins for a player in a specific game
+std::string Requester::getTotalPlayerWinsForGame(const std::string& token,
+  const std::string& gametype, const std::string& player) {
+    std::string path = "private/total-player-wins-for-game";
+    std::string body = "token=" + token
+      + "&gametype=" + gametype + "&player=" + player;
+    return theRequester(path, body);
+}
+
+// Sends POST request to server for total lossing for a player in a specific
+// game
+std::string Requester::getTotalPlayerLossesForGame(const std::string& token,
+  const std::string& gametype, const std::string& player) {
+    std::string path = "private/total-player-losses-for-game";
+    std::string body = "token=" + token
+      + "&gametype=" + gametype + "&player=" + player;
+    return theRequester(path, body);
+}
+
+// Sends POST request to server for most winning player for a specific game
+std::string Requester::getMostWinningPlayerForGame(const std::string& token,
+  const std::string& gametype) {
+    std::string path = "private/most-winning-player-for-game";
+    std::string body = "token=" + token
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
+}
