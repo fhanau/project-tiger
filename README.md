@@ -79,10 +79,13 @@ make tiger-test
 #Build and run all {unit, system, integration} tests
 make run-tiger-test
 
+#Generate code coverage results
+make coverage
+
 #Run end-to-end tests
 make end-end-tests
 
-#run linter, spell checker and static analysis
+#Run linter, spell checker and static analysis
 #Make sure the tools described below are available
 make code-lint
 make code-analyze
@@ -105,6 +108,9 @@ The program uses [libcurl](https://curl.se/libcurl/), [curlpp](https://github.co
 
 ## Testing/Mocking
 We use [GoogleTest and GMock](https://github.com/google/googletest), available in test/googletest. The libraries use a 3-Clause BSD license. Use `make run-tiger-test` to run the tests.
+
+#### Gcovr
+[Gcovr](https://gcovr.com/en/stable/) is a utility for managing the use of the GNU gcov utility and generating summarized code coverage results. Use `run coverage` to generate coverage report, you may also execute `Open ./coverage/index.html` to view the report in browser
 
 ## Tools for linting, static analysis etc.
 #### Cpplint
