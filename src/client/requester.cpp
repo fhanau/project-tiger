@@ -207,7 +207,8 @@ std::string Requester::getMostWinningPlay(const std::string& token,
     return theRequester(path, body);
 }
 
-// Sends POST request to server for total earnings for a player in a specific game
+// Sends POST request to server for total earnings for a player in a specific
+// game
 std::string Requester::getTotalPlayerEarningsForGame(const std::string& token,
   const std::string& gametype, const std::string& player) {
     std::string path = "private/total-player-earning-for-game";
@@ -234,7 +235,8 @@ std::string Requester::getTotalPlayerWinsForGame(const std::string& token,
     return theRequester(path, body);
 }
 
-// Sends POST request to server for total lossing for a player in a specific game
+// Sends POST request to server for total lossing for a player in a specific
+// game
 std::string Requester::getTotalPlayerLossesForGame(const std::string& token,
   const std::string& gametype, const std::string& player) {
     std::string path = "private/total-player-losses-for-game";

@@ -93,11 +93,11 @@ class Requester {
   // Sends POST request to server for total debt for a player
   std::string getTotalPlayerDebtForGame(const std::string& token,
     const std::string& gametype, const std::string& player);
-  
+
   // Sends POST request to server for total wins for a player
   std::string getTotalPlayerWinsForGame(const std::string& token,
     const std::string& gametype, const std::string& player);
-  
+
   // Sends POST request to server for total lossing for a player
   std::string getTotalPlayerLossesForGame(const std::string& token,
     const std::string& gametype, const std::string& player);

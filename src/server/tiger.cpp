@@ -384,8 +384,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       return std::string("GameDataNotFound");
     }
     std::string command = "SELECT player_id, MAX(theCount)"
-      " FROM (SELECT player_id, COUNT(player_id) AS theCount FROM game_list WHERE "
-      "earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
+      " FROM (SELECT player_id, COUNT(player_id) AS theCount FROM game_list"
+      " WHERE earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
       gametype + "' GROUP BY player_id);";
     return std::to_string(getDatabase().getIntValue(command));
   });
