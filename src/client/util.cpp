@@ -16,8 +16,8 @@ int create_token(Requester& req, std::string& token) {
   return EXIT_FAILURE;
 }
 
-int load_token(std::string& token) {
-  std::ifstream token_file(TIGER_CL_TOKEN_PATH);
+int load_token(std::string& token, const std::string& path) {
+  std::ifstream token_file(path);
   if (!token_file.good()) {
     return EXIT_FAILURE;
   }
@@ -27,8 +27,8 @@ int load_token(std::string& token) {
   return EXIT_SUCCESS;
 }
 
-void save_token(const std::string& token) {
-  std::ofstream token_file(TIGER_CL_TOKEN_PATH);
+void save_token(const std::string& token, const std::string& path) {
+  std::ofstream token_file(path);
   token_file << token;
 }
 

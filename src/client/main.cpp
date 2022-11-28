@@ -9,6 +9,14 @@
 
 // Runs client program for accessing server
 int main(int argc, char** argv) {
+  // token path is configurable from the command line to better demonstrate the
+  // multiple clients and persistence aspects of the server.
+#define TIGER_CL_TOKEN_PATH "client-token.dat"
+  std::string token_path = TIGER_CL_TOKEN_PATH;
+  if (argc == 2) {
+    token_path = (std::string)argv[1];
+  }
+
   std::string userInput;
   std::vector<std::string> cleanInput;
   Parser clientParser;
@@ -16,7 +24,7 @@ int main(int argc, char** argv) {
   std::string id = "-1";
   std::cout << "Welcome to Project Tiger!\n";
   std::string token;
-  if (load_token(token) == EXIT_SUCCESS) {
+  if (load_token(token, token_path) == EXIT_SUCCESS) {
     id = get_id(req, token);
     std::cout << "loaded authentication token from " << TIGER_CL_TOKEN_PATH
       << ", corresponding ID " << id << ", ready to execute commands\n";
@@ -24,7 +32,7 @@ int main(int argc, char** argv) {
     id = get_id(req, token);
     std::cout << "Created new token " << TIGER_CL_TOKEN_PATH << ", assigned ID "
       << id << "\n";
-    save_token(token);
+    save_token(token, token_path);
     std::cout << "Token saved to disk, ready to execute commands\n";
   }
 
