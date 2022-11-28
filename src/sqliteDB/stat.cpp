@@ -1,6 +1,9 @@
 #include <iostream>
 #include <sqlite3.h>
+#include <vector>
+#include <algorithm>
 #include "stat.h"
+
 
 // helper function that executes commands
 int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
@@ -11,16 +14,48 @@ int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
     return ret;
 }
 
+int runQueryWithIntReturn2(sqlite3_stmt* stmt ) {
+    // sqlite3_step(stmt);
+    int ret = sqlite3_column_int(stmt, 0);
+    sqlite3_finalize(stmt);
+    return ret;
+}
+
 std::string runQueryWithSingleReturn(Database& db,
     const std::string& sql_command) {
     sqlite3_stmt* stmt = db.makeStatement(sql_command);
     sqlite3_step(stmt);
+
+    // const char* ret_str = (const char*)sqlite3_column_text(stmt, 0);
     const char* ret_str = reinterpret_cast <const char*>(
         sqlite3_column_text(stmt, 0));
     sqlite3_finalize(stmt);
     return std::string(ret_str);
 }
 
+// This method is to return a vector of ints
+// to be used for computing calculations.
+std::vector<int> pulledIntDataVector(Database& db,
+  const std::string& sql_command) {
+    std::vector<int> results;
+    sqlite3_stmt* stmt = db.makeStatement(sql_command);
+    while (sqlite3_step(stmt) != SQLITE_DONE) {
+        int data = runQueryWithIntReturn2(stmt);
+        results.push_back(data);
+    }
+    std::sort(results.begin(), results.end());
+    std::cout << "RESULTS:";
+    for (int i = 0; i < results.size(); i++)
+        std::cout << ' ' << results.at(i);
+    std::cout << '\n';
+    /**/
+    return results;
+}
+
+int medianValue(std::vector<int> results) {
+    int middle = results.size() / 2;
+    return results.at(middle);
+}
 
 int getNumTotalUsers(Database& db) {
     std::string command = "SELECT COUNT(*) FROM players;";
