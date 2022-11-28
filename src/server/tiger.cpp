@@ -317,10 +317,10 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     if (getDatabase().totalRows(findGame) == 0) {
       return std::string("GameDataNotFound");
     }
-    std::string mostCommonPlayCommand = "SELECT result, COUNT(result) AS "
-      "'value_occurrence' FROM game_list WHERE username = '" + acct_id +
-      "' AND game_type = '" + gametype + "' GROUP BY result ORDER BY "
-      "'value_occurence' DESC LIMIT 1;";
+    std::string mostCommonPlayCommand = "SELECT result, MAX(theCount)"
+      " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
+      "username = '" + acct_id + "' AND game_type = '" +
+      gametype + "' GROUP BY result);";
     return getDatabase().getTextValue(mostCommonPlayCommand);
   });
 
