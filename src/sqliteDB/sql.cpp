@@ -203,7 +203,7 @@ std::string Database::getTextValue(std::string command) {
     sqlite3_stmt* queryResult = makeStatement(command);
     int exit = sqlite3_step(queryResult);
     if (exit != SQLITE_ROW) {
-        std::cerr << exit << "\n";
+        // std::cerr << exit << "\n";
         std::cerr << "Error when getting text value\n";
         return "-1";
     }
@@ -216,11 +216,11 @@ std::string Database::getTextValue(std::string command) {
 int Database::doesExist(sqlite3_stmt* statement) {
     int test = sqlite3_column_int(statement, 0);
     if (test > 0) {
-        std::cout << "TEST1 PLEASE = " << test << std::endl;
+        // std::cout << "TEST1 PLEASE = " << test << std::endl;
         sqlite3_reset(statement);
         return 1;
     } else {
-        std::cout << "TEST2 PLEASE = " << test << std::endl;
+        // std::cout << "TEST2 PLEASE = " << test << std::endl;
         return 0;
     }
 }
@@ -265,7 +265,7 @@ int Database::executeCommand(std::string command, std::string errMsg,
         return -1;
     }
 
-    std::cout << successfulMessage << std::endl;
+    // std::cout << successfulMessage << std::endl;
     return 0;
 }
 
