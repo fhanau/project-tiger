@@ -31,65 +31,60 @@ class Requester {
   std::string getPublicStats(const std::string &type);
 
   // Sends GET request to server for total earnings across all games
-  std::string getTotalEarningsAll(const std::string &token,
-    const std::string &host);
+  std::string getTotalEarningsAll(const std::string &token);
 
   // Sends GET request to server for total earnings for a game
   std::string getTotalEarningsGame(const std::string &token,
-    const std::string &host, const std::string &gametype);
+    const std::string &gametype);
 
   // Sends GET request to server for total earnings for a player
   std::string getTotalEarningsPlayer(const std::string &token,
-    const std::string &host, const std::string &player);
+    const std::string &player);
 
   // Sends GET request to server for total wins across all games
-  std::string getTotalWinsAll(const std::string &token,
-    const std::string &host);
+  std::string getTotalWinsAll(const std::string &token);
 
   // Sends GET request to server for total wins for a game
   std::string getTotalWinsGame(const std::string &token,
-    const std::string &host, const std::string &gametype);
+    const std::string &gametype);
 
   // Sends GET request to server for total wins for a &
   std::string getTotalWinsPlayer(const std::string &token,
-    const std::string &host, const std::string &player);
+    const std::string &player);
 
   // Sends GET request to server for total losses across all games
-  std::string getTotalLossesAll(const std::string &token,
-    const std::string &host);
+  std::string getTotalLossesAll(const std::string &token);
 
   // Sends GET request to server for total losses for a game
   std::string getTotalLossesGame(const std::string &token,
-    const std::string &host, const std::string &gametype);
+    const std::string &gametype);
 
   // Sends GET request to server for total losses for a player
   std::string getTotalLossesPlayer(const std::string &token,
-    const std::string &host, const std::string &player);
+    const std::string &player);
 
   // Sends GET request to server for most common result for a game
   std::string getMostCommonPlay(const std::string &token,
-    const std::string &host, const std::string &gametype);
+    const std::string &gametype);
 
   // Sends GET request to server for most common result for winners
   std::string getMostWinningPlay(const std::string &token,
-    const std::string &host, const std::string &gametype);
+    const std::string &gametype);
 
   // Sends GET request to server for total losses for a player
   std::string getTotalPlayersForGame(const std::string &token,
-    const std::string &host, const std::string &gametype);
+    const std::string &gametype);
 
   // ALEX BREBENEL COMMENT Might need to fix
   // Sends GET request to server for best player by number of wins
-  std::string getGreatestPlayerByWins(const std::string &token,
-    const std::string &host);
+  std::string getGreatestPlayerByWins(const std::string &token);
 
   // Sends GET request tp server for number of games
-  std::string getNumberOfGames(const std::string& token,
-    const std::string& host, const std::string& gametype);
+  std::string getNumberOfResults(const std::string& token,
+    const std::string& gametype);
 
   // Sends GET request tp server for number of players
-  std::string getNumberOfPlayers(const std::string& token,
-  const std::string& host);
+  std::string getNumberOfPlayers(const std::string& token);
 
   // Alex Brebenel streamline request function
   std::string theRequester(const std::string& path, const std::string& body);

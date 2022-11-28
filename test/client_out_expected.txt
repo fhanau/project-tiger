@@ -21,5 +21,33 @@ private total-losses-game <string: game name>
 private total-losses-player <string: playerid>
 private most-common-play <string: game name>
 private most-winning-play <string: game name>
+private number-of-results <string: game name>
+private total-players-for-game <string: game name>
+private greatest-player-by-wins <string: playerid>
+private number-of-players
 > total-games: 0
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> total-earnings-all: 100
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> number-of-results: 10
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> most-common-play: 11
+> most-winning-play: Rock
+> total-earnings-game: 13100
+> total-losses-player: -2040
 > Exiting client.
