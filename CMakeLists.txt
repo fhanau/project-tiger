@@ -37,7 +37,7 @@ add_dependencies(code-tests code-spell code-lint code-analyze)
 
 #target for codespell, exit 0 is to work around nonzero return code
 set(TIGER_CODE_FILES server/ client/ ../test/*.cpp game/ sqliteDB/)
-set(TIGER_TEXT_FILES CMakeLists.txt ../README.md ../test/CMakeLists.txt ../.github/ ../test/client-commands.txt ../test/end-end.sh ../test/client_out_expected.txt)
+set(TIGER_TEXT_FILES CMakeLists.txt ../README.md ../test/CMakeLists.txt ../.github/ ../test/end-end/)
 add_custom_target(code-spell
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
   COMMAND codespell ${TIGER_CODE_FILES} ${TIGER_TEXT_FILES} || (exit 0))

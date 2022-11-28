@@ -41,7 +41,7 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/key.pem ${CMAKE_BINARY_DIR}/cert.p
 add_custom_target(end-end-tests
   DEPENDS client server
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  COMMAND ${TIGER_TEST_DIR}/end-end.sh)
+  COMMAND ${TIGER_TEST_DIR}/end-end/end-end.sh)
 
 # setup gcovr
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)

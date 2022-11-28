@@ -49,4 +49,5 @@ private number-of-players
 > most-common-play: 11
 > most-winning-play: Rock
 > total-earnings-game: 13200
+> total-games: 18
 > Exiting client.

@@ -1,0 +1,9 @@
+Welcome to Project Tiger!
+loaded authentication token from client-token.dat, corresponding ID 1, ready to execute commands
+A list of commands can be displayed by typing 'help' and hitting enter.
+Otherwise you can begin entering commands.
+> number-of-results: 0
+> number-of-results: 8
+> total-earnings-all: 1167
+> total-games: 26
+> Exiting client.
