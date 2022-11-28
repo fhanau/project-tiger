@@ -209,7 +209,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE_POST(app, "/private/total-earnings-player", {
-    POST_INIT_GAMETYPE;
+    POST_INIT;
     GET_PLAYER;
     std::string totalEarnCommand = "SELECT total_money FROM "
       "player_stats WHERE username = '" + acct_id + "' AND player_id = '" +
@@ -233,7 +233,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE_POST(app, "/private/total-wins-player", {
-    POST_INIT_GAMETYPE;
+    POST_INIT;
     GET_PLAYER;
     std::string playerWinsCommand = "SELECT total_wins FROM "
       "player_stats WHERE username = '" + acct_id + "' AND player_id = '" +
