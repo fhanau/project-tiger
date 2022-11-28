@@ -31,13 +31,13 @@ class StatTest:public::testing::Test {
             "('player2', 'username2', 'RPS', 1, 1, 1, 0, 0),"
             "('player3', 'username3', 'BlackJack', 1, 0, 1, -1, 0),"
             "('player4', 'username4', 'BlackJack', 0, 1, 1, -1, 0),"
-            "('player101', 'username101', 'BlackJackTest', 1, 1, 1, -1, 5),"
-            "('player102', 'username101', 'BlackJackTest', 2, 2, 1, -2, 5),"
-            "('player103', 'username101', 'BlackJackTest', 3, 3, 1, -3, 5),"
-            "('player104', 'username101', 'BlackJackTest', 4, 4, 1, -4, 5),"
-            "('player105', 'username101', 'BlackJackTest', 5, 5, 1, -5, 5),"
-            "('player106', 'username101', 'BlackJackTest', 100, 6, 100, -1, 5),"
-            "('player107', 'username101', 'BlackJackTest', 106, 7, 200, -1, 5);"));
+            "('player101', 'username101', 'BJTest', 1, 1, 1, -1, 5),"
+            "('player102', 'username101', 'BJTest', 2, 2, 1, -2, 5),"
+            "('player103', 'username101', 'BJTest', 3, 3, 1, -3, 5),"
+            "('player104', 'username101', 'BJTest', 4, 4, 1, -4, 5),"
+            "('player105', 'username101', 'BJTest', 5, 5, 1, -5, 5),"
+            "('player106', 'username101', 'BJTest', 100, 6, 100, -1, 5),"
+            "('player107', 'username101', 'BJTest', 106, 7, 200, -1, 5);"));
         EXPECT_ZERO(db.insertData(
             "INSERT INTO game_list(game_id, game_type, username, "
             "player_id, result, earning) "
