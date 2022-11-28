@@ -50,7 +50,6 @@ Database::Database(const char* db_dir) {
     // Ideally, we would not have the database always-open, but this approach
     // is safer and more reliable for our use case.
     sqlite3_open(directory, &DB);
-
     // Create the 6 tables named:
     // player_stats, game_list, achievements,
     // players, hosts, games.
