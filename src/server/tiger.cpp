@@ -339,6 +339,57 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return getDatabase().getTextValue(mostWinningPlayCommand);
   });
 
+  CROW_ROUTE_POST(app, "/private/total-player-earning-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT SUM(earning) FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning >= 0;";
+    return std::to_string(getDatabase().getIntValue(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/total-player-debt-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT SUM(earning) FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning < 0;";
+    return std::to_string(getDatabase().getIntValue(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/total-player-wins-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT * FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning >= 0;";
+    return std::to_string(getDatabase().totalRows(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/total-player-losses-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT * FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning < 0;";
+    return std::to_string(getDatabase().totalRows(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/most-winning-player-for-game", {
+    POST_INIT_GAMETYPE;
+
+    std::string findGame = "SELECT * from game_list WHERE username = '" +
+      acct_id + "' AND game_type = '" + gametype + "';";
+    if (getDatabase().totalRows(findGame) == 0) {
+      return std::string("GameDataNotFound");
+    }
+    std::string command = "SELECT player_id, MAX(theCount)"
+      " FROM (SELECT player_id, COUNT(player_id) AS theCount FROM game_list WHERE "
+      "earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
+      gametype + "' GROUP BY player_id);";
+    return std::to_string(getDatabase().getIntValue(command));
+  });
+
   // Set up SSL, working around Crow issues
   crow::ssl_context_t ssl_ctx(asio::ssl::context::sslv23);
   ssl_ctx.set_verify_mode(asio::ssl::verify_none);
