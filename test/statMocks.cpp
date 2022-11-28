@@ -16,7 +16,7 @@ TEST(MedianMock, gettingMockMedian) {
   Database db = Database("dummy5.db");
   std::vector<int> result {1, 2, 3, 4, 5};
 
-  ON_CALL(theData, pulledIntDataVector())
+  ON_CALL(theData, pulledIntDataVector)
     .WillByDefault(testing::Return(result));
 
   int med = medianValue(theData.pulledIntDataVector(db, "dummyCommand"));
