@@ -134,4 +134,5 @@ Since the end-to-end tests depend on client and server, they are included in the
 ## Continuous Integration
 We use GitHub Actions for CI integration. The configuration file can be found at `.github/workflows/cmake.yml`. CI runs on every pull request and commit to the trunk. On CI, we have separate jobs to build the client and server, running the tests and providing code coverage reports, linting, and static analysis. The relevant output of each job can generally be found in the penultimate step or the one marked as print. The jobs are also set up to fail if there are any test or build failures or a non-negligible number of lint/static analysis issues, which has been been useful for identifying issues early.
 
-Find the CI reports on the Actions tab of the repository.
+The CI reports are located on the Actions tab of the repository. **Please find the latest tests output as well as spelling, linter/style checker, static analysis and coverage reports in the CI results.** Note that we have tentatively fixed all or almost all spelling, linting and static analysis issues, so you may only see the file names being listed within the output as the program moves through them.
+
