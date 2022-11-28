@@ -30,7 +30,7 @@ TEST(ServerMockTest, CreateNewAccount) {
   crow::response res;
 
   req.url = "/create/username/password";
-
+  mockApp.validate();
   mockApp.handle_full(req, res);
   std::string success = "";
   ASSERT_EQ(res.body, success);
