@@ -26,11 +26,18 @@ class StatTest:public::testing::Test {
         EXPECT_ZERO(db.insertData(
             "INSERT INTO player_stats(player_id, username, game_type, "
             "total_wins, total_losses, most_won, most_lost, total_money) "
-            "VALUES('player1', 'username1', 'RPS', 1, 1, 1, 1, 0),"
-            "('player1', 'username1', 'BlackJack', 1, 1, 1, 2, 0),"
+            "VALUES('player1', 'username1', 'RPS', 1, 1, 1, -1, 0),"
+            "('player1', 'username1', 'BlackJack', 1, 1, 1, -2, 0),"
             "('player2', 'username2', 'RPS', 1, 1, 1, 0, 0),"
             "('player3', 'username3', 'BlackJack', 1, 0, 1, -1, 0),"
-            "('player4', 'username4', 'BlackJack', 0, 1, 1, -1, 0);"));
+            "('player4', 'username4', 'BlackJack', 0, 1, 1, -1, 0),"
+            "('player101', 'username101', 'BlackJackTest', 1, 1, 1, -1, 5),"
+            "('player102', 'username101', 'BlackJackTest', 2, 2, 1, -2, 5),"
+            "('player103', 'username101', 'BlackJackTest', 3, 3, 1, -3, 5),"
+            "('player104', 'username101', 'BlackJackTest', 4, 4, 1, -4, 5),"
+            "('player105', 'username101', 'BlackJackTest', 5, 5, 1, -5, 5),"
+            "('player106', 'username101', 'BlackJackTest', 100, 6, 100, -1, 5),"
+            "('player107', 'username101', 'BlackJackTest', 106, 7, 200, -1, 5);"));
         EXPECT_ZERO(db.insertData(
             "INSERT INTO game_list(game_id, game_type, username, "
             "player_id, result, earning) "
@@ -60,6 +67,14 @@ TEST_F(StatTest, testGetTotalPlayersForGame) {
     EXPECT_EQ(getTotalPlayersForGame(db, "RPS"), 2);
     EXPECT_EQ(getTotalPlayersForGame(db, "BlackJack"), 3);
     EXPECT_EQ(getTotalPlayersForGame(db, "doesNotExists"), 0);
+}
+
+TEST_F(StatTest, testMedianValue) {
+    std::string command = "SELECT total_wins, player_id FROM player_stats"
+      " WHERE username = 'username101' ORDER BY total_wins ASC;";
+
+    int median = medianValue(pulledIntDataVector(db, command));
+    EXPECT_EQ(median, 4);
 }
 
 // TEST_F(StatTest, testGetGreatestPlayerByWins) {

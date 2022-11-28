@@ -15,9 +15,7 @@ int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
 }
 
 int runQueryWithIntReturn2(sqlite3_stmt* stmt ) {
-    // sqlite3_step(stmt);
     int ret = sqlite3_column_int(stmt, 0);
-    sqlite3_finalize(stmt);
     return ret;
 }
 
@@ -42,12 +40,12 @@ std::vector<int> pulledIntDataVector(Database& db,
         int data = runQueryWithIntReturn2(stmt);
         results.push_back(data);
     }
+    sqlite3_finalize(stmt);
     std::sort(results.begin(), results.end());
     std::cout << "RESULTS:";
     for (int i = 0; i < results.size(); i++)
         std::cout << ' ' << results.at(i);
     std::cout << '\n';
-    /**/
     return results;
 }
 
