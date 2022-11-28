@@ -35,13 +35,11 @@ std::vector<int> pulledIntDataVector(Database& db,
   const std::string& sql_command) {
     std::vector<int> results;
     sqlite3_stmt* stmt = db.makeStatement(sql_command);
-    int data = 0;
-    while(sqlite3_step(stmt) != SQLITE_DONE) {
-        data = runQueryWithIntReturn2(stmt);
+    while (sqlite3_step(stmt) != SQLITE_DONE) {
+        int data = runQueryWithIntReturn2(stmt);
         results.push_back(data);
     }
     std::sort(results.begin(), results.end());
-        
     std::cout << "RESULTS:";
     for (int i = 0; i < results.size(); i++)
         std::cout << ' ' << results.at(i);
