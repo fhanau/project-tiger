@@ -15,6 +15,12 @@ class ServerApiTest: public:: testing:: Test {
       token = res.body;
       EXPECT_NE(token, "");
 
+      // register and get another token to play the role of other clients
+      req.url = "/create_account";
+      App.handle_full(req, res);
+      fake_token = res.body;
+      EXPECT_NE(fake_token, "");
+
       // upload game data
       req.url = "/upload";
       req.method = crow::HTTPMethod::POST;
@@ -36,7 +42,7 @@ class ServerApiTest: public:: testing:: Test {
     crow::request req;
     crow::response res;
     crow::SimpleApp App;
-    std::string token;
+    std::string token, fake_token;
 };
 
 TEST_F(ServerApiTest, TestGetNumberPlayers) {
@@ -45,6 +51,13 @@ TEST_F(ServerApiTest, TestGetNumberPlayers) {
   req.body = "token=" + token;
   App.handle_full(req, res);
   EXPECT_EQ(res.body, "2");
+
+  // request with a different token
+  req.url = "/private/number-of-players";
+  req.method = crow::HTTPMethod::POST;
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
 }
 
 TEST_F(ServerApiTest, TestNumberOfGames) {
@@ -53,9 +66,16 @@ TEST_F(ServerApiTest, TestNumberOfGames) {
   req.body = "token=" + token + "&gametype=" + "RPS";
   App.handle_full(req, res);
   EXPECT_EQ(res.body, "2");
+
+  // request with a different token
+  req.url = "/private/number-of-games";
+  req.method = crow::HTTPMethod::POST;
+  req.body = "token=" + fake_token + "&gametype=" + "RPS";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
 }
 
-TEST_F(ServerApiTest, TestEarnings) {
+TEST_F(ServerApiTest, TestEarningsAll) {
   // Test /total-earnings-all
   req.url = "/private/total-earnings-all";
   req.method = crow::HTTPMethod::POST;
@@ -63,8 +83,17 @@ TEST_F(ServerApiTest, TestEarnings) {
   App.handle_full(req, res);
   EXPECT_EQ(res.body, "100");
 
-  // Test /total-earnings-games
-  req.url = "/private/total-earnings-games";
+  // request with a different token
+  req.url = "/private/total-earnings-all";
+  req.method = crow::HTTPMethod::POST;
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestEarningsByGameAndPlayer) {
+  // Test /total-earnings-game
+  req.url = "/private/total-earnings-game";
   req.method = crow::HTTPMethod::POST;
   req.body = "token=" + token + "&gametype=" + "RPS";
   App.handle_full(req, res);
@@ -92,6 +121,15 @@ TEST_F(ServerApiTest, TestWins) {
   App.handle_full(req, res);
   EXPECT_EQ(res.body, "1");
 
+  // request with a different token
+  req.url = "/private/total-wins-all";
+  req.method = crow::HTTPMethod::POST;
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestWinsByGame) {
   // Test /total-wins-game
   req.url = "/private/total-wins-game";
   req.method = crow::HTTPMethod::POST;
@@ -105,7 +143,9 @@ TEST_F(ServerApiTest, TestWins) {
   req.body = "token=" + token + "&gametype=" + "Blackjack";
   App.handle_full(req, res);
   EXPECT_EQ(res.body, "0");
+}
 
+TEST_F(ServerApiTest, TestWinsByPlayer) {
   // Test /total-wins-player
   req.url = "/private/total-wins-player";
   req.method = crow::HTTPMethod::POST;
