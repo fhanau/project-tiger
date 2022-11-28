@@ -7,6 +7,10 @@
 #include "sql.h"
 
 
+int medianValue(std::vector<int> results);
+std::vector<int> pulledIntDataVector(Database& db,
+  const std::string& sql_command);
+
 int getNumTotalUsers(Database& db);
 
 // if game_type == "", then return # all games

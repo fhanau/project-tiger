@@ -5,7 +5,7 @@ add_subdirectory(googletest EXCLUDE_FROM_ALL)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 set(TESTS DatabaseTests.cpp serverApiTests.cpp sqliteTest.cpp cardTests.cpp
-    deckTests.cpp statTests.cpp serverMockTests.cpp authTests.cpp)
+    deckTests.cpp statTests.cpp serverMockTests.cpp authTests.cpp statMocks.cpp)
 set(TEST_DEPS ${TIGER_SOURCE_DIR}/server/tiger.cpp ${TIGER_SOURCE_DIR}/server/tiger.h ${TIGER_SOURCE_DIR}/server/auth.cpp ${TIGER_SOURCE_DIR}/server/auth.h
     mockDatabase.h mockDatabase.cpp)
 set(TEST_GAME_DEPS ${TIGER_SOURCE_DIR}/game/card.cpp
