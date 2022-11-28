@@ -132,6 +132,6 @@ For end-to-end testing, we use a script in `test/<>` which can be executed with 
 Since the end-to-end tests depend on client and server, they are included in the CI build job for convenience and quicker CI runs.
 
 ## Continuous Integration
-We use GitHub Actions for CI integration. The configuration file can be found at `.github/workflows/cmake.yml`. CI runs on every pull request and commit to the trunk. On CI, we have separate jobs to buil the client and server, running the tests and providing code coverage reports, linting, and static analysis. The relevant output of each job can generally be found in the penultimate step or the one marked as print. The jobs are also set up to fail if there are any test or build failures or a non-negligible number of lint/static analysis issues, which has been been useful for identifying issues early.
+We use GitHub Actions for CI integration. The configuration file can be found at `.github/workflows/cmake.yml`. CI runs on every pull request and commit to the trunk. On CI, we have separate jobs to build the client and server, running the tests and providing code coverage reports, linting, and static analysis. The relevant output of each job can generally be found in the penultimate step or the one marked as print. The jobs are also set up to fail if there are any test or build failures or a non-negligible number of lint/static analysis issues, which has been been useful for identifying issues early.
 
 Find the CI reports on the Actions tab of the repository.
