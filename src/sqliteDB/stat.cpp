@@ -26,8 +26,6 @@ std::string runQueryWithSingleReturn(Database& db,
     sqlite3_stmt* stmt = db.makeStatement(sql_command);
     sqlite3_step(stmt);
 
-
-    // const char* ret_str = (const char*)sqlite3_column_text(stmt, 0);
     const char* ret_str = reinterpret_cast <const char*>(
         sqlite3_column_text(stmt, 0));
     sqlite3_finalize(stmt);
