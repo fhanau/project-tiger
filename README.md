@@ -110,7 +110,7 @@ The program uses [libcurl](https://curl.se/libcurl/), [curlpp](https://github.co
 We use [GoogleTest and GMock](https://github.com/google/googletest), available in test/googletest. The libraries use a 3-Clause BSD license. Use `make run-tiger-test` to run the tests.
 
 #### Gcovr
-[Gcovr](https://gcovr.com/en/stable/) is a utility for managing the use of the GNU gcov utility and generating summarized code coverage results. Use `run coverage` to generate coverage report, you may also execute `Open ./coverage/index.html` to view the report in browser
+[Gcovr](https://gcovr.com/en/stable/) is a utility for managing the use of the GNU gcov utility and generating summarized code coverage results. Gcovr is available under a 3-clause BSD License and can be installed using `pip install gcovr` . Use `make coverage` to generate coverage report, you may also execute `Open ./coverage/index.html` to view the report in your browser.
 
 ## Tools for linting, static analysis etc.
 #### Cpplint
@@ -132,6 +132,6 @@ For end-to-end testing, we use a script in `test/<>` which can be executed with 
 Since the end-to-end tests depend on client and server, they are included in the CI build job for convenience and quicker CI runs.
 
 ## Continuous Integration
-We use GitHub Actions for CI integration. The configuration file can be found at `.github/workflows/cmake.yml`. CI runs on every pull request and commit to the trunk. On CI, we have separate jobs to check that the build of client and server, running the tests, linting, static analysis, and (tentatively) code coverage reports. The relevant output of each job can generally be found in the penultimate step or the one marked as print. The jobs are also set up to fail if there are any test or build failures or a non-negligible number of lint/static analysis issues, which has been been useful for identifying issues early.
+We use GitHub Actions for CI integration. The configuration file can be found at `.github/workflows/cmake.yml`. CI runs on every pull request and commit to the trunk. On CI, we have separate jobs to buil the client and server, running the tests and providing code coverage reports, linting, and static analysis. The relevant output of each job can generally be found in the penultimate step or the one marked as print. The jobs are also set up to fail if there are any test or build failures or a non-negligible number of lint/static analysis issues, which has been been useful for identifying issues early.
 
 Find the CI reports on the Actions tab of the repository.
