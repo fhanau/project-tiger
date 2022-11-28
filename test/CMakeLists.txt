@@ -21,15 +21,27 @@ set(TEST_DB_DEPS
     ${TIGER_SOURCE_DIR}/libraries/sqlite/sqlite3.c
     ${TIGER_SOURCE_DIR}/libraries/sqlite/sqlite3.h
 )
+set(TEST_SSL_DEPS
+    ${CMAKE_BINARY_DIR}/key.pem
+    ${CMAKE_BINARY_DIR}/cert.pem
+)
+
 # create the test executable
-add_executable(tiger-test ${TESTS} ${TEST_DEPS} ${TEST_GAME_DEPS} ${TEST_DB_DEPS})
+add_executable(tiger-test ${TESTS} ${TEST_DEPS} ${TEST_GAME_DEPS} ${TEST_DB_DEPS} ${TEST_SSL_DEPS})
 target_link_libraries(tiger-test PRIVATE Crow::Crow GTest::gtest_main GTest::gmock ${CMAKE_DL_LIBS})
 
-#This is just a mockup of how the client would be used for testing. To actually use the client in automated testing, we'd want to have it operate while the server is running, run the server with code coverage so we can get better coverage of the server frontend, and capture the client output to compare it with a file containing expected output.
-add_custom_target(client-based-tests
-  DEPENDS client
-  #This command will freeze if the server is not running.
-  COMMAND cat ${TIGER_TEST_DIR}/client-commands.sh | ${CMAKE_BINARY_DIR}/client)
+#Create key and certificate for HTTPS. Due to cmake being a terrible build system, it is necessary to copy it here.
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/key.pem ${CMAKE_BINARY_DIR}/cert.pem
+  COMMAND openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -subj '/O=CS 4156 Project Tiger/C=US/ST=New York/L=New York/CN=project.tiger' -keyout key.pem -out cert.pem
+  COMMAND touch ${CMAKE_BINARY_DIR}/key.pem ${CMAKE_BINARY_DIR}/cert.pem
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+#Run end-to-end tests. See the readme, end-end.sh and client-commands.txt for details
+add_custom_target(end-end-tests
+  DEPENDS client server
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMAND ${TIGER_TEST_DIR}/end-end.sh)
 
 # setup gcovr
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/)
