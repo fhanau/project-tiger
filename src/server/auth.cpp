@@ -15,12 +15,12 @@ std::string tigerAuth::createUniqueToken(Database& db) {
   std::string token = crow::utility::base64encode_urlsafe(token_buf,
       TOKEN_BYTES);
   // Add token to database
-  db.addNewClient(token);
+  db.addNewClient(get_hash(token));
   return token;
 }
 
 int tigerAuth::getAccountID(Database& db, const std::string& clientToken) {
-  return db.query_token(clientToken);
+  return db.query_token(get_hash(clientToken));
 }
 
 std::string tigerAuth::get_hash(const std::string& password) {
