@@ -109,15 +109,10 @@ TEST(Database_Update, Check_Update_method) {
     sqlite3_stmt* seven = del_table.makeStatement("SELECT * FROM games");
 
     while (sqlite3_step(seven) != SQLITE_DONE) {
-        const char *value = (const char *)sqlite3_column_text(seven, 0);
+        // use unsigned char * to avoid explicit/c-style casts
+        const unsigned char *value = sqlite3_column_text(seven, 0);
         const char *answer = "RPS2";
-        int check = 2;
-        if (strcmp(value, answer) == 0) {
-            check = 1;
-        } else {
-            check = 0;
-        }
-        EXPECT_EQ(check, 1);
+        EXPECT_ZERO(memcmp(value, answer, 5));
         break;
     }
 

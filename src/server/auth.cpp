@@ -25,7 +25,8 @@ int tigerAuth::getAccountID(Database& db, const std::string& clientToken) {
 
 std::string tigerAuth::get_hash(const std::string& password) {
   unsigned char sha_digest[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)password.c_str(), password.size(), sha_digest);
+  SHA256(reinterpret_cast <const unsigned char*>(password.c_str()),
+      password.size(), sha_digest);
   std::string hash = crow::utility::base64encode_urlsafe(sha_digest,
       SHA256_DIGEST_LENGTH);
   return hash;
