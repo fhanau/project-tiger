@@ -349,6 +349,4 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       | asio::ssl::context::no_sslv2
       | asio::ssl::context::no_sslv3);
   app.ssl(std::move(ssl_ctx));
-
-  app.port(18080).multithreaded().run();
 }

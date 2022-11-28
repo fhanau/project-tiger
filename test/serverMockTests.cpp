@@ -22,7 +22,7 @@ TEST(ServerMockTest, CreateNewAccount) {
       std::string pw_hash = tigerAuth::get_hash(password);
       sql.insertMockData("hosts", username);
       sql.insertMockData("tokens", pw_hash);
-      return "";
+      return "SUCCESS";
     }
   });
 
@@ -30,10 +30,9 @@ TEST(ServerMockTest, CreateNewAccount) {
   crow::response res;
 
   req.url = "/create/username/password";
-
+  mockApp.validate();
   mockApp.handle_full(req, res);
-  std::string success = "";
-  ASSERT_EQ(res.body, success);
+  ASSERT_EQ(res.body, "SUCCESS");
 }
 /*
 TEST(ServerMockTest, LoginExistingAccount) {

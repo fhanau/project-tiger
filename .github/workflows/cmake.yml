@@ -32,6 +32,9 @@ jobs:
     - name: Build client and server
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --target client server --config ${{env.BUILD_TYPE}} -- -j 2
+    - name: Run end-to-end tests
+      run: |
+           cmake --build ${{github.workspace}}/build --target end-end-tests -- -j 2;
   test:
     runs-on: ubuntu-22.04
 
@@ -44,11 +47,10 @@ jobs:
       run: sudo apt update && sudo apt install --no-install-recommends --fix-missing -y libasio-dev libcurl4-openssl-dev && python -m pip install --upgrade pip && pip install gcovr
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-    - name: GTest
+    - name: Build and run GTest (unit tests, integration tests, system tests)
       # Execute tests defined by the CMake configuration.
       run: |
-           cmake --build ${{github.workspace}}/build --target tiger-test -- -j 2;
-           ${{github.workspace}}/build/tiger-test
+           cmake --build ${{github.workspace}}/build --target run-tiger-test -- -j 2;
   code-lint:
     runs-on: ubuntu-22.04
     steps:
