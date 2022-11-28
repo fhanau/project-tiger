@@ -48,6 +48,5 @@ private number-of-players
 > Successfully uploaded game data.
 > most-common-play: 11
 > most-winning-play: Rock
-> total-earnings-game: 13100
-> total-losses-player: -2040
+> total-earnings-game: 13200
 > Exiting client.
