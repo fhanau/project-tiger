@@ -1,0 +1,16 @@
+public total-games
+private total-earnings-all
+private number-of-results RPS
+private number-of-results Blackjack
+upload Blackjack player1 500 20
+upload Blackjack player2 -500 19
+upload Blackjack player3 -500 28
+upload Blackjack player4 -500 11
+upload Blackjack player2 667 21
+upload Blackjack player1 -5123 11
+upload Blackjack player4 -540 11
+upload Blackjack player3 -5121 11
+private number-of-results Blackjack
+private total-earnings-all
+public total-games
+exit

@@ -24,4 +24,5 @@ upload Blackjack player3 -5121 11
 private most-common-play Blackjack
 private most-winning-play RPS
 private total-earnings-game RPS
+public total-games
 exit

@@ -1,0 +1,22 @@
+Welcome to Project Tiger!
+Successfully created token.
+Created new token client-token.dat, assigned ID 1
+Token saved to disk, ready to execute commands
+A list of commands can be displayed by typing 'help' and hitting enter.
+Otherwise you can begin entering commands.
+> total-games: 18
+> total-earnings-all: 0
+> number-of-results: 0
+> number-of-results: 0
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> number-of-results: 8
+> total-earnings-all: 1167
+> total-games: 26
+> Exiting client.

@@ -153,8 +153,13 @@ For testing, the example client can be built with `make client` and run using ./
 
 Using the provided documentation, a third party will be able to develop a similar client – since our approach builds on widely used web technologies, a third party only needs to get a token, either through another channel or the `/create_token` interface and then use the token to send requests to upload game data or request the various statistics.
 
+## Testing
+Our systems, unit and integration tests can be found in the `test` folder and use mocking as needed. Use `make run-tiger-test` to run the tests.
+
+The systems tests are located in `test/serverApiTests.cpp` and use the mocking features of the Crow REST library which allow us to set up a server without actually running it. We then use the handle_full() function to send requests to the server and compare the responses with the expected responses using GTest. This allows us to test the server API directly without any external tools.
+
 ## End-to-End testing
-For end-to-end testing, we use a script in `test/<>` which can be executed with `make end-end-tests` for convenience. The script starts the server, runs the client with a list of commands found in `test/<>` captures the client output and compares it with the expected output in `test/<>`. A test failure of end-end-tests indicates that the output produced by the client did not match the expected output. Since the client executes commands that cover a wide range of server functionality, this allows us to do comprehensive end-to-end testing.
+For end-to-end testing, we use the script in `test/end-end/end-end.sh` which can be executed with `make end-end-tests` for convenience. The script starts the server, runs the client with a list of commands, captures the client output and compares it with the expected output. A test failure of end-end-tests indicates that the output produced by the client did not match the expected output. Since the client executes commands that cover a wide range of server functionality, this allows us to conduct comprehensive end-to-end testing. In particular, our end-to-end tests demonstrate the persistence and multiple clients features of the server. See `test/end-end` for details.
 
 Since the end-to-end tests depend on client and server, they are included in the CI build job for convenience and quicker CI runs.
 
