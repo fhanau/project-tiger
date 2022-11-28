@@ -61,6 +61,16 @@ The server can be accessed on port 18080 using the following API. At present, al
 
 ```private/most-winning-play``` POST request for most common winning result for a specific game created by the client. Token is used for authentication and `gametype` is used for querying data.
 
+```private/total-player-earning-for-game``` POST request for total earnings for a specific game for a specific player. Token is used for authentication and `gametype` and `player` are used for querying data.
+
+```private/total-player-debt-for-game``` POST request for total money lost for a specific game for a specific player. Token is used for authentication and `gametype` and `player` are used for querying data.
+
+```private/total-player-wins-for-game``` POST request for total wins for a specific game for a specific player. Token is used for authentication and `gametype` and `player` are used for querying data.
+
+```private/total-player-losses-for-game``` POST request for total losses for a specific game for a specific player. Token is used for authentication and `gametype` and `player` are used for querying data.
+
+```private/most-winning-player-for-game``` POST request for player with the most wins for a specific game. Token is used for authentication and `gametype` is used for querying data.
+
 ### Build directions
 ```
 #install required libraries
