@@ -4,14 +4,16 @@
 
 #define EXPECT_ZERO(stmt) EXPECT_EQ(stmt, 0)
 
-// TODO: Add mocking – for unit testing mocking is needed since the statistics
-// tests use the database class internally.
+/* These integration tests create a db object, call several methods setting up
+ * a database and use statistics functions that invoke the database class and
+ * depends on the database being set up correctly, thus testing the interaction
+ * between the two classes. */
 
 /**
 Table: players
     player_id, username
 */
-class StatTest:public::testing::Test {
+class IntegrationTest:public::testing::Test {
  protected:
     void SetUp() override {
         // clear existing data
@@ -49,17 +51,17 @@ class StatTest:public::testing::Test {
 };
 
 
-TEST_F(StatTest, testGetNumTotalUsers) {
+TEST_F(IntegrationTest, testGetNumTotalUsers) {
     EXPECT_EQ(getNumTotalUsers(db), 4);
 }
 
-TEST_F(StatTest, testGetNumGames) {
+TEST_F(IntegrationTest, testGetNumGames) {
     EXPECT_EQ(getNumGames(db, ""), 3);
     EXPECT_EQ(getNumGames(db, "RPS"), 2);
     EXPECT_EQ(getNumGames(db, "BlackJack"), 1);
 }
 
-TEST_F(StatTest, testGetTotalPlayersForGame) {
+TEST_F(IntegrationTest, testGetTotalPlayersForGame) {
     EXPECT_EQ(getTotalPlayersForGame(db, "RPS"), 2);
     EXPECT_EQ(getTotalPlayersForGame(db, "BlackJack"), 3);
     EXPECT_EQ(getTotalPlayersForGame(db, "doesNotExists"), 0);
