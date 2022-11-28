@@ -51,6 +51,9 @@ jobs:
       # Execute tests defined by the CMake configuration.
       run: |
            cmake --build ${{github.workspace}}/build --target run-tiger-test -- -j 2;
+    - name: Generate Code Coverage Report
+      run: |
+           cmake --build ${{github.workspace}}/build --target coverage -- -j 2;
   code-lint:
     runs-on: ubuntu-22.04
     steps:
@@ -82,17 +85,3 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --target code-analyze
     - name: Static Analysis (assert)
       run: cmake --build ${{github.workspace}}/build --target code-analyze-ci
-
-  # TODO: finish report uploading
-  #Generate and upload coverage report
-  # coverage:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #     with:
-  #       submodules: recursive
-  #   - name: Generate Coverage Report
-  #     run: |
-  #       cmake --build ${{github.workspace}}/build --target coverage-ci
-  #   - name: Upload Coverage Report
-  #     uses:
