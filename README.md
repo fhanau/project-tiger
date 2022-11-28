@@ -7,7 +7,7 @@ The clients will be organizations that host games and/or competitions. Basically
 The data we will be accumulating will be records/milestones per user (such as best result achieved, biggest bet won, biggest bet lost, total number of games, win-loss ratio). In order to keep track of these records, our server will store the username of all the users that our clients have. With regards to created data, our server can calculate the win-loss ratio and predict best possible move suggestions depending on which game is being played. The other forms of data are game logs, which contain metadata such as number of players, player ids, moves made, and money wagered. These game logs will be made accessible to all of our clients’ users to search for with game ids.
 
 
-##Authentication and API rationale
+## Authentication and API rationale
 We use a token-based approach to authentication where each token uniquely identifies an account and allows it to upload data about games and retrieve statistics for the given account. Since each account has one access token, our service is stateless and does not need to have a separate login function. On each request the token is used to authenticate by looking up the corresponding account ID or returning an error if there is no account for the given token. The server then uses the account ID to upload data or compute statistics based on the data for the account ID, i.e. the client can only make changes for the given account ID it is authorized for as inferred from the token. As long as the tokens are secret, clients have no way to read or write the data of other accounts.
 
 The implementation uses HTTPS and POST requests as supported by the Crow REST API and OpenSSL for SSL, SHA-256 hashing and cryptographically secure pseudorandom data, which allows us to base authentication and authorization on established open-source libraries.
@@ -15,6 +15,8 @@ The implementation uses HTTPS and POST requests as supported by the Crow REST AP
 In production use, clients using the service would be provided an access token off-channel and would use it to access data based on the internal account ID. For demonstration purposes, clients can request a new token and associated account ID to be sent to them using the `/create_account` API, which allows us to add new clients to effectively debug, test and showcase the server.
 
 Each request that requires authentication takes a token parameter within the body of a POST request alongside any other parameters. For example, an upload request might have a body of `token=<token as returned by server>&gametype=chess&result=p1_wins&earning=100&player=p1`. Similarly, requests for private statistics may include a player or gametype parameter as elaborated below. We also provide a number of global public statistics across all accounts, which can be accessed using GET requests without requiring a token.
+
+For clients using our interface, commands such as `help` and `help-private` provide the full list of supported endpoints for both public and private statistics.
 
 ## API reference
 The server can be accessed on port 18080 using the following API. At present, all API methods are implemented using HTTP GET requests using CROW on the server side and curl for the example clients.
@@ -31,33 +33,33 @@ The server can be accessed on port 18080 using the following API. At present, al
 
 ```private/total-earnings-all``` POST request for total earnings for all players for a client. Token is used for authentication and querying data.
 
-```private/total-earnings-game``` POST request for total earnings for a specific game for a client. Token is used for authentication and querying data.
+```private/total-earnings-game``` POST request for total earnings for a specific game for a client. Token is used for authentication and `gametype` is used for querying data.
 
-```private/total-earnings-all``` POST request for total earnings for a specific player for a client. Token is used for authentication and querying data.
+```private/total-earnings-player``` POST request for total earnings for a specific player for a client. Token is used for authentication and `player` is used for querying data.
 
 ```private/total-wins-all``` POST request for total wins for all players for a client. Token is used for authentication and querying data.
 
-```private/total-wins-game``` POST request for total wins for a specific game for a client. Token is used for authentication and querying data.
+```private/total-wins-game``` POST request for total wins for a specific game for a client. Token is used for authentication and `gametype` is used for querying data.
 
-```private/total-wins-player``` POST request for total wins for a specific player for a client. Token is used for authentication and querying data.
+```private/total-wins-player``` POST request for total wins for a specific player for a client. Token is used for authentication and `player` is used for querying data.
 
 ```private/total-losses-all``` POST request for total losses for all players for a client. Token is used for authentication and querying data.
 
-```private/total-losses-game``` POST request for total losses for a specific game for a client. Token is used for authentication and querying data.
+```private/total-losses-game``` POST request for total losses for a specific game for a client. Token is used for authentication and `gametype` is used for querying data.
 
-```private/total-losses-player``` POST request for total losses for a specific player for a client. Token is used for authentication and querying data.
+```private/total-losses-player``` POST request for total losses for a specific player for a client. Token is used for authentication and `player` is used for querying data.
 
-```private/total-players-for-game``` POST request for total players for a specific game the client created. Token is used for authentication and querying data.
+```private/total-players-for-game``` POST request for total players for a specific game the client created. Token is used for authentication and `gametype` is used for querying data.
 
-```private/number-of-games``` POST request for total number of games for a specific game the client created. Token is used for authentication and querying data.
+```private/number-of-games``` POST request for total number of games for a specific game the client created. Token is used for authentication and `gametype` is used for querying data.
 
 ```private/number-of-players``` POST request for total players for across all games the client created. Token is used for authentication and querying data.
 
 ```private/greatest-player-by-wins``` POST request for total players for a specific game the client created. Token is used for authentication and querying data.
 
-```private/most-common-play``` POST request for most common result for a specific game created by the client. Token is used for authentication and querying data.
+```private/most-common-play``` POST request for most common result for a specific game created by the client. Token is used for authentication and `gametype` is used for querying data.
 
-```private/most-winning-play``` POST request for most common winning result for a specific game created by the client. Token is used for authentication and querying data.
+```private/most-winning-play``` POST request for most common winning result for a specific game created by the client. Token is used for authentication and `gametype` is used for querying data.
 
 ### Build directions
 ```
