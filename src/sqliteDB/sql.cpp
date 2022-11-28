@@ -50,6 +50,7 @@ Database::Database(const char* db_dir) {
     // Ideally, we would not have the database always-open, but this approach
     // is safer and more reliable for our use case.
     sqlite3_open(directory, &DB);
+
     // Create the 6 tables named:
     // player_stats, game_list, achievements,
     // players, hosts, games.
@@ -135,7 +136,7 @@ int Database::createTable(std::string command) {
             sqlite3_free(messageError);
             return -1;
         } else {
-            std::cout << "Table created Successfully" << std::endl;
+            // std::cout << "Table created Successfully" << std::endl;
         }
     }
     catch (const std::exception& e) {
@@ -194,6 +195,7 @@ int Database::getIntValue(std::string command) {
         std::cerr << "ERROR_CODE: " << exit <<
           ", Error when getting int value\n";
         sqlite3_free(messageError);
+        return -1;
     }
     return value;
 }
@@ -244,17 +246,10 @@ int Database::executeCommand(std::string command, std::string errMsg,
     }
 
     if (exit == 19) {
-        std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" << 
-          std::endl;
-        sqlite3_free(messageError);
-        return 0;
-    } else if (exit == 19) {
         std::cerr << "ERROR_CODE: 19, Constraint/Duplicate Error!" <<
           std::endl;
         // messageError is not guaranteed to be set even if there is an error.
         if (messageError) {
-          std::cerr << "ERROR_CODE: " << exit << ", " << 
-          errMsg << ": " << messageError << std::endl;
           sqlite3_free(messageError);
         }
         return 0;
