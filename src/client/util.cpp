@@ -275,7 +275,8 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
         }
       } else if (!type.compare("total-player-earning-for-game")) {
         if (input.size() != 4) {
-          std::cout << "Invalid parameters for total-player-earning-for-game.\n";
+          std::cout << "Invalid parameters for "
+            "total-player-earning-for-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
@@ -290,7 +291,8 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
         }
       } else if (!type.compare("total-player-debt-for-game")) {
         if (input.size() != 4) {
-          std::cout << "Invalid parameters for total-player-debt-for-game.\n";
+          std::cout << "Invalid parameters for "
+           "total-player-debt-for-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
@@ -320,7 +322,8 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
         }
       } else if (!type.compare("total-player-losses-for-game")) {
         if (input.size() != 4) {
-          std::cout << "Invalid parameters for total-player-losses-for-game.\n";
+          std::cout << "Invalid parameters for"
+            " total-player-losses-for-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
@@ -335,7 +338,8 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
         }
       } else if (!type.compare("most-winning-player-for-game")) {
         if (input.size() != 3) {
-          std::cout << "Invalid parameters for most-winning-player-for-game.\n";
+          std::cout << "Invalid parameters for "
+            "most-winning-player-for-game.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
@@ -371,10 +375,14 @@ void displayPrivateHelp() {
   std::cout << "private number-of-results <string: game name>\n";
   std::cout << "private total-players-for-game <string: game name>\n";
   std::cout << "private greatest-player-by-wins <string: playerid>\n";
-  std::cout << "private total-player-earning-for-game <string: game name> <string: playerid>\n";
-  std::cout << "private total-player-debt-for-game <string: game name> <string: playerid>\n";
-  std::cout << "private total-player-wins-for-game <string: game name> <string: playerid>\n";
-  std::cout << "private total-player-losses-for-game <string: game name> <string: playerid>\n";
+  std::cout << "private total-player-earning-for-game <string: game name>"
+   " <string: playerid>\n";
+  std::cout << "private total-player-debt-for-game <string: game name>"
+   " <string: playerid>\n";
+  std::cout << "private total-player-wins-for-game <string: game name>"
+    " <string: playerid>\n";
+  std::cout << "private total-player-losses-for-game <string: game name>"
+    " <string: playerid>\n";
   std::cout << "private most-winning-player-for-game <string: game name>\n";
   std::cout << "private number-of-players\n";
 }

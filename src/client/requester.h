@@ -86,23 +86,23 @@ class Requester {
   // Sends POST request to server for number of players
   std::string getNumberOfPlayers(const std::string& token);
 
-  // Sends POST request to server for total earnings for a player in a specific game
+  // Sends POST request to server for total earnings for a player
   std::string getTotalPlayerEarningsForGame(const std::string& token,
     const std::string& gametype, const std::string& player);
 
-  // Sends POST request to server for total debt for a player in a specific game
+  // Sends POST request to server for total debt for a player
   std::string getTotalPlayerDebtForGame(const std::string& token,
     const std::string& gametype, const std::string& player);
   
-  // Sends POST request to server for total wins for a player in a specific game
+  // Sends POST request to server for total wins for a player
   std::string getTotalPlayerWinsForGame(const std::string& token,
     const std::string& gametype, const std::string& player);
   
-  // Sends POST request to server for total lossing for a player in a specific game
+  // Sends POST request to server for total lossing for a player
   std::string getTotalPlayerLossesForGame(const std::string& token,
     const std::string& gametype, const std::string& player);
 
-  // Sends POST request to server for most winning player for a specific game
+  // Sends POST request to server for most winning player
   std::string getMostWinningPlayerForGame(const std::string& token,
     const std::string& gametype);
 
