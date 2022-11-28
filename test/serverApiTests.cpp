@@ -4,7 +4,7 @@
 TEST(ServerApiTest, TestGetNumberPlayers) {
   crow::SimpleApp mockApp;
   Tiger::initTigerServer(mockApp, "db.db");
-  mockApp.validate();   //Used to make sure all the route handlers are in order.
+  mockApp.validate();  // Used to make sure all the route handlers are in order.
   crow::request req;
   crow::response res;
 

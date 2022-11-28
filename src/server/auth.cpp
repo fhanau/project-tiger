@@ -15,17 +15,18 @@ std::string tigerAuth::createUniqueToken(Database& db) {
   std::string token = crow::utility::base64encode_urlsafe(token_buf,
       TOKEN_BYTES);
   // Add token to database
-  db.addNewClient(token);
+  db.addNewClient(get_hash(token));
   return token;
 }
 
 int tigerAuth::getAccountID(Database& db, const std::string& clientToken) {
-  return db.query_token(clientToken);
+  return db.query_token(get_hash(clientToken));
 }
 
 std::string tigerAuth::get_hash(const std::string& password) {
   unsigned char sha_digest[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)password.c_str(), password.size(), sha_digest);
+  SHA256(reinterpret_cast <const unsigned char*>(password.c_str()),
+      password.size(), sha_digest);
   std::string hash = crow::utility::base64encode_urlsafe(sha_digest,
       SHA256_DIGEST_LENGTH);
   return hash;

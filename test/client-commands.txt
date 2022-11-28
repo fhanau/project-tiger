@@ -1,4 +1,27 @@
 help
 help-private
 public total-games
+upload RPS player1 100 Rock
+upload RPS player2 -100 Scissors
+private total-earnings-all
+upload RPS player3 1000 Rock
+upload RPS player4 -1000 Scissors
+upload RPS player1 -5000 Rock
+upload RPS player3 10000 Paper
+upload RPS player2 -500 Scissors
+upload RPS player4 2000 Rock
+upload RPS player1 -50 Paper
+upload RPS player3 100 Scissors
+private number-of-results RPS
+upload Blackjack player1 500 20
+upload Blackjack player2 -500 19
+upload Blackjack player3 -500 28
+upload Blackjack player4 -500 11
+upload Blackjack player2 667 21
+upload Blackjack player1 -5123 11
+upload Blackjack player4 -540 11
+upload Blackjack player3 -5121 11
+private most-common-play Blackjack
+private most-winning-play RPS
+private total-earnings-game RPS
 exit

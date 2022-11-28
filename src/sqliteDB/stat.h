@@ -28,4 +28,4 @@ std::vector<std::string> getGreatestPlayerByEarnings(Database& db);
 // std::vector<std::string> getGameResultsGivenUserID(
 //     Database& db, const std::string& userID);
 
-#endif // STAT_H_
+#endif  // STAT_H_

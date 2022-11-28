@@ -1,5 +1,5 @@
 #remove existing db and tokens to have consistent account ID and a clean database at the start.
-rm client-token.dat db.db
+rm -f client-token.dat db.db
 ./server &
 server_pid=$!
 #sleep so the server can start up before client starts sending

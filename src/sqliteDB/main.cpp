@@ -18,7 +18,7 @@ int main() {
     "WHERE player_id = 100;";
     dummy.updateData(updateCommand);
 
-    //dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
+    // dummy.deleteData("DELETE FROM player_stats WHERE player_id = 100;");
 
     sqlite3_stmt* x;
     std::string getStatsCommand = "SELECT * FROM player_stats WHERE player_id "

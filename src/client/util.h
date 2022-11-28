@@ -13,10 +13,10 @@
 
 // Loads token from disk. Returns EXIT_FAILURE if token file can't be found or
 // is invalid.
-int load_token(std::string& token);
+int load_token(std::string& token, const std::string& path);
 
 // Saves token to disk.
-void save_token(const std::string& token);
+void save_token(const std::string& token, const std::string& path);
 
 // Sends a request to the server to get the ID associated with a token – the
 // client does not need the ID, so this is only needed for debug/info purposes.

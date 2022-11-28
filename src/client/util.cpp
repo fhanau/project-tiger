@@ -16,8 +16,8 @@ int create_token(Requester& req, std::string& token) {
   return EXIT_FAILURE;
 }
 
-int load_token(std::string& token) {
-  std::ifstream token_file(TIGER_CL_TOKEN_PATH);
+int load_token(std::string& token, const std::string& path) {
+  std::ifstream token_file(path);
   if (!token_file.good()) {
     return EXIT_FAILURE;
   }
@@ -27,8 +27,8 @@ int load_token(std::string& token) {
   return EXIT_SUCCESS;
 }
 
-void save_token(const std::string& token) {
-  std::ofstream token_file(TIGER_CL_TOKEN_PATH);
+void save_token(const std::string& token, const std::string& path) {
+  std::ofstream token_file(path);
   token_file << token;
 }
 
@@ -49,14 +49,10 @@ std::string formatResult(const std::vector<std::string> &input) {
   return result;
 }
 
-void handleUploadGameData(const std::vector<std::string> &input,
-    const std::string &loggedInUsername, Requester& req,
+void handleUploadGameData(const std::vector<std::string> &input, Requester& req,
     const std::string &session) {
   if (input.size() < 5) {
     std::cout << "Invalid input for uploading game data.\n";
-    std::cout << "See 'help' for a list of commands.\n";
-  } else if (loggedInUsername.size() == 0) {
-    std::cout << "Must be logged in to upload game data.\n";
     std::cout << "See 'help' for a list of commands.\n";
   } else {
     std::string type = input[1];
@@ -93,17 +89,17 @@ void handlePublicStats(const std::vector<std::string> &input, Requester& req) {
 }
 
 void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
-  const std::string &host, const std::string &session) {
+  const std::string &session) {
     if (input.size() < 2) {
       std::cout << "Invalid input for requesting private data.\n";
       std::cout << "See 'help' for a list of commands.\n";
-    } else if (host.size() == 0 || session.size() == 0) {
+    } else if (session.size() == 0) {
       std::cout << "Cannot request private data without being logged in.\n";
       std::cout << "See 'help' for a list of commands.\n";
     } else {
       std::string type = input[1];
       if (!type.compare("total-earnings-all")) {
-        std::string resp = req.getTotalEarningsAll(session, host);
+        std::string resp = req.getTotalEarningsAll(session);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -115,7 +111,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getTotalEarningsGame(session, host,
+          std::string resp = req.getTotalEarningsGame(session,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -129,7 +125,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string playerid = input[2];
-          std::string resp = req.getTotalEarningsPlayer(session, host,
+          std::string resp = req.getTotalEarningsPlayer(session,
             playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -138,7 +134,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           }
         }
       } else if (!type.compare("total-wins-all")) {
-        std::string resp = req.getTotalWinsAll(session, host);
+        std::string resp = req.getTotalWinsAll(session);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -150,7 +146,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getTotalWinsGame(session, host,
+          std::string resp = req.getTotalWinsGame(session,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -164,7 +160,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string playerid = input[2];
-          std::string resp = req.getTotalWinsPlayer(session, host,
+          std::string resp = req.getTotalWinsPlayer(session,
             playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -173,7 +169,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           }
         }
       } else if (!type.compare("total-losses-all")) {
-        std::string resp = req.getTotalLossesAll(session, host);
+        std::string resp = req.getTotalLossesAll(session);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -185,7 +181,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getTotalLossesGame(session, host,
+          std::string resp = req.getTotalLossesGame(session,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -199,7 +195,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string playerid = input[2];
-          std::string resp = req.getTotalLossesPlayer(session, host,
+          std::string resp = req.getTotalLossesPlayer(session,
             playerid);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -213,7 +209,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getMostCommonPlay(session, host,
+          std::string resp = req.getMostCommonPlay(session,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -227,7 +223,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getMostWinningPlay(session, host,
+          std::string resp = req.getMostWinningPlay(session,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -241,7 +237,7 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getTotalPlayersForGame(session, host,
+          std::string resp = req.getTotalPlayersForGame(session,
             gametype);
           if (resp.size() > 0) {
             std::cout << type << ": " << resp << "\n";
@@ -250,28 +246,28 @@ void handlePrivateStats(const std::vector<std::string> &input, Requester& req,
           }
         }
       } else if (!type.compare("greatest-player-by-wins")) {
-        std::string resp = req.getGreatestPlayerByWins(session, host);
+        std::string resp = req.getGreatestPlayerByWins(session);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
           std::cout << "Could not retrieve private data.\n";
         }
-      } else if (!type.compare("number-of-games")) {
+      } else if (!type.compare("number-of-results")) {
         if (input.size() != 3) {
           std::cout << "Invalid parameters for number-of-games.\n";
           std::cout << "See 'help-private' for a list of commands.\n";
         } else {
           std::string gametype = input[2];
-          std::string resp = req.getNumberOfGames(session, host,
+          std::string resp = req.getNumberOfResults(session,
             gametype);
           if (resp.size() > 0) {
-            std::cout << type << ": " << resp << "\n";
+            std::cout << "number-of-results: " << resp << "\n";
           } else {
             std::cout << "Could not retrieve private data.\n";
           }
         }
       } else if (!type.compare("number-of-players")) {
-        std::string resp = req.getNumberOfPlayers(session, host);
+        std::string resp = req.getNumberOfPlayers(session);
         if (resp.size() > 0) {
           std::cout << type << ": " << resp << "\n";
         } else {
@@ -298,6 +294,10 @@ void displayPrivateHelp() {
   std::cout << "private total-losses-player <string: playerid>\n";
   std::cout << "private most-common-play <string: game name>\n";
   std::cout << "private most-winning-play <string: game name>\n";
+  std::cout << "private number-of-results <string: game name>\n";
+  std::cout << "private total-players-for-game <string: game name>\n";
+  std::cout << "private greatest-player-by-wins <string: playerid>\n";
+  std::cout << "private number-of-players\n";
 }
 
 void displayHelp() {
@@ -317,14 +317,13 @@ void handleExit() {
 
 void processCleanInput(const std::vector<std::string>& cleanInput,
     Requester& req, const std::string &token) {
-  std::string loggedInUsername = "dummy";
   std::string command = cleanInput[0];
   if (!command.compare("upload")) {
-    handleUploadGameData(cleanInput, loggedInUsername, req, token);
+    handleUploadGameData(cleanInput, req, token);
   } else if (!command.compare("public")) {
     handlePublicStats(cleanInput, req);
   } else if (!command.compare("private")) {
-    handlePrivateStats(cleanInput, req, loggedInUsername, token);
+    handlePrivateStats(cleanInput, req, token);
   } else if (!command.compare("help")) {
     displayHelp();
   } else if (!command.compare("help-private")) {
