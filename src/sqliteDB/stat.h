@@ -6,8 +6,11 @@
 
 #include "sql.h"
 
-
-int medianValue(std::vector<int> results);
+// Method to get the median from a sorted vector of values
+float medianValue(std::vector<int> results);
+// Method to get median, first and third quartile, and interquartile range
+std::array<float, 4> percentileValues(std::vector<int> results);
+// Method to pull a list of ints from a sql command
 std::vector<int> pulledIntDataVector(Database& db,
   const std::string& sql_command);
 

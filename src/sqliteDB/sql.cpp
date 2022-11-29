@@ -299,7 +299,7 @@ int Database::deleteData(std::string command) {
 
 // Method to drop table, given SQL command, Alex Brebenel version
 int Database::dropTable2(std::string command) {
-    int run = executeCommand(command, "Error in deleteData2 function.",
+    int run = executeCommand(command, "Error in dropData2 function.",
     "Records deleted Successfully!", 0);
     return run;
 }
