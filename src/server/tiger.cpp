@@ -5,6 +5,7 @@
 #include "../sqliteDB/sql.h"
 #include "auth.h"
 #include "tiger.h"
+#include "../sqliteDB/stat.h"
 
 #define CROW_ROUTE_POST(app, url, impl) CROW_ROUTE(app, url).methods( \
     crow::HTTPMethod::POST)([](const crow::request& req) impl);
@@ -388,6 +389,21 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       " WHERE earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
       gametype + "' GROUP BY player_id);";
     return std::to_string(getDatabase().getIntValue(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/median-earning", {
+    POST_INIT_GAMETYPE;
+
+    std::string findGame = "SELECT * from game_list WHERE username = '" +
+      acct_id + "' AND game_type = '" + gametype + "';";
+    if (getDatabase().totalRows(findGame) == 0) {
+      return std::string("GameDataNotFound");
+    }
+    std::string command = "SELECT earning FROM game_list"
+      " WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' ORDER BY earning ASC";
+    std::vector<int> values = pulledIntDataVector(getDatabase(), command);
+    return std::to_string(medianValue(values));
   });
 
   // Set up SSL, working around Crow issues

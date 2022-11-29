@@ -253,3 +253,12 @@ std::string Requester::getMostWinningPlayerForGame(const std::string& token,
       + "&gametype=" + gametype;
     return theRequester(path, body);
 }
+
+// Sends POST request to server for median earning for specific game
+std::string Requester::getMedianEarning(const std::string& token,
+  const std::string& gametype) {
+    std::string path = "private/median-earning";
+    std::string body = "token=" + token
+      + "&gametype=" + gametype;
+    return theRequester(path, body);
+}

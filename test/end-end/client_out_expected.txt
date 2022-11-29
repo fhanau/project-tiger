@@ -30,6 +30,7 @@ private total-player-wins-for-game <string: game name> <string: playerid>
 private total-player-losses-for-game <string: game name> <string: playerid>
 private most-winning-player-for-game <string: game name>
 private number-of-players
+private median-earning <string: game name>
 > total-games: 0
 > Successfully uploaded game data.
 > Successfully uploaded game data.
