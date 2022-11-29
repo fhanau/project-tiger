@@ -10,9 +10,6 @@
 float medianValue(std::vector<int> results);
 // Method to get median, first and third quartile, and interquartile range
 std::array<float, 4> percentileValues(std::vector<int> results);
-// Method to pull a list of ints from a sql command
-std::vector<int> pulledIntDataVector(Database& db,
-  const std::string& sql_command);
 
 int getNumTotalUsers(Database& db);
 
@@ -26,6 +23,9 @@ std::vector<std::string> getGreatestPlayerByWins(Database& db);
 
 // return player_id
 std::vector<std::string> getGreatestPlayerByEarnings(Database& db);
+
+//Get median earnings for a given game.
+int getMedianEarnings(Database& db, const std::string& game_type, const std::string& acct_id);
 
 // TODO: may return JSON for compliated return type
 // std::vector<std::string> getGameResultsGivenUserID(

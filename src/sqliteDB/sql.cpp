@@ -1,6 +1,8 @@
-#include <stdio.h>
 #include <iostream>
 #include <cstring>
+#include <string>
+#include <vector>
+#include <stdio.h>
 #include <sqlite3.h>
 // #include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
@@ -169,6 +171,26 @@ sqlite3_stmt* Database::makeStatement(std::string command) {
     sqlite3_prepare_v2(DB, command.c_str(), -1, &the_Statement, 0);
     sqlite3_reset(the_Statement);
     return the_Statement;
+}
+
+// This method is to return a vector of ints
+// to be used for computing calculations.
+std::vector<int> Database::pulledIntDataVector(const std::string& sql_command) {
+    std::vector<int> results;
+    sqlite3_stmt* stmt = makeStatement(sql_command);
+    while (sqlite3_step(stmt) != SQLITE_DONE) {
+        int data = sqlite3_column_int(stmt, 0);
+        results.push_back(data);
+    }
+    sqlite3_finalize(stmt);
+    std::sort(results.begin(), results.end());
+    /*
+    std::cout << "RESULTS:";
+    for (int i = 0; i < results.size(); i++)
+        std::cout << ' ' << results.at(i);
+    std::cout << '\n';
+    */
+    return results;
 }
 
 int Database::totalRows(std::string command) {

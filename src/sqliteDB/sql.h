@@ -24,8 +24,8 @@ class Database {
 
  public:
   // Create a database stored in file db_dir
-  explicit Database(const char* db_dir);
-  ~Database();
+  Database(const char* db_dir);
+  virtual ~Database();
 
   // Adds a token for a new client account to the database.
   void addNewClient(const std::string& token);
@@ -49,6 +49,8 @@ class Database {
   int totalRows(std::string command);
   // Create sqlite3 statement used for processing rows
   sqlite3_stmt* makeStatement(std::string command);
+  // Method to pull a list of ints from a sql command
+  virtual std::vector<int> pulledIntDataVector(const std::string& sql_command);
   // Get the maximum value of a column in an sql table
   // int getMax(std::string table_name, std::string col_name);
   // Get the int value of a result column from an SQL query

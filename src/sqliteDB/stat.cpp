@@ -31,27 +31,6 @@ std::string runQueryWithSingleReturn(Database& db,
     return std::string(ret_str);
 }
 
-// This method is to return a vector of ints
-// to be used for computing calculations.
-std::vector<int> pulledIntDataVector(Database& db,
-  const std::string& sql_command) {
-    std::vector<int> results;
-    sqlite3_stmt* stmt = db.makeStatement(sql_command);
-    while (sqlite3_step(stmt) != SQLITE_DONE) {
-        int data = runQueryWithIntReturn2(stmt);
-        results.push_back(data);
-    }
-    sqlite3_finalize(stmt);
-    std::sort(results.begin(), results.end());
-    /*
-    std::cout << "RESULTS:";
-    for (int i = 0; i < results.size(); i++)
-        std::cout << ' ' << results.at(i);
-    std::cout << '\n';
-    */
-    return results;
-}
-
 float medianValue(std::vector<int> results) {
     int size = results.size();
     int middle = size / 2;
@@ -130,6 +109,15 @@ int getTotalPlayersForGame(Database& db, const std::string& game_type) {
     std::string command = "SELECT COUNT(DISTINCT player_id) FROM game_list "
         "WHERE game_type = '" + game_type + "';";
     return runQueryWithIntReturn(db, command);
+}
+
+int getMedianEarnings(Database& db, const std::string& game_type, const std::string& acct_id) {
+  std::string command = "SELECT earning FROM game_list "
+    "WHERE game_type = '" + game_type + "' AND username = '" + acct_id + "';";
+  std::cout << command << std::endl;
+  std::vector<int> results = db.pulledIntDataVector(command);
+  std::cout << results.size() << std::endl;
+  return medianValue(results);
 }
 
 // TODO: buggy, segmentation fault
