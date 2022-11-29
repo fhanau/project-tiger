@@ -183,6 +183,43 @@ TEST_F(ServerApiTest, TestLossesByGame) {
   EXPECT_EQ(res.body, "0");
 }
 
+TEST_F(ServerApiTest, TestPublicApis) {
+  // Create a new request object since we'll be using GET
+  crow::request req_get;
+  req_get.url = "/public/total-games";
+  App.handle_full(req_get, res);
+  int total_games_1 = std::stod(res.body);
+  req_get.url = "/public/total-hosts";
+  App.handle_full(req_get, res);
+  int total_accts_1 = std::stod(res.body);
+
+  // register and get a fresh token, creating a new account
+  req_get.url = "/create_account";
+  App.handle_full(req_get, res);
+  std::string tmp_token = res.body;
+  EXPECT_NE(token, "");
+
+  // upload game data, effectively incrementing the number of games
+  req.url = "/upload";
+  req.body = "token=" + tmp_token + "&gametype=" + "RPS"
+    + "&player=" + "player1" + "&result=" + "Win"
+    + "&earning=" + std::to_string(100);
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "SUCCESS");
+
+  // Verify that the number of games across accounts increased by one.
+  req_get.url = "/public/total-games";
+  App.handle_full(req_get, res);
+  int total_games_2 = std::stod(res.body);
+  EXPECT_EQ(total_games_1 + 1, total_games_2);
+
+  // Verify that the number of accounts increased by one.
+  req_get.url = "/public/total-hosts";
+  App.handle_full(req_get, res);
+  int total_accts_2 = std::stod(res.body);
+  EXPECT_EQ(total_accts_1 + 1, total_accts_2);
+}
+
 // TEST_F(ServerApiTest, TestMostandGreatestAPIs) {
 //     // upload more game data
 //     req.url = "/upload";
