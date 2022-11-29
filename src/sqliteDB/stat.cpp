@@ -110,6 +110,45 @@ std::array<float, 4> percentileValues(std::vector<int> results) {
     return percentiles;
 }
 
+std::array<std::vector<std::string>, 2> findOutlierUsers(Database& db,
+  const std::string& sql_command) {
+    std::vector<int> results;
+    std::vector<std::string> players;
+    std::vector<std::string> abovePlayers = {""};
+    std::vector<std::string> belowPlayers = {""};
+
+    sqlite3_stmt* stmt = db.makeStatement(sql_command);
+    while (sqlite3_step(stmt) != SQLITE_DONE) {
+        int data = sqlite3_column_int(stmt, 0);
+        std::string player_name = reinterpret_cast <const char*>(
+          sqlite3_column_text(stmt, 1));
+
+        results.push_back(data);
+        players.push_back(player_name);
+    }
+
+    sqlite3_finalize(stmt);
+
+    std::array<float, 4> boxStats = percentileValues(results);
+    int belowStat = boxStats.at(0) - boxStats.at(3);
+    int aboveStat = boxStats.at(2) + boxStats.at(3);
+
+    for (int i = 0; i < results.size(); i++) {
+        std::string player_name = players.at(i);
+        int totalWins = results.at(i);
+        if (totalWins < belowStat) {
+            belowPlayers.push_back(player_name);
+        } else if (totalWins > aboveStat) {
+            abovePlayers.push_back(player_name);
+        }
+    }
+
+    std::array<std::vector<std::string>, 2> exceptionalPlayers = \
+      {belowPlayers, abovePlayers};
+
+    return exceptionalPlayers;
+}
+
 int getNumTotalUsers(Database& db) {
     std::string command = "SELECT COUNT(*) FROM players;";
     return runQueryWithIntReturn(db, command);
