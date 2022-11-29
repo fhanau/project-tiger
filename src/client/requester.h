@@ -106,6 +106,10 @@ class Requester {
   std::string getMostWinningPlayerForGame(const std::string& token,
     const std::string& gametype);
 
+  // Sends POST request to server for median earning
+  std::string getMedianEarning(const std::string& token,
+    const std::string& gametype);
+
   // Alex Brebenel streamline request function
   std::string theRequester(const std::string& path, const std::string& body);
 
