@@ -1,3 +1,4 @@
+#include <array>
 #include <sqlite3.h>
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
