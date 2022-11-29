@@ -43,10 +43,12 @@ std::vector<int> pulledIntDataVector(Database& db,
     }
     sqlite3_finalize(stmt);
     std::sort(results.begin(), results.end());
+    /*
     std::cout << "RESULTS:";
     for (int i = 0; i < results.size(); i++)
         std::cout << ' ' << results.at(i);
     std::cout << '\n';
+    */
     return results;
 }
 
@@ -71,6 +73,7 @@ std::array<float, 4> percentileValues(std::vector<int> results) {
     int mid1;
     int mid2;
 
+
     // To create the sub-vectors for first and third quartile.
     if (size % 2 == 1 && size != 0) {
         mid1 = size / 2;
@@ -89,11 +92,11 @@ std::array<float, 4> percentileValues(std::vector<int> results) {
     std::vector<int> thirdResults;
 
     for (int i = 0; i < size; i++) {
-        if (i == mid1 || i == mid2) {
+        if (mid1 == mid2 && i == mid1) {
             continue;
-        } else if (i < mid1) {
+        } else if (i <= mid1) {
             firstResults.push_back(results.at(i));
-        } else if (i > mid2) {
+        } else {
             thirdResults.push_back(results.at(i));
         }
     }

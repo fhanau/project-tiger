@@ -31,6 +31,10 @@ class StatTest:public::testing::Test {
             "('player2', 'username2', 'RPS', 1, 1, 1, 0, 0),"
             "('player3', 'username3', 'BlackJack', 1, 0, 1, -1, 0),"
             "('player4', 'username4', 'BlackJack', 0, 1, 1, -1, 0),"
+            "('player201', 'username201', 'BJTest', 1, 1, 1, -1, 5),"
+            "('player202', 'username201', 'BJTest', 2, 2, 1, -2, 5),"
+            "('player203', 'username201', 'BJTest', 3, 3, 1, -3, 5),"
+            "('player204', 'username201', 'BJTest', 4, 4, 1, -4, 5),"
             "('player101', 'username101', 'BJTest', 1, 1, 1, -1, 5),"
             "('player102', 'username101', 'BJTest', 2, 2, 1, -2, 5),"
             "('player103', 'username101', 'BJTest', 3, 3, 1, -3, 5),"
@@ -54,7 +58,6 @@ class StatTest:public::testing::Test {
     Database db = Database("dummy5.db");
 };
 
-
 TEST_F(StatTest, testGetNumTotalUsers) {
     EXPECT_EQ(getNumTotalUsers(db), 4);
 }
@@ -77,6 +80,9 @@ TEST_F(StatTest, testMedianValue) {
 
     float median = medianValue(pulledIntDataVector(db, command));
     EXPECT_EQ(median, 4.0);
+
+    std::vector<int> empty = {};
+    EXPECT_ZERO(medianValue(empty));
 }
 
 TEST_F(StatTest, testBoxWhiskerPoints) {
@@ -90,6 +96,25 @@ TEST_F(StatTest, testBoxWhiskerPoints) {
     EXPECT_EQ(percentiles.at(1), 4.0);
     EXPECT_EQ(percentiles.at(2), 103.0);
     EXPECT_EQ(percentiles.at(3), 101.5);
+
+    command = "SELECT total_wins, player_id FROM player_stats"
+      " WHERE username = 'username201' ORDER BY total_wins ASC;";
+
+    percentiles = percentileValues(\
+      pulledIntDataVector(db, command));
+
+    EXPECT_EQ(percentiles.at(0), 1.5);
+    EXPECT_EQ(percentiles.at(1), 2.5);
+    EXPECT_EQ(percentiles.at(2), 3.5);
+    EXPECT_EQ(percentiles.at(3), 2.0);
+
+    std::vector<int> empty = {};
+    std::array<float, 4> emptyPerc = percentileValues(empty);
+
+    EXPECT_ZERO(emptyPerc.at(0));
+    EXPECT_ZERO(emptyPerc.at(1));
+    EXPECT_ZERO(emptyPerc.at(2));
+    EXPECT_ZERO(emptyPerc.at(3));
 }
 
 // TEST_F(StatTest, testGetGreatestPlayerByWins) {
