@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <vector>
+#include <array>
 #include <algorithm>
 #include "stat.h"
 
@@ -49,9 +50,61 @@ std::vector<int> pulledIntDataVector(Database& db,
     return results;
 }
 
-int medianValue(std::vector<int> results) {
-    int middle = results.size() / 2;
-    return results.at(middle);
+float medianValue(std::vector<int> results) {
+    int size = results.size();
+    int middle = size / 2;
+    if (size % 2 == 1 && size != 0) {
+        return results.at(middle) * 1.0;
+    } else if (size != 0) {
+        int sum = results.at(middle) + results.at(middle - 1);
+        float average = sum / 2.0;
+        return average;
+    } else {
+        return 0.0;
+    }
+}
+
+std::array<float, 4> percentileValues(std::vector<int> results) {
+    std::array<float, 4> percentiles;
+    int size = results.size();
+    float median;
+    int mid1;
+    int mid2;
+
+    // To create the sub-vectors for first and third quartile.
+    if (size % 2 == 1 && size != 0) {
+        mid1 = size / 2;
+        mid2 = size / 2;
+        median = results.at(mid1) * 1.0;
+    } else if (size != 0) {
+        mid1 = size / 2 - 1;
+        mid2 = size / 2;
+        median = (results.at(mid1) + results.at(mid2)) / 2.0;
+    } else {
+        percentiles = {0.0, 0.0, 0.0, 0.0};
+        return percentiles;
+    }
+
+    std::vector<int> firstResults;
+    std::vector<int> thirdResults;
+
+    for (int i = 0; i < size; i++) {
+        if (i == mid1 || i == mid2) {
+            continue;
+        } else if (i < mid1) {
+            firstResults.push_back(results.at(i));
+        } else if (i > mid2) {
+            thirdResults.push_back(results.at(i));
+        }
+    }
+
+    float firstQuartile = medianValue(firstResults);
+    float thirdQuartile = medianValue(thirdResults);
+    float interQuartileRange = thirdQuartile - firstQuartile;
+
+    percentiles = {firstQuartile, median, thirdQuartile, interQuartileRange};
+
+    return percentiles;
 }
 
 int getNumTotalUsers(Database& db) {
@@ -78,6 +131,7 @@ int getTotalPlayersForGame(Database& db, const std::string& game_type) {
 
 // TODO: buggy, segmentation fault
 // return player_id
+/*
 std::vector<std::string> getGreatestPlayerByWins(Database& db) {
     std::vector<std::string> res;
     std::string command =
@@ -95,3 +149,4 @@ std::vector<std::string> getGreatestPlayerByWins(Database& db) {
     }
     return res;
 }
+*/

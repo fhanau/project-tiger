@@ -36,6 +36,8 @@ class StatTest:public::testing::Test {
             "('player103', 'username101', 'BJTest', 3, 3, 1, -3, 5),"
             "('player104', 'username101', 'BJTest', 4, 4, 1, -4, 5),"
             "('player105', 'username101', 'BJTest', 5, 5, 1, -5, 5),"
+            "('player108', 'username101', 'BJTest', 1, 5, 1, -5, 5),"
+            "('player109', 'username101', 'BJTest', 500, 8, 1, -9, 7),"
             "('player106', 'username101', 'BJTest', 100, 6, 100, -1, 5),"
             "('player107', 'username101', 'BJTest', 106, 7, 200, -1, 5);"));
         EXPECT_ZERO(db.insertData(
@@ -73,8 +75,21 @@ TEST_F(StatTest, testMedianValue) {
     std::string command = "SELECT total_wins, player_id FROM player_stats"
       " WHERE username = 'username101' ORDER BY total_wins ASC;";
 
-    int median = medianValue(pulledIntDataVector(db, command));
-    EXPECT_EQ(median, 4);
+    float median = medianValue(pulledIntDataVector(db, command));
+    EXPECT_EQ(median, 4.0);
+}
+
+TEST_F(StatTest, testBoxWhiskerPoints) {
+    std::string command = "SELECT total_wins, player_id FROM player_stats"
+      " WHERE username = 'username101' ORDER BY total_wins ASC;";
+
+    std::array<float, 4> percentiles = percentileValues(\
+      pulledIntDataVector(db, command));
+
+    EXPECT_EQ(percentiles.at(0), 1.5);
+    EXPECT_EQ(percentiles.at(1), 4.0);
+    EXPECT_EQ(percentiles.at(2), 103.0);
+    EXPECT_EQ(percentiles.at(3), 101.5);
 }
 
 // TEST_F(StatTest, testGetGreatestPlayerByWins) {
