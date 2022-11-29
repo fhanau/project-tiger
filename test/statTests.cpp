@@ -6,6 +6,9 @@
 
 #define EXPECT_ZERO(stmt) EXPECT_EQ(stmt, 0)
 
+// TODO: Add mocking – for unit testing mocking is needed since the statistics
+// tests use the database class internally.
+
 /**
 Table: players
     player_id, username
