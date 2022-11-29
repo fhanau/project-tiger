@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <sqlite3.h>
-//#include "../libraries/sqlite/sqlite3.h"
+// #include "../libraries/sqlite/sqlite3.h"
 #include "sql.h"
 
 
@@ -209,6 +209,7 @@ std::string Database::getTextValue(std::string command) {
     }
     const unsigned char* value = sqlite3_column_text(queryResult, 0);
     std::string result = std::string(reinterpret_cast<const char *>(value));
+    std::cout << "Text result is: " << result << "\n";
     return result;
 }
 
@@ -298,7 +299,7 @@ int Database::deleteData(std::string command) {
 
 // Method to drop table, given SQL command, Alex Brebenel version
 int Database::dropTable2(std::string command) {
-    int run = executeCommand(command, "Error in deleteData2 function.",
+    int run = executeCommand(command, "Error in dropData2 function.",
     "Records deleted Successfully!", 0);
     return run;
 }

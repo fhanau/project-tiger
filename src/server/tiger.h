@@ -13,4 +13,4 @@ namespace Tiger {
   // needed.
   void initTigerServer(crow::SimpleApp& app, const std::string& db_path);
 }
-#endif // TIGER_H_
+#endif  // TIGER_H_

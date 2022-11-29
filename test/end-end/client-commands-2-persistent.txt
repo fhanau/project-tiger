@@ -1,0 +1,5 @@
+private number-of-results RPS
+private number-of-results Blackjack
+private total-earnings-all
+public total-games
+exit

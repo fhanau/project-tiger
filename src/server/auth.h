@@ -17,11 +17,11 @@ int getAccountID(Database& db, const std::string& clientToken);
 // Calculates the SHA256 hash of a password using openssl and returns its base64
 // representation.
 std::string get_hash(const std::string& password);
-} // namespace tigerAuth
+}  // namespace tigerAuth
 
 #define TOKEN_BITS 256
 #define TOKEN_BYTES (TOKEN_BITS / 8)
-//this will change based on TOKEN_BITS, but is non-trivial to calculate
+// this will change based on TOKEN_BITS, but is non-trivial to calculate
 #define TOKEN_BASE64_LEN 44
 
-#endif // SRC_SERVER_AUTH_H_
+#endif  // SRC_SERVER_AUTH_H_

@@ -38,26 +38,6 @@ std::string Card::getOwner() const {
     return owner;
 }
 
-void Card::display() const {
-    // may change output stream if needed
-    std::unordered_map<int, std::string> faceName = {
-        {ace, "A"}, {jack, "J"}, {queen, "Q"},
-        {king, "K"}, {black_joker, "BJ"}, {red_joker, "RJ"}
-    };
-    std::cout << suit << "-";
-    if (faceName.find(face) != faceName.end()) {
-        std::cout << faceName[face];
-    } else {
-        std::cout << face;
-    }
-    std::cout << std::endl;
-}
-
-bool Card::comparator(const Card& card1, const Card& card2) const {
-    // TODO(Songheng): implement
-    return true;
-}
-
 bool Card::operator==(const Card& rhs) const {
     return typeid(*this) == typeid(rhs)
         && this->getFace() == rhs.getFace()

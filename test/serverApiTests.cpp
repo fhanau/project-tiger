@@ -1,75 +1,248 @@
-#include <regex>
-#include <typeinfo>
-#include <crow.h>
 #include "gtest/gtest.h"
 #include "../src/server/tiger.h"
-#include "../src/server/auth.h"
 
-TEST(ServerUtilTest, ReturnsValidToken) {
-  Database db("dummy.db");
-  std::string sessionId = tigerAuth::createUniqueToken(db);
-  EXPECT_EQ(sessionId.size(), TOKEN_BASE64_LEN);
+// define fixture class to setup the testing environment
+class ServerApiTest: public:: testing:: Test {
+ protected:
+    void SetUp() override {
+      Tiger::initTigerServer(App, "db.db");
+      // make sure all the route handlers are in order.
+      App.validate();
 
-  // Check if session ID contains characters not allowed in url-safe base64
-  // Inspired by https://stackoverflow.com/a/7616973
-  bool contains_non_base64
-    = !std::regex_match(sessionId, std::regex("^[A-Za-z0-9\\-_\\=]+$"));
-  ASSERT_FALSE(contains_non_base64);
-}
+      // register and get a token
+      req.url = "/create_account";
+      App.handle_full(req, res);
+      token = res.body;
+      EXPECT_NE(token, "");
 
-TEST(ServerUtilTest, ReturnsUniqueSession) {
-  Database db("dummy.db");
-  std::string sessionIdFirstCall = tigerAuth::createUniqueToken(db);
-  std::string sessionIdSecondCall = tigerAuth::createUniqueToken(db);
-  ASSERT_NE(sessionIdFirstCall, sessionIdSecondCall);
-}
+      // register and get another token to play the role of other clients
+      req.url = "/create_account";
+      App.handle_full(req, res);
+      fake_token = res.body;
+      EXPECT_NE(fake_token, "");
 
-TEST(ServerUtilTest, ReturnsDistinctIDs) {
-  Database db("dummy.db");
-  std::string sessionIdFirstCall = tigerAuth::createUniqueToken(db);
-  std::string sessionIdSecondCall = tigerAuth::createUniqueToken(db);
-  int accountID1 = tigerAuth::getAccountID(db, sessionIdFirstCall);
-  int accountID2 = tigerAuth::getAccountID(db, sessionIdSecondCall);
-  ASSERT_NE(accountID1, accountID2);
-}
+      // upload game data
+      req.method = crow::HTTPMethod::POST;
+      req.url = "/upload";
+      req.body = "token=" + token + "&gametype=" + "RPS"
+        + "&player=" + "player1" + "&result=" + "Win"
+        + "&earning=" + std::to_string(100);
+      App.handle_full(req, res);
+      EXPECT_EQ(res.body, "SUCCESS");
 
-TEST(ServerUtilTest, ReturnsCorrectHashForPassword) {
-  std::string hashedPassword1 = tigerAuth::get_hash("password");
-  std::string hashedPassword2 = tigerAuth::get_hash("password");
-  ASSERT_EQ(hashedPassword1, hashedPassword2);
-}
+      req.body = "token=" + token + "&gametype=" + "RPS"
+        + "&player=" + "player2" + "&result=" + "Loss"
+        + "&earning=" + std::to_string(-100);
+      App.handle_full(req, res);
+      EXPECT_EQ(res.body, "SUCCESS");
+    }
 
-TEST(ServerUtilTest, ReturnsUniqueHashForDifferentPasswords) {
-  std::string hashedPassword1 = tigerAuth::get_hash("password1");
-  std::string hashedPassword2 = tigerAuth::get_hash("password2");
-  ASSERT_NE(hashedPassword1, hashedPassword2);
-}
+    void TearDown() override {}
 
-// TEST(ServerUtilTest, ReturnsDatabase) {
-//   Database database = Tiger::getDatabase();
-//   std::string databaseType = typeid(database).name();
-//   std::string type = "Database";
-//   int correctType = databaseType.find(type) != std::string::npos;
-//   ASSERT_EQ(correctType, 1);
-// }
+    crow::request req;
+    crow::response res;
+    crow::SimpleApp App;
+    std::string token, fake_token;
+};
 
-TEST(ServerApiTest, TestGetNumberPlayers) {
-  crow::SimpleApp mockApp;
-  Tiger::initTigerServer(mockApp, "db.db");
-  mockApp.validate();   //Used to make sure all the route handlers are in order.
-  crow::request req;
-  crow::response res;
-
-  req.url = "/create_account";
-  req.raw_url = "/create_account";
-  mockApp.handle_full(req, res);
-  std::string token = res.body;
-  EXPECT_NE(token, "");
-
-  req.method = crow::HTTPMethod::POST;
+TEST_F(ServerApiTest, TestGetNumberPlayers) {
   req.url = "/private/number-of-players";
   req.body = "token=" + token;
-  mockApp.handle_full(req, res);
-  std::string success = "0";
-  EXPECT_EQ(res.body, success);
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "2");
+
+  // request with a different token
+  req.url = "/private/number-of-players";
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
 }
+
+TEST_F(ServerApiTest, TestNumberOfGames) {
+  req.url = "/private/number-of-games";
+  req.body = "token=" + token + "&gametype=" + "RPS";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "2");
+
+  // request with a different token
+  req.url = "/private/number-of-games";
+  req.body = "token=" + fake_token + "&gametype=" + "RPS";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestEarningsAll) {
+  // Test /total-earnings-all
+  req.url = "/private/total-earnings-all";
+  req.body = "token=" + token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "100");
+
+  // request with a different token
+  req.url = "/private/total-earnings-all";
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestEarningsByGameAndPlayer) {
+  // Test /total-earnings-game
+  req.url = "/private/total-earnings-game";
+  req.body = "token=" + token + "&gametype=" + "RPS";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "100");
+
+  // Test /total-earnings-players
+  req.url = "/private/total-earnings-player";
+  req.body = "token=" + token + "&player=" + "player1";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "100");
+
+  req.url = "/private/total-earnings-player";
+  req.body = "token=" + token + "&player=" + "player2";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestWins) {
+  // Test /total-wins-all
+  req.url = "/private/total-wins-all";
+  req.body = "token=" + token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "1");
+
+  // request with a different token
+  req.url = "/private/total-wins-all";
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestWinsByGame) {
+  // Test /total-wins-game
+  req.url = "/private/total-wins-game";
+  req.body = "token=" + token + "&gametype=" + "RPS";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "1");
+
+  // Test /total-wins-game with different gametype
+  req.url = "/private/total-wins-game";
+  req.body = "token=" + token + "&gametype=" + "Blackjack";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestWinsByPlayer) {
+  // Test /total-wins-player
+  req.url = "/private/total-wins-player";
+  req.body = "token=" + token + "&player=" + "player1";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "1");
+
+  req.url = "/private/total-wins-player";
+  req.body = "token=" + token + "&player=" + "player2";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestLosses) {
+  req.url = "/private/total-losses-all";
+  req.body = "token=" + token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "1");
+
+  // request with a different token
+  req.url = "/private/total-losses-all";
+  req.body = "token=" + fake_token;
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestLossesByPlayer) {
+  req.url = "/private/total-losses-player";
+  req.body = "token=" + token + "&player=" + "player1";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+
+  req.url = "/private/total-losses-player";
+  req.body = "token=" + token + "&player=" + "player2";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "1");
+}
+
+TEST_F(ServerApiTest, TestLossesByGame) {
+  req.url = "/private/total-losses-game";
+  req.body = "token=" + token + "&gametype=" + "RPS";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "-100");
+
+  // Test /total-losses-game with different gametype
+  req.url = "/private/total-losses-game";
+  req.body = "token=" + token + "&gametype=" + "Blackjack";
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "0");
+}
+
+TEST_F(ServerApiTest, TestPublicApis) {
+  // Create a new request object since we'll be using GET
+  crow::request req_get;
+  req_get.url = "/public/total-games";
+  App.handle_full(req_get, res);
+  int total_games_1 = std::stod(res.body);
+  req_get.url = "/public/total-hosts";
+  App.handle_full(req_get, res);
+  int total_accts_1 = std::stod(res.body);
+
+  // register and get a fresh token, creating a new account
+  req_get.url = "/create_account";
+  App.handle_full(req_get, res);
+  std::string tmp_token = res.body;
+  EXPECT_NE(token, "");
+
+  // upload game data, effectively incrementing the number of games
+  req.url = "/upload";
+  req.body = "token=" + tmp_token + "&gametype=" + "RPS"
+    + "&player=" + "player1" + "&result=" + "Win"
+    + "&earning=" + std::to_string(100);
+  App.handle_full(req, res);
+  EXPECT_EQ(res.body, "SUCCESS");
+
+  // Verify that the number of games across accounts increased by one.
+  req_get.url = "/public/total-games";
+  App.handle_full(req_get, res);
+  int total_games_2 = std::stod(res.body);
+  EXPECT_EQ(total_games_1 + 1, total_games_2);
+
+  // Verify that the number of accounts increased by one.
+  req_get.url = "/public/total-hosts";
+  App.handle_full(req_get, res);
+  int total_accts_2 = std::stod(res.body);
+  EXPECT_EQ(total_accts_1 + 1, total_accts_2);
+}
+
+// TEST_F(ServerApiTest, TestMostandGreatestAPIs) {
+//     // upload more game data
+//     req.url = "/upload";
+//     req.body = "token=" + token + "&gametype=" + "RPS"
+//       + "&player=" + "player1" + "&result=" + "Win"
+//       + "&earning=" + std::to_string(70);
+//     App.handle_full(req, res);
+//     EXPECT_EQ(res.body, "SUCCESS");
+
+//     req.body = "token=" + token + "&gametype=" + "RPS"
+//       + "&player=" + "player3" + "&result=" + "Loss"
+//       + "&earning=" + std::to_string(-70);
+//     App.handle_full(req, res);
+//     EXPECT_EQ(res.body, "SUCCESS");
+
+//     test greatest-player-by-wins
+//     req.url = "/private/greatest-player-by-wins";
+//     req.body = "token=" + token;
+//     App.handle_full(req, res);
+//     EXPECT_EQ(res.body, "player1");  // gives "-1"
+
+//     req.url = "/private/most-common-play";
+//     req.body = "token=" + token + "&gametype=" + "RPS";
+//     App.handle_full(req, res);
+//     EXPECT_EQ(res.body, "player1"); // gives "LOSS"
+// }

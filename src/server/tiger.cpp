@@ -5,6 +5,7 @@
 #include "../sqliteDB/sql.h"
 #include "auth.h"
 #include "tiger.h"
+#include "../sqliteDB/stat.h"
 
 #define CROW_ROUTE_POST(app, url, impl) CROW_ROUTE(app, url).methods( \
     crow::HTTPMethod::POST)([](const crow::request& req) impl);
@@ -49,7 +50,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return std::to_string(acct_id);
   });
 
-//Shared setup and parsing code for most private functions
+// Shared setup and parsing code for most private functions
 #define POST_INIT \
   GET_TOKEN \
   int _acct_id = tigerAuth::getAccountID(getDatabase(), token); \
@@ -58,7 +59,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   } \
   std::string acct_id = std::to_string(_acct_id);
 
-//Same as above, also reads gametype parameter
+// Same as above, also reads gametype parameter
 #define POST_INIT_GAMETYPE \
   POST_INIT; \
   if (!qs.get("gametype")) { \
@@ -209,7 +210,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE_POST(app, "/private/total-earnings-player", {
-    POST_INIT_GAMETYPE;
+    POST_INIT;
     GET_PLAYER;
     std::string totalEarnCommand = "SELECT total_money FROM "
       "player_stats WHERE username = '" + acct_id + "' AND player_id = '" +
@@ -233,7 +234,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   });
 
   CROW_ROUTE_POST(app, "/private/total-wins-player", {
-    POST_INIT_GAMETYPE;
+    POST_INIT;
     GET_PLAYER;
     std::string playerWinsCommand = "SELECT total_wins FROM "
       "player_stats WHERE username = '" + acct_id + "' AND player_id = '" +
@@ -317,10 +318,10 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     if (getDatabase().totalRows(findGame) == 0) {
       return std::string("GameDataNotFound");
     }
-    std::string mostCommonPlayCommand = "SELECT result, COUNT(result) AS "
-      "'value_occurrence' FROM game_list WHERE username = '" + acct_id +
-      "' AND game_type = '" + gametype + "' GROUP BY result ORDER BY "
-      "'value_occurence' DESC LIMIT 1;";
+    std::string mostCommonPlayCommand = "SELECT result, MAX(theCount)"
+      " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
+      "username = '" + acct_id + "' AND game_type = '" +
+      gametype + "' GROUP BY result);";
     return getDatabase().getTextValue(mostCommonPlayCommand);
   });
 
@@ -339,7 +340,73 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     return getDatabase().getTextValue(mostWinningPlayCommand);
   });
 
-  //Set up SSL, working around Crow issues
+  CROW_ROUTE_POST(app, "/private/total-player-earning-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT SUM(earning) FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning >= 0;";
+    return std::to_string(getDatabase().getIntValue(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/total-player-debt-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT SUM(earning) FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning < 0;";
+    return std::to_string(getDatabase().getIntValue(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/total-player-wins-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT * FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning >= 0;";
+    return std::to_string(getDatabase().totalRows(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/total-player-losses-for-game", {
+    POST_INIT_GAMETYPE;
+    GET_PLAYER;
+    std::string command = "SELECT * FROM game_list "
+      "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' AND playerid = '" + player + "' AND earning < 0;";
+    return std::to_string(getDatabase().totalRows(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/most-winning-player-for-game", {
+    POST_INIT_GAMETYPE;
+
+    std::string findGame = "SELECT * from game_list WHERE username = '" +
+      acct_id + "' AND game_type = '" + gametype + "';";
+    if (getDatabase().totalRows(findGame) == 0) {
+      return std::string("GameDataNotFound");
+    }
+    std::string command = "SELECT player_id, MAX(theCount)"
+      " FROM (SELECT player_id, COUNT(player_id) AS theCount FROM game_list"
+      " WHERE earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
+      gametype + "' GROUP BY player_id);";
+    return std::to_string(getDatabase().getIntValue(command));
+  });
+
+  CROW_ROUTE_POST(app, "/private/median-earning", {
+    POST_INIT_GAMETYPE;
+
+    std::string findGame = "SELECT * from game_list WHERE username = '" +
+      acct_id + "' AND game_type = '" + gametype + "';";
+    if (getDatabase().totalRows(findGame) == 0) {
+      return std::string("GameDataNotFound");
+    }
+    std::string command = "SELECT earning FROM game_list"
+      " WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
+      "' ORDER BY earning ASC";
+    std::vector<int> values = pulledIntDataVector(getDatabase(), command);
+    return std::to_string(medianValue(values));
+  });
+
+  // Set up SSL, working around Crow issues
   crow::ssl_context_t ssl_ctx(asio::ssl::context::sslv23);
   ssl_ctx.set_verify_mode(asio::ssl::verify_none);
   ssl_ctx.use_certificate_file("cert.pem", crow::ssl_context_t::pem);

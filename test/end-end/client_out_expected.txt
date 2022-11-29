@@ -1,0 +1,59 @@
+Welcome to Project Tiger!
+Successfully created token.
+Created new token client-token.dat, assigned ID 0
+Token saved to disk, ready to execute commands
+A list of commands can be displayed by typing 'help' and hitting enter.
+Otherwise you can begin entering commands.
+> Commands available:
+upload <string: name of game> <string: playerid> <int: win/loss amount> <string: result description>
+public <string: ['total-games', 'total-players', 'total-types']>
+help-private
+exit
+> Commands available for private data requests:
+private total-earnings-all
+private total-earnings-game <string: game name>
+private total-earnings-player <string: playerid>
+private total-wins-all
+private total-wins-game <string: game name>
+private total-wins-player <string: playerid>
+private total-losses-all
+private total-losses-game <string: game name>
+private total-losses-player <string: playerid>
+private most-common-play <string: game name>
+private most-winning-play <string: game name>
+private number-of-results <string: game name>
+private total-players-for-game <string: game name>
+private greatest-player-by-wins <string: playerid>
+private total-player-earning-for-game <string: game name> <string: playerid>
+private total-player-debt-for-game <string: game name> <string: playerid>
+private total-player-wins-for-game <string: game name> <string: playerid>
+private total-player-losses-for-game <string: game name> <string: playerid>
+private most-winning-player-for-game <string: game name>
+private number-of-players
+private median-earning <string: game name>
+> total-games: 0
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> total-earnings-all: 100
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> number-of-results: 10
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> Successfully uploaded game data.
+> most-common-play: 11
+> most-winning-play: Rock
+> total-earnings-game: 13200
+> total-games: 18
+> Exiting client.

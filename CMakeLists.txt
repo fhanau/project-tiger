@@ -37,25 +37,25 @@ add_dependencies(code-tests code-spell code-lint code-analyze)
 
 #target for codespell, exit 0 is to work around nonzero return code
 set(TIGER_CODE_FILES server/ client/ ../test/*.cpp game/ sqliteDB/)
-set(TIGER_TEXT_FILES CMakeLists.txt ../README.md ../test/CMakeLists.txt ../.github/ ../test/client-commands.txt ../test/end-end.sh ../test/client_out_expected.txt)
+set(TIGER_TEXT_FILES CMakeLists.txt ../README.md ../test/CMakeLists.txt ../.github/ ../test/end-end/)
 add_custom_target(code-spell
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
   COMMAND codespell ${TIGER_CODE_FILES} ${TIGER_TEXT_FILES} || (exit 0))
 add_custom_target(code-lint
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
-  COMMAND cpplint --recursive --filter=-legal/copyright,-build/include_subdir,-build/header_guard,-build/include_order,-runtime/explicit,-runtime/references,-readability/todo,-readability/casting,-whitespace/comments,-build/c++11 ${TIGER_CODE_FILES} || (exit 0))
+  COMMAND cpplint --recursive --filter=-legal/copyright,-build/include_subdir,-build/header_guard,-build/include_order,-runtime/explicit,-runtime/references,-readability/todo,-build/c++11 ${TIGER_CODE_FILES} || (exit 0))
 add_custom_target(code-analyze
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
   #make sure to not analyze library headers, avoids warnings that don't apply to us and much faster
-  COMMAND cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --suppress=passedByValue ${TIGER_CODE_FILES})
+  COMMAND cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=passedByValue ${TIGER_CODE_FILES})
 
 #tests for CI, at most 5 linting/static analyzer issues
 add_custom_target(code-lint-ci
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
-  COMMAND test `cpplint --recursive --filter=-legal/copyright,-build/include_subdir,-build/header_guard,-build/include_order,-runtime/explicit,-runtime/references,-readability/todo,-readability/casting,-whitespace/comments,-build/c++11 --quiet --output=sed ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 5)
+  COMMAND test `cpplint --recursive --filter=-legal/copyright,-build/include_subdir,-build/header_guard,-build/include_order,-runtime/explicit,-runtime/references,-readability/todo,-build/c++11 --quiet --output=sed ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 5)
 add_custom_target(code-spell-ci
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
   COMMAND codespell ${TIGER_CODE_FILES} ${TIGER_TEXT_FILES})
 add_custom_target(code-analyze-ci
   WORKING_DIRECTORY ${TIGER_SOURCE_DIR}
-  COMMAND test `cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=cstyleCast --suppress=passedByValue --template='{line}' -q ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 10)
+  COMMAND test `cppcheck --enable=warning,style --std=c++17 --suppress=noExplicitConstructor --suppress=passedByValue --template='{line}' -q ${TIGER_CODE_FILES} 2>&1 >/dev/null | wc -l` -le 10)
