@@ -119,6 +119,22 @@ TEST_F(StatTest, testBoxWhiskerPoints) {
     EXPECT_ZERO(emptyPerc.at(3));
 }
 
+TEST_F(StatTest, testOutlierReturning) {
+    std::string command = "SELECT total_wins, player_id FROM player_stats"
+      " WHERE username = 'username101' ORDER BY total_wins ASC;";
+
+    std::array<std::vector<std::string>, 2> outliers =\
+      findOutlierUsers(db, command);
+
+    std::vector<std::string> aboveAvg = outliers.at(1);
+    std::vector<std::string> belowAvg = outliers.at(0);
+
+    EXPECT_EQ(aboveAvg.at(0), "");
+    EXPECT_EQ(belowAvg.at(0), "");
+
+    EXPECT_EQ(aboveAvg.at(1), "player109");
+}
+
 // TEST_F(StatTest, testGetGreatestPlayerByWins) {
 // ASSERT_THAT(getGreatestPlayerByWins(db), testing::ElementsAre("player1"));
 // }

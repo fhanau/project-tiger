@@ -13,6 +13,9 @@ std::array<float, 4> percentileValues(std::vector<int> results);
 // Method to pull a list of ints from a sql command
 std::vector<int> pulledIntDataVector(Database& db,
   const std::string& sql_command);
+// Method that returns above and below average outliers
+std::array<std::vector<std::string>, 2> findOutlierUsers(Database& db,
+  const std::string& sql_command);
 
 int getNumTotalUsers(Database& db);
 
