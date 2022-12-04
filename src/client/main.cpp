@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
+#include <strings.h>
 
 #include "parser.h"
 #include "requester.h"
@@ -13,14 +14,22 @@ int main(int argc, char** argv) {
   // multiple clients and persistence aspects of the server.
 #define TIGER_CL_TOKEN_PATH "client-token.dat"
   std::string token_path = TIGER_CL_TOKEN_PATH;
-  if (argc == 2) {
-    token_path = (std::string)argv[1];
+  std::string baseUrl = DEFAULT_BASEURL;
+  if (argc >= 2) {
+    // allow specifying default to make it easier to a custom baseurl
+    if (strncasecmp("default", argv[1], 8) != 0) {
+      token_path = (std::string)argv[1];
+    }
+    if (argc == 3) {
+      // make base url configurable
+      baseUrl =  (std::string)argv[2];
+    }
   }
 
   std::string userInput;
   std::vector<std::string> cleanInput;
   Parser clientParser;
-  Requester req;
+  Requester req(baseUrl);
   std::string id = "-1";
   std::cout << "Welcome to Project Tiger!\n";
   std::string token;
