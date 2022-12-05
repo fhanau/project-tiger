@@ -388,7 +388,7 @@ void displayPrivateHelp() {
   std::cout << "private most-winning-play <string: game name>\n";
   std::cout << "private number-of-results <string: game name>\n";
   std::cout << "private total-players-for-game <string: game name>\n";
-  std::cout << "private greatest-player-by-wins <string: playerid>\n";
+  std::cout << "private greatest-player-by-wins\n";
   std::cout << "private total-player-earning-for-game <string: game name>"
    " <string: playerid>\n";
   std::cout << "private total-player-debt-for-game <string: game name>"
