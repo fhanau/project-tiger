@@ -193,7 +193,6 @@ int Database::getIntValue(std::string command) {
     int value = 0;
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
         &messageError);
-    std::cout << "VALUE: " << value << std::endl;
     if (exit != SQLITE_OK) {
         std::cerr << "ERROR_CODE: " << exit <<
           ", Error when getting int value\n";
