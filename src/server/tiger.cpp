@@ -209,9 +209,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-earnings-all", {
     POST_INIT;
-    /*std::string allEarningsCommand = "SELECT * FROM "
-      "player_stats;";/ / WHERE username = '" + acct_id + "';";*/
-     std::string allEarningsCommand = "SELECT SUM(earning) FROM "
+    std::string allEarningsCommand = "SELECT SUM(earning) FROM "
       "game_list WHERE username = '" + acct_id + "' AND earning > 0;";
 
     return std::to_string(getDatabase().getIntValue(allEarningsCommand));
@@ -314,7 +312,6 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       numberOfPlayersCommand));
   });
 
-  // ALEX BREBENEL COMMENT - Might need to edit this one
   CROW_ROUTE_POST(app, "/private/greatest-player-by-wins", {
     POST_INIT;
     std::string greatestPlayerByWinsCommand = "SELECT player_id, MAX(wins) "
