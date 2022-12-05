@@ -302,12 +302,17 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   // ALEX BREBENEL COMMENT - Might need to edit this one
   CROW_ROUTE_POST(app, "/private/greatest-player-by-wins", {
     POST_INIT;
-    std::string greatestPlayerByWinsCommand = "SELECT player_id, "
+    std::string greatestPlayerByWinsCommand = "SELECT player_id, MAX(wins) "
+      "FROM (SELECT player_id, COUNT(player_id) as wins FROM game_list "
+      "WHERE earning > 0 AND username = '" + acct_id + "' "
+      "GROUP BY player_id);";
+    
+    /*"SELECT player_id, "
       "SUM(total_wins) AS tw FROM player_stats WHERE "
       "username = '" + acct_id + "' AND tw = (SELECT MAX(total_wins) "
       "FROM player_stats WHERE username = '" + acct_id + "'"
       " GROUP BY player_id) GROUP BY player_id;";
-
+*/
     return getDatabase().getTextValue(greatestPlayerByWinsCommand);
   });
 
