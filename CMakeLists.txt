@@ -16,13 +16,13 @@ find_package(OpenSSL REQUIRED)
 
 set(TIGER_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(TIGER_TEST_DIR ${PROJECT_SOURCE_DIR}/test)
+include_directories(${TIGER_SOURCE_DIR}/libraries/sqlite)
 add_subdirectory(${TIGER_SOURCE_DIR}/server)
 add_subdirectory(${TIGER_SOURCE_DIR}/client)
 set(CROW_FEATURES ssl)
 add_subdirectory(${TIGER_SOURCE_DIR}/libraries/Crow)
 set(CURLPP_BUILD_SHARED_LIBS OFF)
 add_subdirectory(${TIGER_SOURCE_DIR}/libraries/curlpp EXCLUDE_FROM_ALL)
-include_directories(${TIGER_SOURCE_DIR}/libraries/sqlite)
 
 #Import tests so they can be built from the top level.
 add_subdirectory(test)

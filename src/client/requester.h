@@ -9,10 +9,11 @@
 #include "curlpp/Easy.hpp"
 #include "curlpp/Options.hpp"
 
+#define DEFAULT_BASEURL "https://127.0.0.1:18080/"
 // Handles making all GET requests to server using input from client
 class Requester {
  public:
-  Requester() {
+  Requester(std::string _baseUrl) : baseUrl(_baseUrl) {
     reset();
   }
 
@@ -123,7 +124,7 @@ class Requester {
 
   curlpp::Cleanup cleaner;
   curlpp::Easy request;
-  const std::string baseUrl = "https://127.0.0.1:18080/";
+  std::string baseUrl;
 };
 
 #endif

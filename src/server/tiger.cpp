@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
 #include <crow/app.h>
 #include "../sqliteDB/sql.h"
 #include "auth.h"
