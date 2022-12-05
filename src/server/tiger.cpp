@@ -106,7 +106,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
     std::string playerCommand = "SELECT * FROM players WHERE player_id = '"
       + player + "' AND username = '" + acct_id + "';";
-    
+
     std::string playerGameCommand = "SELECT * FROM player_stats WHERE "
       "player_id = '" + player + "' AND username = '" + acct_id + "' AND "
       "game_type = '" + gametype + "';";
@@ -117,7 +117,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
         " VALUES('" + player + "', '" + acct_id + "');";
       getDatabase().insertData(newPlayerCommand);
     }
-    
+
     if (getDatabase().totalRows(playerGameCommand) == 0) {
       if (earningValue <= 0) {
         std::string newStatsCommand = "INSERT INTO player_stats(player_id, "
@@ -213,7 +213,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       "player_stats;";/ / WHERE username = '" + acct_id + "';";*/
      std::string allEarningsCommand = "SELECT SUM(earning) FROM "
       "game_list WHERE username = '" + acct_id + "' AND earning > 0;";
-    
+
     return std::to_string(getDatabase().getIntValue(allEarningsCommand));
   });
 
@@ -403,7 +403,6 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       " WHERE earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
       gametype + "' GROUP BY player_id);";
     return getDatabase().getTextValue(command);
-    //return std::to_string(getDatabase().getIntValue(command));
   });
 
   CROW_ROUTE_POST(app, "/private/median-earning", {
