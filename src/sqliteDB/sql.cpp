@@ -171,6 +171,8 @@ sqlite3_stmt* Database::makeStatement(std::string command) {
 }
 
 int Database::totalRows(std::string command) {
+    // std::cout << "COMMAND TOTAL ROWS!! " << command << std::endl;
+    // selectData(command);
     char* messageError = 0;
     int count = 0;
     int exit = sqlite3_exec(DB, command.c_str(), countCallback, &count,
@@ -185,6 +187,8 @@ int Database::totalRows(std::string command) {
 }
 
 int Database::getIntValue(std::string command) {
+    // std::cout << "COMMAND INT!! " << command << std::endl;
+    // selectData(command);
     char *messageError = 0;
     int value = 0;
     int exit = sqlite3_exec(DB, command.c_str(), intCallback, &value,
@@ -199,6 +203,8 @@ int Database::getIntValue(std::string command) {
 }
 
 std::string Database::getTextValue(std::string command) {
+    // std::cout << "COMMAND TEXT!! " << command << std::endl;
+    // selectData(command);
     sqlite3_stmt* queryResult = makeStatement(command);
     int exit = sqlite3_step(queryResult);
     if (exit != SQLITE_ROW) {

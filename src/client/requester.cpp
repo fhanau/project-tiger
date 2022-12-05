@@ -184,7 +184,6 @@ std::string Requester::getNumberOfPlayers(const std::string& token) {
     return theRequester(path, body);
 }
 
-// ALEX BREBENEL COMMENT - Might need to change
 std::string Requester::getGreatestPlayerByWins(const std::string& token) {
     std::string path = "private/greatest-player-by-wins";
     std::string body = "token=" + token;
