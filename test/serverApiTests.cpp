@@ -55,7 +55,7 @@ TEST_F(ServerApiTest, TestGetNumberPlayers) {
   req.url = "/private/number-of-players";
   req.body = "token=" + fake_token;
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploaded");
 }
 
 TEST_F(ServerApiTest, TestNumberOfGames) {
@@ -68,7 +68,7 @@ TEST_F(ServerApiTest, TestNumberOfGames) {
   req.url = "/private/number-of-games";
   req.body = "token=" + fake_token + "&gametype=" + "RPS";
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploaded");
 }
 
 TEST_F(ServerApiTest, TestEarningsAll) {
@@ -82,7 +82,7 @@ TEST_F(ServerApiTest, TestEarningsAll) {
   req.url = "/private/total-earnings-all";
   req.body = "token=" + fake_token;
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploaded");
 }
 
 TEST_F(ServerApiTest, TestEarningsByGameAndPlayer) {
@@ -115,7 +115,7 @@ TEST_F(ServerApiTest, TestWins) {
   req.url = "/private/total-wins-all";
   req.body = "token=" + fake_token;
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploaded");
 }
 
 TEST_F(ServerApiTest, TestWinsByGame) {
@@ -129,7 +129,7 @@ TEST_F(ServerApiTest, TestWinsByGame) {
   req.url = "/private/total-wins-game";
   req.body = "token=" + token + "&gametype=" + "Blackjack";
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploadedForGame");
 }
 
 TEST_F(ServerApiTest, TestWinsByPlayer) {
@@ -155,7 +155,7 @@ TEST_F(ServerApiTest, TestLosses) {
   req.url = "/private/total-losses-all";
   req.body = "token=" + fake_token;
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploaded");
 }
 
 TEST_F(ServerApiTest, TestLossesByPlayer) {
@@ -180,7 +180,7 @@ TEST_F(ServerApiTest, TestLossesByGame) {
   req.url = "/private/total-losses-game";
   req.body = "token=" + token + "&gametype=" + "Blackjack";
   App.handle_full(req, res);
-  EXPECT_EQ(res.body, "0");
+  EXPECT_EQ(res.body, "NoDataUploadedForGame");
 }
 
 TEST_F(ServerApiTest, TestPublicApis) {

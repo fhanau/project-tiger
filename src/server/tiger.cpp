@@ -74,6 +74,27 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   } \
   std::string player = std::string(qs.get("player"));
 
+#define CHECK_HOST \
+  std::string findHost = "SELECT * from game_list WHERE username = '" + \
+      acct_id + "';"; \
+  if (getDatabase().totalRows(findHost) == 0) { \
+    return std::string("NoDataUploaded"); \
+  }
+
+#define CHECK_GAME \
+  std::string findGame = "SELECT * from game_list WHERE username = '" + \
+      acct_id + "' and game_type = '" + gametype + "';"; \
+  if (getDatabase().totalRows(findGame) == 0) { \
+    return std::string("NoDataUploadedForGame"); \
+  }
+
+#define CHECK_PLAYER \
+  std::string findPlayer = "SELECT * from game_list WHERE username = '" + \
+      acct_id + "' and player_id = '" + player + "';"; \
+  if (getDatabase().totalRows(findPlayer) == 0) { \
+    return std::string("NoDataUploadedForPlayer"); \
+  }
+
   CROW_ROUTE_POST(app, "/upload", {
     // Receives request from client to upload game data to database
     // Must be logged in to upload game data
@@ -209,6 +230,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-earnings-all", {
     POST_INIT;
+    CHECK_HOST;
     std::string allEarningsCommand = "SELECT SUM(earning) FROM "
       "game_list WHERE username = '" + acct_id + "' AND earning > 0;";
 
@@ -217,6 +239,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-earnings-game", {
     POST_INIT_GAMETYPE;
+    CHECK_HOST;
+    CHECK_GAME;
     std::string allGameEarningsCommand = "SELECT SUM(earning) FROM game_list"
       " WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' AND earning > 0;";
@@ -226,6 +250,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-earnings-player", {
     POST_INIT;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_PLAYER;
     std::string totalEarnCommand = "SELECT SUM(earning) FROM "
       "game_list WHERE username = '" + acct_id + "' AND player_id = '" +
       player + "' AND earning > 0;";
@@ -234,6 +260,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-wins-all", {
     POST_INIT;
+    CHECK_HOST;
     std::string allWinsCommand = "SELECT SUM(total_wins) FROM player_stats"
       " WHERE username = '" + acct_id + "';";
     return std::to_string(getDatabase().getIntValue(allWinsCommand));
@@ -241,6 +268,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-wins-game", {
     POST_INIT_GAMETYPE;
+    CHECK_HOST;
+    CHECK_GAME;
     std::string allGameWinsCommand = "SELECT COUNT(game_id) FROM "
       "game_list WHERE username = '" + acct_id + "' AND game_type = '" +
       gametype + "' AND earning > 0;";
@@ -250,6 +279,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-wins-player", {
     POST_INIT;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_PLAYER;
     std::string playerWinsCommand = "SELECT SUM(total_wins) FROM "
       "player_stats WHERE username = '" + acct_id + "' AND player_id = '" +
       player + "';";
@@ -258,6 +289,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-losses-all", {
     POST_INIT;
+    CHECK_HOST;
     std::string allLossesCommand = "SELECT SUM(total_losses) FROM "
       "player_stats WHERE username = '" + acct_id + "';";
     return std::to_string(getDatabase().getIntValue(allLossesCommand));
@@ -265,6 +297,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-losses-game", {
     POST_INIT_GAMETYPE;
+    CHECK_HOST;
+    CHECK_GAME;
     std::string allGameLossesCommand = "SELECT SUM(earning) FROM game_list "
       "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' AND earning <= 0;";
@@ -274,6 +308,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-losses-player", {
     POST_INIT;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_PLAYER;
     std::string allPlayerLossesCommand = "SELECT total_losses FROM "
       "player_stats WHERE username = '" + acct_id + "' AND player_id = '" +
       player + "';";
@@ -282,6 +318,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/total-players-for-game", {
     POST_INIT_GAMETYPE;
+    CHECK_HOST;
+    CHECK_GAME;
     std::string totalPlayersForGameCommand = "SELECT COUNT(DISTINCT player_i"
       "d) FROM game_list WHERE game_type = '" + gametype +
       "' AND username = '" + acct_id + "';";
@@ -291,11 +329,13 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/number-of-games", {
     POST_INIT_GAMETYPE;
+    CHECK_HOST;
     std::string numberOfGamesCommand = "";
     if (gametype == "all") {
       numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
       " FROM game_list WHERE username = '" + acct_id + "';";
     } else {
+      CHECK_GAME;
       numberOfGamesCommand = "SELECT COUNT(DISTINCT game_id)"
       " FROM game_list WHERE game_type = '" + gametype +
       "' AND username = '" + acct_id + "';";
@@ -306,6 +346,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/number-of-players", {
     POST_INIT;
+    CHECK_HOST;
     std::string numberOfPlayersCommand = "SELECT COUNT(*) FROM players"
       " WHERE username = '" + acct_id + "';";
     return std::to_string(getDatabase().getIntValue(
@@ -314,6 +355,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/greatest-player-by-wins", {
     POST_INIT;
+    CHECK_HOST;
     std::string greatestPlayerByWinsCommand = "SELECT player_id, MAX(wins) "
       "FROM (SELECT player_id, COUNT(player_id) as wins FROM game_list "
       "WHERE earning > 0 AND username = '" + acct_id + "' "
@@ -323,12 +365,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/most-common-play", {
     POST_INIT_GAMETYPE;
-    std::string findGame = "SELECT * from game_list WHERE username = '" +
-      acct_id + "' AND game_type = '" + gametype + "';";
-
-    if (getDatabase().totalRows(findGame) == 0) {
-      return std::string("GameDataNotFound");
-    }
+    CHECK_HOST;
+    CHECK_GAME;
     std::string mostCommonPlayCommand = "SELECT result, MAX(theCount)"
       " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
       "username = '" + acct_id + "' AND game_type = '" +
@@ -338,12 +376,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/most-winning-play", {
     POST_INIT_GAMETYPE;
-    std::string findGame = "SELECT * from game_list WHERE username = '" +
-      acct_id + "' AND game_type = '" + gametype + "';";
-
-    if (getDatabase().totalRows(findGame) == 0) {
-      return std::string("GameDataNotFound");
-    }
+    CHECK_HOST;
+    CHECK_GAME;
     std::string mostWinningPlayCommand = "SELECT result, MAX(theCount)"
       " FROM (SELECT result, COUNT(result) AS theCount FROM game_list WHERE "
       "earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
@@ -354,6 +388,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-player-earning-for-game", {
     POST_INIT_GAMETYPE;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_GAME;
+    CHECK_PLAYER;
     std::string command = "SELECT SUM(earning) FROM game_list "
       "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' AND player_id = '" + player + "' AND earning >= 0;";
@@ -363,6 +400,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-player-debt-for-game", {
     POST_INIT_GAMETYPE;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_GAME;
+    CHECK_PLAYER;
     std::string command = "SELECT SUM(earning) FROM game_list "
       "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' AND player_id = '" + player + "' AND earning < 0;";
@@ -372,6 +412,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-player-wins-for-game", {
     POST_INIT_GAMETYPE;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_GAME;
+    CHECK_PLAYER;
     std::string command = "SELECT * FROM game_list "
       "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' AND player_id = '" + player + "' AND earning >= 0;";
@@ -381,6 +424,9 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   CROW_ROUTE_POST(app, "/private/total-player-losses-for-game", {
     POST_INIT_GAMETYPE;
     GET_PLAYER;
+    CHECK_HOST;
+    CHECK_GAME;
+    CHECK_PLAYER;
     std::string command = "SELECT * FROM game_list "
       "WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' AND player_id = '" + player + "' AND earning < 0;";
@@ -389,12 +435,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/most-winning-player-for-game", {
     POST_INIT_GAMETYPE;
-
-    std::string findGame = "SELECT * from game_list WHERE username = '" +
-      acct_id + "' AND game_type = '" + gametype + "';";
-    if (getDatabase().totalRows(findGame) == 0) {
-      return std::string("GameDataNotFound");
-    }
+    CHECK_HOST;
+    CHECK_GAME;
     std::string command = "SELECT player_id, MAX(theCount)"
       " FROM (SELECT player_id, COUNT(player_id) AS theCount FROM game_list"
       " WHERE earning > 0 AND username = '" + acct_id + "' AND game_type = '" +
@@ -404,12 +446,8 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
 
   CROW_ROUTE_POST(app, "/private/median-earning", {
     POST_INIT_GAMETYPE;
-
-    std::string findGame = "SELECT * from game_list WHERE username = '" +
-      acct_id + "' AND game_type = '" + gametype + "';";
-    if (getDatabase().totalRows(findGame) == 0) {
-      return std::string("GameDataNotFound");
-    }
+    CHECK_HOST;
+    CHECK_GAME;
     std::string command = "SELECT earning FROM game_list"
       " WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' ORDER BY earning ASC";
