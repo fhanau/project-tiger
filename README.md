@@ -55,7 +55,7 @@ The server can be accessed on port 18080 using the following API. At present, al
 
 ```private/number-of-players``` POST request for total players for across all games the client created. Token is used for authentication and querying data.
 
-```private/greatest-player-by-wins``` POST request for a specific player from a specific game type the client created. Token is used for authentication and querying data.
+```private/greatest-player-by-wins``` POST request for the player with the most wins across all game types. Game types are created by the client. Token is used for authentication and querying data.
 
 ```private/most-common-play``` POST request for most common result for a specific game created by the client. Token is used for authentication and `gametype` is used for querying data.
 
