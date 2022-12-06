@@ -23,7 +23,7 @@ private most-common-play <string: game name>
 private most-winning-play <string: game name>
 private number-of-results <string: game name>
 private total-players-for-game <string: game name>
-private greatest-player-by-wins <string: playerid>
+private greatest-player-by-wins
 private total-player-earning-for-game <string: game name> <string: playerid>
 private total-player-debt-for-game <string: game name> <string: playerid>
 private total-player-wins-for-game <string: game name> <string: playerid>
