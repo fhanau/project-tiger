@@ -5,9 +5,9 @@ Token saved to disk, ready to execute commands
 A list of commands can be displayed by typing 'help' and hitting enter.
 Otherwise you can begin entering commands.
 > total-games: 18
-> total-earnings-all: 0
-> number-of-results: 0
-> number-of-results: 0
+> total-earnings-all: NoDataUploaded
+> number-of-results: NoDataUploaded
+> number-of-results: NoDataUploaded
 > Successfully uploaded game data.
 > Successfully uploaded game data.
 > Successfully uploaded game data.
