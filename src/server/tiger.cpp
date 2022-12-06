@@ -74,6 +74,13 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
   } \
   std::string player = std::string(qs.get("player"));
 
+#define CHECK_HOST \
+  std::string findHost = "SELECT * from game_list WHERE username = '" + \
+      acct_id + "';"; \
+  if (getDatabase().totalRows(findHost) == 0) { \
+    return std::string("NoDataUploaded"); \
+  }
+
 #define CHECK_GAME \
   std::string findGame = "SELECT * from game_list WHERE username = '" + \
       acct_id + "' and game_type = '" + gametype + "';"; \
@@ -86,13 +93,6 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
       acct_id + "' and player_id = '" + player + "';"; \
   if (getDatabase().totalRows(findPlayer) == 0) { \
     return std::string("NoDataUploadedForPlayer"); \
-  }
-
-#define CHECK_HOST \
-  std::string findHost = "SELECT * from game_list WHERE username = '" + \
-      acct_id + "';"; \
-  if (getDatabase().totalRows(findHost) == 0) { \
-    return std::string("NoDataUploaded"); \
   }
 
   CROW_ROUTE_POST(app, "/upload", {
