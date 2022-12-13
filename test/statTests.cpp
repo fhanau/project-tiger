@@ -63,27 +63,12 @@ class StatTest:public::testing::Test {
     Database db = Database("dummy5.db");
 };
 
-TEST_F(StatTest, testGetNumTotalUsers) {
-    EXPECT_EQ(getNumTotalUsers(db), 4);
-}
-
-TEST_F(StatTest, testGetNumGames) {
-    EXPECT_EQ(getNumGames(db, ""), 3);
-    EXPECT_EQ(getNumGames(db, "RPS"), 2);
-    EXPECT_EQ(getNumGames(db, "BlackJack"), 1);
-}
-
-TEST_F(StatTest, testGetTotalPlayersForGame) {
-    EXPECT_EQ(getTotalPlayersForGame(db, "RPS"), 2);
-    EXPECT_EQ(getTotalPlayersForGame(db, "BlackJack"), 3);
-    EXPECT_EQ(getTotalPlayersForGame(db, "doesNotExists"), 0);
-}
 
 TEST_F(StatTest, testMedianValue) {
     std::string command = "SELECT total_wins, player_id FROM player_stats"
       " WHERE username = 'username101' ORDER BY total_wins ASC;";
 
-    float median = medianValue(pulledIntDataVector(db, command));
+    float median = medianValue(db.getIntDataVector(command));
     EXPECT_EQ(median, 4.0);
 
     std::vector<int> empty = {};
@@ -95,7 +80,7 @@ TEST_F(StatTest, testBoxWhiskerPoints) {
       " WHERE username = 'username101' ORDER BY total_wins ASC;";
 
     std::array<float, 4> percentiles = percentileValues(\
-      pulledIntDataVector(db, command));
+      db.getIntDataVector(command));
 
     EXPECT_EQ(percentiles.at(0), 1.5);
     EXPECT_EQ(percentiles.at(1), 4.0);
@@ -106,7 +91,7 @@ TEST_F(StatTest, testBoxWhiskerPoints) {
       " WHERE username = 'username201' ORDER BY total_wins ASC;";
 
     percentiles = percentileValues(\
-      pulledIntDataVector(db, command));
+      db.getIntDataVector(command));
 
     EXPECT_EQ(percentiles.at(0), 1.5);
     EXPECT_EQ(percentiles.at(1), 2.5);
