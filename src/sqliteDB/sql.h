@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <vector>
 
 // Simpler than including the entire sqlite3 header, which is only needed
 // by sql.cpp and stat.cpp.

@@ -2,11 +2,18 @@
 #include <sqlite3.h>
 #include <vector>
 #include <array>
-#include <algorithm>
 #include "stat.h"
 
 
 // helper function that executes commands
+int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
+    sqlite3_stmt* stmt = db.makeStatement(sql_command);
+    sqlite3_step(stmt);
+    int ret = sqlite3_column_int(stmt, 0);
+    sqlite3_finalize(stmt);
+    return ret;
+}
+
 int runQueryWithIntReturn2(sqlite3_stmt* stmt) {
     int ret = sqlite3_column_int(stmt, 0);
     return ret;
@@ -107,4 +114,26 @@ std::array<std::vector<std::string>, 2> findOutlierUsers(Database& db,
       {belowPlayers, abovePlayers};
 
     return exceptionalPlayers;
+}
+
+int getNumTotalUsers(Database& db) {
+    std::string command = "SELECT COUNT(*) FROM players;";
+    return runQueryWithIntReturn(db, command);
+}
+
+int getNumGames(Database& db, const std::string& game_type) {
+    std::string command;
+    if (game_type == "") {
+        command = "SELECT COUNT(DISTINCT game_id) FROM game_list;";
+    } else {
+        command = "SELECT COUNT(DISTINCT game_id) FROM game_list "
+            "WHERE game_type = '" + game_type + "';";
+    }
+    return runQueryWithIntReturn(db, command);
+}
+
+int getTotalPlayersForGame(Database& db, const std::string& game_type) {
+    std::string command = "SELECT COUNT(DISTINCT player_id) FROM game_list "
+        "WHERE game_type = '" + game_type + "';";
+    return runQueryWithIntReturn(db, command);
 }

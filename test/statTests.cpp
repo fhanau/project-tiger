@@ -63,6 +63,21 @@ class StatTest:public::testing::Test {
     Database db = Database("dummy5.db");
 };
 
+TEST_F(StatTest, testGetNumTotalUsers) {
+    EXPECT_EQ(getNumTotalUsers(db), 4);
+}
+
+TEST_F(StatTest, testGetNumGames) {
+    EXPECT_EQ(getNumGames(db, ""), 3);
+    EXPECT_EQ(getNumGames(db, "RPS"), 2);
+    EXPECT_EQ(getNumGames(db, "BlackJack"), 1);
+}
+
+TEST_F(StatTest, testGetTotalPlayersForGame) {
+    EXPECT_EQ(getTotalPlayersForGame(db, "RPS"), 2);
+    EXPECT_EQ(getTotalPlayersForGame(db, "BlackJack"), 3);
+    EXPECT_EQ(getTotalPlayersForGame(db, "doesNotExists"), 0);
+}
 
 TEST_F(StatTest, testMedianValue) {
     std::string command = "SELECT total_wins, player_id FROM player_stats"
@@ -122,7 +137,3 @@ TEST_F(StatTest, testOutlierReturning) {
 
     EXPECT_EQ(aboveAvg.at(1), "player109");
 }
-
-// TEST_F(StatTest, testGetGreatestPlayerByWins) {
-// ASSERT_THAT(getGreatestPlayerByWins(db), testing::ElementsAre("player1"));
-// }

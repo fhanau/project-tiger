@@ -1,13 +1,19 @@
+include_directories(${TIGER_SOURCE_DIR}/game)
 include_directories(${TIGER_SOURCE_DIR}/sqliteDB)
 
 add_subdirectory(googletest EXCLUDE_FROM_ALL)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-set(TESTS DatabaseTests.cpp serverApiTests.cpp sqliteTest.cpp
-    statTests.cpp integrationTests.cpp serverMockTests.cpp
+set(TESTS DatabaseTests.cpp serverApiTests.cpp sqliteTest.cpp cardTests.cpp
+    deckTests.cpp statTests.cpp integrationTests.cpp serverMockTests.cpp
     authTests.cpp statMocks.cpp)
 set(TEST_DEPS ${TIGER_SOURCE_DIR}/server/tiger.cpp ${TIGER_SOURCE_DIR}/server/tiger.h ${TIGER_SOURCE_DIR}/server/auth.cpp ${TIGER_SOURCE_DIR}/server/auth.h
     mockDatabase.h mockDatabase.cpp)
+set(TEST_GAME_DEPS ${TIGER_SOURCE_DIR}/game/card.cpp
+    ${TIGER_SOURCE_DIR}/game/card.h
+    ${TIGER_SOURCE_DIR}/game/deck.h
+    ${TIGER_SOURCE_DIR}/game/deck.cpp
+)
 set(TEST_DB_DEPS
     ${TIGER_SOURCE_DIR}/sqliteDB/sql.h
     ${TIGER_SOURCE_DIR}/sqliteDB/sql.cpp
@@ -22,7 +28,7 @@ set(TEST_SSL_DEPS
 )
 
 # create the test executable
-add_executable(tiger-test ${TESTS} ${TEST_DEPS} ${TEST_DB_DEPS} ${TEST_SSL_DEPS})
+add_executable(tiger-test ${TESTS} ${TEST_DEPS} ${TEST_GAME_DEPS} ${TEST_DB_DEPS} ${TEST_SSL_DEPS})
 target_link_libraries(tiger-test PRIVATE Crow::Crow GTest::gtest_main GTest::gmock ${CMAKE_DL_LIBS})
 
 #Create key and certificate for HTTPS. Due to cmake being a terrible build system, it is necessary to copy it here.
