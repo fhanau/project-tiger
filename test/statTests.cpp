@@ -83,7 +83,7 @@ TEST_F(StatTest, testMedianValue) {
     std::string command = "SELECT total_wins, player_id FROM player_stats"
       " WHERE username = 'username101' ORDER BY total_wins ASC;";
 
-    float median = medianValue(pulledIntDataVector(db, command));
+    float median = medianValue(db.getIntDataVector(command));
     EXPECT_EQ(median, 4.0);
 
     std::vector<int> empty = {};
@@ -95,7 +95,7 @@ TEST_F(StatTest, testBoxWhiskerPoints) {
       " WHERE username = 'username101' ORDER BY total_wins ASC;";
 
     std::array<float, 4> percentiles = percentileValues(\
-      pulledIntDataVector(db, command));
+      db.getIntDataVector(command));
 
     EXPECT_EQ(percentiles.at(0), 1.5);
     EXPECT_EQ(percentiles.at(1), 4.0);
@@ -106,7 +106,7 @@ TEST_F(StatTest, testBoxWhiskerPoints) {
       " WHERE username = 'username201' ORDER BY total_wins ASC;";
 
     percentiles = percentileValues(\
-      pulledIntDataVector(db, command));
+      db.getIntDataVector(command));
 
     EXPECT_EQ(percentiles.at(0), 1.5);
     EXPECT_EQ(percentiles.at(1), 2.5);
@@ -137,7 +137,3 @@ TEST_F(StatTest, testOutlierReturning) {
 
     EXPECT_EQ(aboveAvg.at(1), "player109");
 }
-
-// TEST_F(StatTest, testGetGreatestPlayerByWins) {
-// ASSERT_THAT(getGreatestPlayerByWins(db), testing::ElementsAre("player1"));
-// }

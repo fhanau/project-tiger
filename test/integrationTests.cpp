@@ -66,7 +66,3 @@ TEST_F(IntegrationTest, testGetTotalPlayersForGame) {
     EXPECT_EQ(getTotalPlayersForGame(db, "BlackJack"), 3);
     EXPECT_EQ(getTotalPlayersForGame(db, "doesNotExists"), 0);
 }
-
-// TEST_F(StatTest, testGetGreatestPlayerByWins) {
-// ASSERT_THAT(getGreatestPlayerByWins(db), testing::ElementsAre("player1"));
-// }

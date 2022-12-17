@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 #include <sqlite3.h>
 #include "sql.h"
 
@@ -307,4 +309,16 @@ int Database::dropTable2(std::string command) {
     int run = executeCommand(command, "Error in dropData2 function.",
     "Records deleted Successfully!", 0);
     return run;
+}
+
+std::vector<int> Database::getIntDataVector(std::string command) {
+    std::vector<int> results;
+    sqlite3_stmt* stmt = makeStatement(command);
+    while (sqlite3_step(stmt) != SQLITE_DONE) {
+        auto data = sqlite3_column_int(stmt, 0);
+        results.push_back(data);
+    }
+    sqlite3_finalize(stmt);
+    std::sort(results.begin(), results.end());
+    return results;
 }

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <vector>
 
 // Simpler than including the entire sqlite3 header, which is only needed
 // by sql.cpp and stat.cpp.
@@ -55,6 +56,8 @@ class Database {
   int getIntValue(std::string command);
   // Get the text value of a result column from an SQL query
   std::string getTextValue(std::string command);
+  // Get a list of int value of a result column from an SQL query
+  std::vector<int> getIntDataVector(std::string command);
   // Check if a query result exists in a specific table
   int doesExist(sqlite3_stmt* statement);
   // Delete a table from the database. Alex Brebenel version.

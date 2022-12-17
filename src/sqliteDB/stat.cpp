@@ -2,7 +2,6 @@
 #include <sqlite3.h>
 #include <vector>
 #include <array>
-#include <algorithm>
 #include "stat.h"
 
 
@@ -15,41 +14,9 @@ int runQueryWithIntReturn(Database& db, const std::string& sql_command) {
     return ret;
 }
 
-int runQueryWithIntReturn2(sqlite3_stmt* stmt ) {
+int runQueryWithIntReturn2(sqlite3_stmt* stmt) {
     int ret = sqlite3_column_int(stmt, 0);
     return ret;
-}
-
-std::string runQueryWithSingleReturn(Database& db,
-    const std::string& sql_command) {
-    sqlite3_stmt* stmt = db.makeStatement(sql_command);
-    sqlite3_step(stmt);
-
-    const char* ret_str = reinterpret_cast <const char*>(
-        sqlite3_column_text(stmt, 0));
-    sqlite3_finalize(stmt);
-    return std::string(ret_str);
-}
-
-// This method is to return a vector of ints
-// to be used for computing calculations.
-std::vector<int> pulledIntDataVector(Database& db,
-  const std::string& sql_command) {
-    std::vector<int> results;
-    sqlite3_stmt* stmt = db.makeStatement(sql_command);
-    while (sqlite3_step(stmt) != SQLITE_DONE) {
-        int data = runQueryWithIntReturn2(stmt);
-        results.push_back(data);
-    }
-    sqlite3_finalize(stmt);
-    std::sort(results.begin(), results.end());
-    /*
-    std::cout << "RESULTS:";
-    for (int i = 0; i < results.size(); i++)
-        std::cout << ' ' << results.at(i);
-    std::cout << '\n';
-    */
-    return results;
 }
 
 float medianValue(std::vector<int> results) {
@@ -170,25 +137,3 @@ int getTotalPlayersForGame(Database& db, const std::string& game_type) {
         "WHERE game_type = '" + game_type + "';";
     return runQueryWithIntReturn(db, command);
 }
-
-// TODO: buggy, segmentation fault
-// return player_id
-/*
-std::vector<std::string> getGreatestPlayerByWins(Database& db) {
-    std::vector<std::string> res;
-    std::string command =
-        "SELECT player_id, SUM(total_wins) AS tw FROM player_stats"
-        "WHERE tw = (SELECT MAX(total_wins) FROM player_stats GROUP BY "
-        "player_id)"
-        "GROUP BY player_id";
-    auto x = db.makeStatement(command);
-    while (sqlite3_step(x) != SQLITE_DONE) {
-        // const unsigned char* -> const char* -> string
-        std::string player_id{
-            reinterpret_cast<const char*>(sqlite3_column_text(x, 0))
-        };
-        res.push_back(player_id);
-    }
-    return res;
-}
-*/

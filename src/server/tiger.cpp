@@ -451,7 +451,7 @@ void Tiger::initTigerServer(crow::SimpleApp& app, const std::string& db_path) {
     std::string command = "SELECT earning FROM game_list"
       " WHERE username = '" + acct_id + "' AND game_type = '" + gametype +
       "' ORDER BY earning ASC";
-    std::vector<int> values = pulledIntDataVector(getDatabase(), command);
+    std::vector<int> values = getDatabase().getIntDataVector(command);
     return std::to_string(medianValue(values));
   });
 
